@@ -1,0 +1,7 @@
+*.dsc
+*.dsd
+*.dsk
+*_wrap.c
+__pycache__/**
+build/**
+.ipynb_checkpoints
