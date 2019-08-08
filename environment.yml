@@ -1,0 +1,21 @@
+name: pyhecdss
+channels:
+  - plotly
+  - conda-forge
+  - defaults
+dependencies:
+  - jupyter=1.0.0=py37_7
+  - jupyter_client=5.2.4=py37_0
+  - jupyter_console=6.0.0=py37_0
+  - jupyter_contrib_core=0.3.3=py_2
+  - jupyter_contrib_nbextensions=0.5.1=py37_0
+  - jupyter_core=4.4.0=py37_0
+  - jupyter_highlight_selected_word=0.2.0=py37_1000
+  - jupyter_latex_envs=1.4.4=py37_1000
+  - jupyter_nbextensions_configurator=0.4.1=py37_0
+  - matplotlib=3.0.3=py37hc8f65d3_0
+  - pandas=0.24.2=py37ha925a31_0
+  - python=3.7.3=h8c8aaf0_1
+  - python-dateutil=2.8.0=py37_0
+  - scipy=1.2.1=py37h29ff71c_0
+prefix: d:\Programs\Anaconda2\envs\dsm2
