@@ -1,4 +1,4 @@
-import pyheclib
+from . import pyheclib
 import pandas as pd
 import numpy as np
 class DSSFile:
