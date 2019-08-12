@@ -1,5 +1,5 @@
 import unittest
-import pyheclib
+from context import pyheclib
 class TestPyHeclibBasic(unittest.TestCase):
     def test_open_close(self):
         ifltab=pyheclib.intArray(600)

@@ -1,5 +1,5 @@
 import unittest
-import pyhecdss
+from context import pyhecdss
 class TestPyDsUtilsBasic(unittest.TestCase):
     def test_open_close(self):
         fname="test1.dss"
