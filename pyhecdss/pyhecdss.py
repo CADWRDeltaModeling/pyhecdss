@@ -2,6 +2,9 @@ from . import pyheclib
 import pandas as pd
 import numpy as np
 class DSSFile:
+    #DSS missing conventions
+    MISSING_VALUE=-901.0
+    MISSING_RECORD=-902.0
     def __init__(self,fname):
         self.ifltab=pyheclib.intArray(600)
         self.istat=pyheclib.new_intp()
@@ -126,6 +129,7 @@ class DSSFile:
             pyheclib.delete_intp(istat)
             dindex=pd.date_range(startDateStr,periods=nvals,freq=interval)
             df1=pd.DataFrame(data=dvalues,index=dindex,columns=[pathname])
+            df1.replace([DSSFile.MISSING_VALUE,DSSFile.MISSING_RECORD],[np.nan,np.nan],inplace=True)
             return df1,cunits.strip(),ctype.strip()
         finally:
             self.close()
