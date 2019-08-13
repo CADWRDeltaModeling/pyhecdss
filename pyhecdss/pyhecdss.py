@@ -2,6 +2,7 @@ from . import pyheclib
 import pandas as pd
 import numpy as np
 import os
+import time
 class DSSFile:
     #DSS missing conventions
     MISSING_VALUE=-901.0
@@ -72,11 +73,22 @@ class DSSFile:
     def read_catalog(self):
         """
         Reads .dsd (condensed catalog) for the given dss file.
-        Will run catalog if it doesn't exist.
+        Will run catalog if it doesn't exist or is out of date
         """
         fdname=self.fname[:self.fname.rfind(".")]+".dsd"
         if not os.path.exists(fdname):
+            print("NO CATALOG FOUND: Generating...")
             self.catalog()
+        else:
+            if os.path.exists(self.fname):
+                ftime=pd.to_datetime(time.ctime(os.path.getmtime(self.fname)))
+                fdtime=pd.to_datetime(time.ctime(os.path.getmtime(fdname)))
+                if ftime > fdtime:
+                    print("CATALOG FILE OLD: Generating...")
+                    self.catalog()
+            else:
+                print("Warning: No DSS File found. Using catalog file as is")
+        #
         with open(fdname,'r') as fd:
             lines=fd.readlines()
         columns=['Tag','A Part','B Part','C Part','F Part','E Part','D Part']
