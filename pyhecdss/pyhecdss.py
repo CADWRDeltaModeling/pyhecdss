@@ -1,6 +1,7 @@
 from . import pyheclib
 import pandas as pd
 import numpy as np
+import os
 class DSSFile:
     #DSS missing conventions
     MISSING_VALUE=-901.0
@@ -68,6 +69,50 @@ class DSSFile:
             pyheclib.fortranflush_(inunit)
             pyheclib.fortranclose_(inunit)
             self.close()
+    def read_catalog(self):
+        """
+        Reads .dsd (condensed catalog) for the given dss file.
+        Will run catalog if it doesn't exist.
+        """
+        fdname=self.fname[:self.fname.rfind(".")]+".dsd"
+        if not os.path.exists(fdname):
+            self.catalog()
+        with open(fdname,'r') as fd:
+            lines=fd.readlines()
+        columns=['Tag','A Part','B Part','C Part','F Part','E Part','D Part']
+        colline=lines[7]
+        column_indices=[]
+        for c in columns:
+            column_indices.append(colline.find(c))
+        a=np.empty([len(columns),len(lines)-9],dtype='U132')
+        ilx=0
+        for line in lines[9:]:
+            cix=0
+            isx=column_indices[0]
+            for iex in column_indices[1:]:
+                s=line[isx:iex].strip()
+                if s.startswith("-"):
+                    s=a[cix,ilx-1]
+                a[cix,ilx]=s
+                cix=cix+1
+                isx=iex
+            s=line[isx:].strip()
+            a[cix,ilx]=s
+            ilx=ilx+1
+        df=pd.DataFrame(a.transpose(),columns=list('TABCFED'))
+        return df
+    def get_pathnames(self,catalog_dataframe=None):
+        """
+        converts a catalog data frame into pathnames
+        If catalog_dataframe is None then reads catalog to populate it
+
+        returns a list of pathnames (condensed version, i.e. D part is time window)
+        /A PART/B PART/C PART/DPART (START DATE "-" END DATE)/E PART/F PART/
+        """
+        if catalog_dataframe is None:
+            catalog_dataframe=self.read_catalog()
+        pdf=catalog_dataframe.iloc[:,[1,2,3,6,5,4]]
+        return pdf.apply(func=lambda x: '/'+('/'.join(x.to_list()))+'/',axis=1).to_list()
     def num_values_in_interval(self,sdstr,edstr,istr):
         """
         Get number of values in interval istr, using the start date and end date
@@ -89,10 +134,24 @@ class DSSFile:
         return itime
     def parse_pathname_epart(self,pathname):
         return pathname.split('/')[1:7][4]
-    def read_rts(self,pathname,startDateStr, endDateStr):
+    def read_rts(self,pathname,startDateStr=None, endDateStr=None):
+        """
+        read regular time series for pathname.
+        if pathname D part contains a time window (START DATE "-" END DATE) and
+        either start or end date is None it uses that to define start and end date
+        """
         try:
             self.open()
             interval = self.parse_pathname_epart(pathname)
+            if startDateStr is None or endDateStr is None:
+                twstr=pathname.split("/")[4]
+                if twstr.find("-") < 0 :
+                    raise "No start date or end date and twstr is "+twstr
+                sdate,edate=twstr.split("-")
+                if startDateStr is None:
+                    startDateStr=sdate.strip()
+                if endDateStr is None:
+                    endDateStr=edate.strip()
             nvals = self.num_values_in_interval(startDateStr, endDateStr, interval)
             sdate = pd.to_datetime(startDateStr)
             cdate = sdate.date().strftime('%d%b%Y').upper()

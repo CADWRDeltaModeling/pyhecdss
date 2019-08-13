@@ -35,5 +35,15 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         #get series
         vseries=values.iloc[:,0]
         self.assertTrue(abs(vseries.at['01JAN1990 0430']-1215.6314) < 1e-03)
+    def test_read_catalog(self):
+        fname="historical_v82.dss"
+        dssfile=pyhecdss.DSSFile(fname)
+        df = dssfile.read_catalog()
+        self.assertTrue(len(df) > 1)
+    def test_get_pathnames(self):
+        fname="historical_v82.dss"
+        dssfile=pyhecdss.DSSFile(fname)
+        pathnames=dssfile.get_pathnames()
+        self.assertTrue(len(pathnames)>0)
 if __name__ == '__main__':
     unittest.main()

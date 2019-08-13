@@ -1,0 +1,326 @@
+
+     HECDSS Condensed Catalog of Record Pathnames in File D:\delta\dsm2_v820_beta\studies\historical_820f\output\historica
+
+     Catalog Created on Aug 8, 2019 at  9:13     File Created on ******* 
+     Number of Records: 101757                   DSS Version 6-VE,  File 6-OF
+     Sort Order: ABCFED
+
+ Tag      A Part         B Part             C Part  F Part                   E Part  D Part
+
+ T101756  HYDRO8.1.3-DO  CALAVERAS          FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CFTRN000           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN128            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN134            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN144            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN145            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN205            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN212            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN309            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN392            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN434            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN437            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN442            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN50             FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN511            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN59             FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN70             FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN71             FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHAN80             FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHCCC006           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHDMC004           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHGRL009           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHVCT000           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHWST000           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CIS-219            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CLIFTON_COURT      FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    COSUMNES           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CVP                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    DGL                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    DGL-205            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    DLC                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    DLC-365            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    FAL                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    FISHERMANS         FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    GCT                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    GLC                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    GLE                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    GSS                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    GSS-366            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    HOL                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    HWB                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ISH-253            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    LPS                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    LPS-324            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    MAB                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    MANDEVILLE         FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    MHR-131            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    MOK                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    MOK-349            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    MRU                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    MSD                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    MTB                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    MTZ                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    MUP                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    OAD                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    OBD                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ODM                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    OH4                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    OHI                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    OLD                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ORM                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ORQ                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ORX                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    OSJ                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    PDC                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RMID005_155        FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RMID005_156        FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RMID015            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RMID015_144        FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RMID015_145        FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RMID027            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RMID040            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD024            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD034            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD040            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD046            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD047            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD059            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD074            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC054            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC075            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC081            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC092            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC101            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC123            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC128            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC155            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN007            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN018            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN037            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN043            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN046            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN052            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN058            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN063            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN072            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN087            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN112            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RYI                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SAC                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SANUB8             FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SGA                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SJD                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SJL                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SLBAR002           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SLDUT007           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SLMZU011           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SLMZU025           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SLTRM004           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SSS                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SUT                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    TAYLORSL           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    TPI-194            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    TPP-186            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    TPS-183            FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    TRN                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    TSK-14             FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    UNI                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    VCU                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    VERNALIS           FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    VNI-37             FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    WCI                FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    YOLO               FLOW    HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    - - - - - - - -    STAGE   HISTORICAL_V82           15MIN   01JAN1990 - 01SEP2016
+ T101756  QUAL8.2.0B1    14ML_SL            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    3MILE_SL           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CFTRN000           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHCCC006           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHDMC004           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHDMC006           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHGRL009           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHIPPS_S_442       EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHSWP003           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHVCT000           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CHWST000           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    CLIFTON_COURT      EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    DCC                EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    DISAPPOINTMENT_SL  EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    EMPTRACT_SL        EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    FALSE_R            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    FISH_CUT           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    GEORGIANA_SL       EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    MIDR_SJR           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    MTZMA_SL_US_SCG_   EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    OLDR_MIDR          EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    OLDR_MOUTH         EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    POTATO_SL          EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RMID005            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RMID015            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RMID023            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RMID027            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RMID040            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROCK_SL_PP1        EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD014            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD024            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD034            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD040            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD046            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD047            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD059            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    ROLD074            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC054            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC064            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC075            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC077            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC081            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC092            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC101            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC123            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC128            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC139            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAC155            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN007            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN018            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN032            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN037            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN043            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN046            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN052            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN058            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN063            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN072            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN087            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    RSAN112            EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SAC_EMMATON        EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SJR_SAN_ANDREAS    EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SLBAR002           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SLDUT007           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SLDUT009           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SLMZU011           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SLMZU025           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SLPPR003           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SLTRM004           EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    STEAMBOAT_SL       EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
+ T101756  - - - - - -    SUTTER_SL          EC      HISTORICAL_V82+FROM-ALL  15MIN   01JAN1990 - 01SEP2016
