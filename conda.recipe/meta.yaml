@@ -1,0 +1,35 @@
+{% set name = "pyhecdss" %}
+{% set version = "0.1" %}
+
+package:
+  name:           "{{ name|lower }}"
+  version:        "{{ version }}"
+
+source:
+  #git_url: http://dwrrhapp0179.ad.water.ca.gov/gitea/nsandhu/pyhecdss.git
+  path: ..
+
+build:
+  number: 0
+  #skip:           true
+
+requirements:
+  build:
+    - python
+    - setuptools
+    - numpy
+    - swig
+  run:
+    - python
+    - numpy
+    - pandas
+
+test:
+  imports:
+    - pyhecdss
+
+about:
+  home:           "http://dwrrhapp0179.ad.water.ca.gov/gitea/nsandhu/pyhecdss"
+  license:        "BSD"
+  license_family: "BSD"
+  summary:        "Read HECDSS as pandas DataFrame"
