@@ -1,9 +1,9 @@
 {% set name = "pyhecdss" %}
-{% set version = "0.1.1" %}
+{% set data = load_setup_py_data() %}
 
 package:
   name:           "{{ name|lower }}"
-  version:        "{{ version }}"
+  version:        "{{ data['version'] }}"
 
 source:
   #git_url: http://dwrrhapp0179.ad.water.ca.gov/gitea/nsandhu/pyhecdss.git

@@ -17,6 +17,21 @@ def get_numpy_include():
         numpy_include = numpy.get_numpy_include()
     return numpy_include
 
+##------------------ VERSIONING BEST PRACTICES --------------------------##
+import os,codecs
+here = os.path.abspath(os.path.dirname(__file__))
+
+def read(*parts):
+    with codecs.open(os.path.join(here, *parts), 'r') as fp:
+        return fp.read()
+
+def find_version(*file_paths):
+    version_file = read(*file_paths)
+    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
+                              version_file, re.M)
+    if version_match:
+        return version_match.group(1)
+    raise RuntimeError("Unable to find version string.")
 
 # check_numpy_i() #--This is failing due SSL certificate issue
 #
@@ -33,7 +48,7 @@ pyheclib_module = Extension('pyhecdss._pyheclib',
                             )
 
 setup(name='pyhecdss',
-      version='0.1',
+      version=find_version("pyhecdss","__init__.py"),
       author="Nicky Sandhu",
       description="""Swig for HECLIB""",
       ext_modules=[pyheclib_module],
