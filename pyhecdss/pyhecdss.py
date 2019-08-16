@@ -130,7 +130,11 @@ class DSSFile:
         Get number of values in interval istr, using the start date and end date
         string
         """
-        return int((pd.to_datetime(edstr)-pd.to_datetime(sdstr))/pd.to_timedelta(istr))
+        if istr.find('MON'): # less number of estimates will lead to overestimating values
+            td=pd.to_timedelta('30DAY')
+        else:
+            td=pd.to_timedelta(istr)
+        return int((pd.to_datetime(edstr)-pd.to_datetime(sdstr))/td)+1
     def julian_day(self, date):
         """
         get julian day for the date. (count of days since beginning of year)
@@ -198,7 +202,12 @@ class DSSFile:
             pyheclib.delete_intp(iofset)
             pyheclib.delete_intp(jcomp)
             pyheclib.delete_intp(istat)
-            dindex=pd.date_range(startDateStr,periods=nvals,freq=interval)
+            if interval.find('MON') >= 0:
+                interval=interval.replace('MON','M')
+            if ctype == 'INST-VAL':
+                dindex=pd.date_range(startDateStr,periods=nvals,freq=interval)
+            else:
+                dindex=pd.period_range(startDateStr,periods=nvals,freq=interval)
             df1=pd.DataFrame(data=dvalues,index=dindex,columns=[pathname])
             df1.replace([DSSFile.MISSING_VALUE,DSSFile.MISSING_RECORD],[np.nan,np.nan],inplace=True)
             return df1,cunits.strip(),ctype.strip()
