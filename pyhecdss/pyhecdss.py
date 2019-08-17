@@ -130,8 +130,10 @@ class DSSFile:
         Get number of values in interval istr, using the start date and end date
         string
         """
-        if istr.find('MON'): # less number of estimates will lead to overestimating values
-            td=pd.to_timedelta('30DAY')
+        if istr.find('MON') >= 0: # less number of estimates will lead to overestimating values
+            td=pd.to_timedelta(int(istr[:istr.find('MON')]),'M')
+        elif istr.find('YEAR') >= 0:
+            td=pd.to_timedelta(int(istr[:istr.find('YEAR')]),'Y')
         else:
             td=pd.to_timedelta(istr)
         return int((pd.to_datetime(edstr)-pd.to_datetime(sdstr))/td)+1
@@ -139,7 +141,7 @@ class DSSFile:
         """
         get julian day for the date. (count of days since beginning of year)
         """
-        return xxx
+        return date.dayofyear
     def m2ihm(self, minute):
         """
         24 hour style from mins
@@ -150,6 +152,16 @@ class DSSFile:
         return itime
     def parse_pathname_epart(self,pathname):
         return pathname.split('/')[1:7][4]
+    def _pad_to_end_of_block(self, endDateStr, interval):
+        if interval.find('MON') >=0 or interval.find('YEAR') >=0:
+            buffer=pd.DateOffset(years=10)
+        elif interval.find('DAY') >=0 :
+            buffer=pd.DateOffset(years=1)
+        elif interval.find('HOUR') >=0 or interval.find('MIN') >= 0:
+            buffer = pd.DateOffset(months=1)
+        else:
+            buffer=pd.DateOffset(days=1)
+        return (pd.to_datetime(endDateStr) + buffer).strftime('%d%b%Y').upper()
     def read_rts(self,pathname,startDateStr=None, endDateStr=None):
         """
         read regular time series for pathname.
@@ -168,6 +180,7 @@ class DSSFile:
                     startDateStr=sdate.strip()
                 if endDateStr is None:
                     endDateStr=edate.strip()
+                    _pad_to_end_of_block(endDateStr)
             nvals = self.num_values_in_interval(startDateStr, endDateStr, interval)
             sdate = pd.to_datetime(startDateStr)
             cdate = sdate.date().strftime('%d%b%Y').upper()
@@ -204,6 +217,12 @@ class DSSFile:
             pyheclib.delete_intp(istat)
             if interval.find('MON') >= 0:
                 interval=interval.replace('MON','M')
+            elif interval.find('HOUR') >= 0:
+                interval=interval.replace('HOUR','H')
+            elif interval.find('DAY') >= 0:
+                interval=interval.replace('DAY','D')
+            elif interval.find('YEAR') >= 0:
+                interval=interval.replace('YEAR','Y')
             if ctype == 'INST-VAL':
                 dindex=pd.date_range(startDateStr,periods=nvals,freq=interval)
             else:
