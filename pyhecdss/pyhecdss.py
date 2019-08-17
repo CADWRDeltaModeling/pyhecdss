@@ -171,16 +171,20 @@ class DSSFile:
         try:
             self.open()
             interval = self.parse_pathname_epart(pathname)
+            trim_first=False
+            trim_last=False
             if startDateStr is None or endDateStr is None:
                 twstr=pathname.split("/")[4]
                 if twstr.find("-") < 0 :
                     raise "No start date or end date and twstr is "+twstr
                 sdate,edate=twstr.split("-")
                 if startDateStr is None:
+                    trim_first=True
                     startDateStr=sdate.strip()
                 if endDateStr is None:
+                    trim_last=True
                     endDateStr=edate.strip()
-                    _pad_to_end_of_block(endDateStr)
+                    endDateStr=self._pad_to_end_of_block(endDateStr,interval)
             nvals = self.num_values_in_interval(startDateStr, endDateStr, interval)
             sdate = pd.to_datetime(startDateStr)
             cdate = sdate.date().strftime('%d%b%Y').upper()
@@ -229,6 +233,18 @@ class DSSFile:
                 dindex=pd.period_range(startDateStr,periods=nvals,freq=interval)
             df1=pd.DataFrame(data=dvalues,index=dindex,columns=[pathname])
             df1.replace([DSSFile.MISSING_VALUE,DSSFile.MISSING_RECORD],[np.nan,np.nan],inplace=True)
+            if trim_first or trim_last:
+                if trim_first:
+                    first_index=df1.first_valid_index()
+                else:
+                    first_index=0
+                if trim_last:
+                    last_index = df1.last_valid_index()
+                else:
+                    last_index=None
+                df1 = df1[first_index:last_index]
+            else:
+                df1 = df1
             return df1,cunits.strip(),ctype.strip()
         finally:
             self.close()
