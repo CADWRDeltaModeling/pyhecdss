@@ -91,145 +91,145 @@ class _SwigNonDynamicMeta(type):
 
 
 
-def new_intp():
+def new_intp() -> "int *":
     return _pyheclib.new_intp()
 
-def copy_intp(value):
+def copy_intp(value: 'int') -> "int *":
     return _pyheclib.copy_intp(value)
 
-def delete_intp(obj):
+def delete_intp(obj: 'int *') -> "void":
     return _pyheclib.delete_intp(obj)
 
-def intp_assign(obj, value):
+def intp_assign(obj: 'int *', value: 'int') -> "void":
     return _pyheclib.intp_assign(obj, value)
 
-def intp_value(obj):
+def intp_value(obj: 'int *') -> "int":
     return _pyheclib.intp_value(obj)
 
-def new_doublep():
+def new_doublep() -> "double *":
     return _pyheclib.new_doublep()
 
-def copy_doublep(value):
+def copy_doublep(value: 'double') -> "double *":
     return _pyheclib.copy_doublep(value)
 
-def delete_doublep(obj):
+def delete_doublep(obj: 'double *') -> "void":
     return _pyheclib.delete_doublep(obj)
 
-def doublep_assign(obj, value):
+def doublep_assign(obj: 'double *', value: 'double') -> "void":
     return _pyheclib.doublep_assign(obj, value)
 
-def doublep_value(obj):
+def doublep_value(obj: 'double *') -> "double":
     return _pyheclib.doublep_value(obj)
 class intArray(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
 
-    def __init__(self, nelements):
+    def __init__(self, nelements: 'size_t'):
         _pyheclib.intArray_swiginit(self, _pyheclib.new_intArray(nelements))
     __swig_destroy__ = _pyheclib.delete_intArray
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: 'size_t') -> "int":
         return _pyheclib.intArray___getitem__(self, index)
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index: 'size_t', value: 'int') -> "void":
         return _pyheclib.intArray___setitem__(self, index, value)
 
-    def cast(self):
+    def cast(self) -> "int *":
         return _pyheclib.intArray_cast(self)
 
     @staticmethod
-    def frompointer(t):
+    def frompointer(t: 'int *') -> "intArray *":
         return _pyheclib.intArray_frompointer(t)
 
 # Register intArray in _pyheclib:
 _pyheclib.intArray_swigregister(intArray)
 
-def intArray_frompointer(t):
+def intArray_frompointer(t: 'int *') -> "intArray *":
     return _pyheclib.intArray_frompointer(t)
 
 class doubleArray(object):
     thisown = property(lambda x: x.this.own(), lambda x, v: x.this.own(v), doc='The membership flag')
     __repr__ = _swig_repr
 
-    def __init__(self, nelements):
+    def __init__(self, nelements: 'size_t'):
         _pyheclib.doubleArray_swiginit(self, _pyheclib.new_doubleArray(nelements))
     __swig_destroy__ = _pyheclib.delete_doubleArray
 
-    def __getitem__(self, index):
+    def __getitem__(self, index: 'size_t') -> "double":
         return _pyheclib.doubleArray___getitem__(self, index)
 
-    def __setitem__(self, index, value):
+    def __setitem__(self, index: 'size_t', value: 'double') -> "void":
         return _pyheclib.doubleArray___setitem__(self, index, value)
 
-    def cast(self):
+    def cast(self) -> "double *":
         return _pyheclib.doubleArray_cast(self)
 
     @staticmethod
-    def frompointer(t):
+    def frompointer(t: 'double *') -> "doubleArray *":
         return _pyheclib.doubleArray_frompointer(t)
 
 # Register doubleArray in _pyheclib:
 _pyheclib.doubleArray_swigregister(doubleArray)
 
-def doubleArray_frompointer(t):
+def doubleArray_frompointer(t: 'double *') -> "doubleArray *":
     return _pyheclib.doubleArray_frompointer(t)
 
 
-def chrlnb_(cline, ilast, _cline_len):
+def chrlnb_(cline: 'char *', ilast: 'int *', _cline_len: 'slen_t') -> "void":
     return _pyheclib.chrlnb_(cline, ilast, _cline_len)
 
-def juldat_(jul, istyle, cdate, ndate, _cdate_len):
+def juldat_(jul: 'int *', istyle: 'int *', cdate: 'char *', ndate: 'int *', _cdate_len: 'slen_t') -> "void":
     return _pyheclib.juldat_(jul, istyle, cdate, ndate, _cdate_len)
 
-def m2ihm_(min, ctime, _ctime_len):
+def m2ihm_(min: 'int *', ctime: 'char *', _ctime_len: 'slen_t') -> "int":
     return _pyheclib.m2ihm_(min, ctime, _ctime_len)
 
-def zcat_(ifltab, icunit, icdunt, inunit, cinstr, labrev, ldosrt, lcdcat, norecs, _cinstr_len):
+def zcat_(ifltab: 'int *', icunit: 'int *', icdunt: 'int *', inunit: 'int *', cinstr: 'char *', labrev: 'int *', ldosrt: 'int *', lcdcat: 'int *', norecs: 'int *', _cinstr_len: 'slen_t') -> "void":
     return _pyheclib.zcat_(ifltab, icunit, icdunt, inunit, cinstr, labrev, ldosrt, lcdcat, norecs, _cinstr_len)
 
-def zdtype_(ifltab, cpath, ndata, lfound, cdtype, idtype, _cpath_len, _cdtype_len):
+def zdtype_(ifltab: 'int *', cpath: 'char *', ndata: 'int *', lfound: 'int *', cdtype: 'char *', idtype: 'int *', _cpath_len: 'slen_t', _cdtype_len: 'slen_t') -> "void":
     return _pyheclib.zdtype_(ifltab, cpath, ndata, lfound, cdtype, idtype, _cpath_len, _cdtype_len)
 
-def zfname_(cin, cname, nname, lexist, _cin_len, _cname_len):
+def zfname_(cin: 'char *', cname: 'char *', nname: 'int *', lexist: 'int *', _cin_len: 'slen_t', _cname_len: 'slen_t') -> "void":
     return _pyheclib.zfname_(cin, cname, nname, lexist, _cin_len, _cname_len)
 
-def zgintl_(intl, chintl, nodata, istat, _chintl_len):
+def zgintl_(intl: 'int *', chintl: 'char *', nodata: 'int *', istat: 'int *', _chintl_len: 'slen_t') -> "void":
     return _pyheclib.zgintl_(intl, chintl, nodata, istat, _chintl_len)
 
-def zopen_(ifltab, cfname, istat, _cfname_len):
+def zopen_(ifltab: 'int *', cfname: 'char *', istat: 'int *', _cfname_len: 'slen_t') -> "void":
     return _pyheclib.zopen_(ifltab, cfname, istat, _cfname_len)
 
-def zset_(cflg, cstr, numb, _cflg_len, _cstr_len):
+def zset_(cflg: 'char *', cstr: 'char *', numb: 'int *', _cflg_len: 'slen_t', _cstr_len: 'slen_t') -> "void":
     return _pyheclib.zset_(cflg, cstr, numb, _cflg_len, _cstr_len)
 
-def zsitsx_(ifltab, cpath, itimes, values, nvalue, ibdate, jqual, lsqual, cunits, ctype, iuhead, nuhead, inflag, istat, _cpath_len, _cunits_len, _ctype_len):
+def zsitsx_(ifltab: 'int *', cpath: 'char *', itimes: 'int *', values: 'float *', nvalue: 'int *', ibdate: 'int *', jqual: 'int *', lsqual: 'int *', cunits: 'char *', ctype: 'char *', iuhead: 'int *', nuhead: 'int *', inflag: 'int *', istat: 'int *', _cpath_len: 'slen_t', _cunits_len: 'slen_t', _ctype_len: 'slen_t') -> "void":
     return _pyheclib.zsitsx_(ifltab, cpath, itimes, values, nvalue, ibdate, jqual, lsqual, cunits, ctype, iuhead, nuhead, inflag, istat, _cpath_len, _cunits_len, _ctype_len)
 
-def zritsxd_(ifltab, cpath, juls, istime, jule, ietime, itimes, dvalues, kvals, nvals, ibdate, iqual, lqual, lqread, cunits, ctype, iuhead, kuhead, nuhead, inflag, istat, _cpath_len, _cunits_len, _ctype_len):
+def zritsxd_(ifltab: 'int *', cpath: 'char *', juls: 'int *', istime: 'int *', jule: 'int *', ietime: 'int *', itimes: 'int *', dvalues: 'double *', kvals: 'int *', nvals: 'int *', ibdate: 'int *', iqual: 'int *', lqual: 'int *', lqread: 'int *', cunits: 'char *', ctype: 'char *', iuhead: 'int *', kuhead: 'int *', nuhead: 'int *', inflag: 'int *', istat: 'int *', _cpath_len: 'slen_t', _cunits_len: 'slen_t', _ctype_len: 'slen_t') -> "void":
     return _pyheclib.zritsxd_(ifltab, cpath, juls, istime, jule, ietime, itimes, dvalues, kvals, nvals, ibdate, iqual, lqual, lqread, cunits, ctype, iuhead, kuhead, nuhead, inflag, istat, _cpath_len, _cunits_len, _ctype_len)
 
-def zrpdd_(ifltab, cpath, nord, ncurve, ihoriz, c1unit, c1type, c2unit, c2type, dvalues, kvals, nvals, clabel, klabel, label, iuhead, kuhead, nuhead, istat, _cpath_len, _c1unit_len, _c1type_len, _c2unit_len, _c2type_len, _clabel_len):
+def zrpdd_(ifltab: 'int *', cpath: 'char *', nord: 'int *', ncurve: 'int *', ihoriz: 'int *', c1unit: 'char *', c1type: 'char *', c2unit: 'char *', c2type: 'char *', dvalues: 'double *', kvals: 'int *', nvals: 'int *', clabel: 'char *', klabel: 'int *', label: 'int *', iuhead: 'int *', kuhead: 'int *', nuhead: 'int *', istat: 'int *', _cpath_len: 'slen_t', _c1unit_len: 'slen_t', _c1type_len: 'slen_t', _c2unit_len: 'slen_t', _c2type_len: 'slen_t', _clabel_len: 'slen_t') -> "void":
     return _pyheclib.zrpdd_(ifltab, cpath, nord, ncurve, ihoriz, c1unit, c1type, c2unit, c2type, dvalues, kvals, nvals, clabel, klabel, label, iuhead, kuhead, nuhead, istat, _cpath_len, _c1unit_len, _c1type_len, _c2unit_len, _c2type_len, _clabel_len)
 
-def zrrtsx_(ifltab, cpath, cdate, ctime, nvals, svalues, jqual, lqual, lqread, iuhead, kuhead, nuhead, iofset, jcomp, istat, _cpath_len, _cdate_len, _ctime_len, _cunits_len, _ctype_len):
+def zrrtsx_(ifltab: 'int *', cpath: 'char *', cdate: 'char *', ctime: 'char *', nvals: 'int *', svalues: 'float *', jqual: 'int *', lqual: 'int *', lqread: 'int *', iuhead: 'int *', kuhead: 'int *', nuhead: 'int *', iofset: 'int *', jcomp: 'int *', istat: 'int *', _cpath_len: 'slen_t', _cdate_len: 'slen_t', _ctime_len: 'slen_t', _cunits_len: 'slen_t', _ctype_len: 'slen_t') -> "char *, char *":
     return _pyheclib.zrrtsx_(ifltab, cpath, cdate, ctime, nvals, svalues, jqual, lqual, lqread, iuhead, kuhead, nuhead, iofset, jcomp, istat, _cpath_len, _cdate_len, _ctime_len, _cunits_len, _ctype_len)
 
-def zrrtsxd_(ifltab, cpath, cdate, ctime, nvals, dvalues, jqual, lqual, lqread, iuhead, kuhead, nuhead, iofset, jcomp, istat, _cpath_len, _cdate_len, _ctime_len, _cunits_len, _ctype_len):
+def zrrtsxd_(ifltab: 'int *', cpath: 'char *', cdate: 'char *', ctime: 'char *', nvals: 'int *', dvalues: 'double *', jqual: 'int *', lqual: 'int *', lqread: 'int *', iuhead: 'int *', kuhead: 'int *', nuhead: 'int *', iofset: 'int *', jcomp: 'int *', istat: 'int *', _cpath_len: 'slen_t', _cdate_len: 'slen_t', _ctime_len: 'slen_t', _cunits_len: 'slen_t', _ctype_len: 'slen_t') -> "char *, char *":
     return _pyheclib.zrrtsxd_(ifltab, cpath, cdate, ctime, nvals, dvalues, jqual, lqual, lqread, iuhead, kuhead, nuhead, iofset, jcomp, istat, _cpath_len, _cdate_len, _ctime_len, _cunits_len, _ctype_len)
 
-def hec_zrrtsxd(ifltab, cpath, cdate, ctime, numpyvalues, jqual, lqual, lqread, iuhead, kuhead, nuhead, iofset, jcomp, istat, _cpath_len, _cdate_len, _ctime_len, _cunits_len, _ctype_len):
+def hec_zrrtsxd(ifltab: 'int *', cpath: 'char *', cdate: 'char *', ctime: 'char *', numpyvalues: 'double *', jqual: 'int *', lqual: 'int *', lqread: 'int *', iuhead: 'int *', kuhead: 'int *', nuhead: 'int *', iofset: 'int *', jcomp: 'int *', istat: 'int *', _cpath_len: 'slen_t', _cdate_len: 'slen_t', _ctime_len: 'slen_t', _cunits_len: 'slen_t', _ctype_len: 'slen_t') -> "char *, char *":
     return _pyheclib.hec_zrrtsxd(ifltab, cpath, cdate, ctime, numpyvalues, jqual, lqual, lqread, iuhead, kuhead, nuhead, iofset, jcomp, istat, _cpath_len, _cdate_len, _ctime_len, _cunits_len, _ctype_len)
 
-def zclose_(ifltab):
+def zclose_(ifltab: 'int *') -> "void":
     return _pyheclib.zclose_(ifltab)
 
-def fortranclose_(INPUT):
+def fortranclose_(INPUT: 'int *') -> "int":
     return _pyheclib.fortranclose_(INPUT)
 
-def fortranflush_(INPUT):
+def fortranflush_(INPUT: 'int *') -> "void":
     return _pyheclib.fortranflush_(INPUT)
 
-def fortranopen_(INPUT, filename, _filename_len):
+def fortranopen_(INPUT: 'int *', filename: 'char *', _filename_len: 'slen_t') -> "int":
     return _pyheclib.fortranopen_(INPUT, filename, _filename_len)
 
 
