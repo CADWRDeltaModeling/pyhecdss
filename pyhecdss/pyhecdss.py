@@ -12,6 +12,9 @@ class DSSFile:
         self.istat=pyheclib.new_intp()
         self.fname=fname
         self.isopen=False
+        self.open()
+    def __del__(self):
+        self.close()
     def open(self):
         """
         Open DSS file
@@ -38,8 +41,9 @@ class DSSFile:
         """
         Catalog DSS Files
         """
+        opened_already= self.isopen
         try:
-            self.open()
+            if not opened_already: self.open()
             icunit=pyheclib.new_intp() # unit (fortran) for catalog
             pyheclib.intp_assign(icunit,12)
             fcname=self.fname[:self.fname.rfind(".")]+".dsc"
@@ -69,7 +73,7 @@ class DSSFile:
             pyheclib.fortranclose_(icdunit)
             pyheclib.fortranflush_(inunit)
             pyheclib.fortranclose_(inunit)
-            self.close()
+            if not opened_already: self.close()
     def read_catalog(self):
         """
         Reads .dsd (condensed catalog) for the given dss file.
@@ -168,8 +172,10 @@ class DSSFile:
         if pathname D part contains a time window (START DATE "-" END DATE) and
         either start or end date is None it uses that to define start and end date
         """
+        opened_already=self.isopen
+        print('opened_already: ',opened_already,self.isopen)
         try:
-            self.open()
+            if not opened_already: self.open()
             interval = self.parse_pathname_epart(pathname)
             trim_first=False
             trim_last=False
@@ -247,4 +253,4 @@ class DSSFile:
                 df1 = df1
             return df1,cunits.strip(),ctype.strip()
         finally:
-            self.close()
+            if not opened_already: self.close()
