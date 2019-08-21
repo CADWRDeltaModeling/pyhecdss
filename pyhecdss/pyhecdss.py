@@ -96,6 +96,9 @@ class DSSFile:
         with open(fdname,'r') as fd:
             lines=fd.readlines()
         columns=['Tag','A Part','B Part','C Part','F Part','E Part','D Part']
+        if len(lines) < 9:
+            print("Warning: catalog is empty! for filename: ",fdname)
+            return None
         colline=lines[7]
         column_indices=[]
         for c in columns:
@@ -128,7 +131,7 @@ class DSSFile:
         if catalog_dataframe is None:
             catalog_dataframe=self.read_catalog()
         pdf=catalog_dataframe.iloc[:,[1,2,3,6,5,4]]
-        return pdf.apply(func=lambda x: '/'+('/'.join(x.to_list()))+'/',axis=1).to_list()
+        return pdf.apply(func=lambda x: '/'+('/'.join(list(x.values)))+'/',axis=1).values.tolist()
     def num_values_in_interval(self,sdstr,edstr,istr):
         """
         Get number of values in interval istr, using the start date and end date
@@ -173,7 +176,6 @@ class DSSFile:
         either start or end date is None it uses that to define start and end date
         """
         opened_already=self.isopen
-        print('opened_already: ',opened_already,self.isopen)
         try:
             if not opened_already: self.open()
             interval = self.parse_pathname_epart(pathname)

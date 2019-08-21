@@ -2,8 +2,8 @@
 setup.py file for SWIG example
 """
 
-from distutils.core import setup, Extension
-from distutils import sysconfig
+#from distutils.core import setup, Extension
+from setuptools import setup, Extension
 
 # Third-party modules - we depend on numpy for everything
 import re
@@ -53,4 +53,5 @@ setup(name='pyhecdss',
       description="""Swig for HECLIB""",
       ext_modules=[pyheclib_module],
       packages=["pyhecdss"],
+      install_requires=["numpy>=1.11,<2","pandas>=0.23"],
       )

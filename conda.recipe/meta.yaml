@@ -17,16 +17,19 @@ requirements:
   build:
     - python
     - setuptools
-    - numpy
+    - numpy {{ numpy }}
     - swig
+    - pandas >=0.23
   run:
-    - python
-    - numpy
-    - pandas
+    - python >=3.7
+    - numpy  >=1.11
+    - pandas >=0.23
 
 test:
   imports:
     - pyhecdss
+  #commands:
+  #  run_test.bat
 
 about:
   home:           "http://dwrrhapp0179.ad.water.ca.gov/gitea/nsandhu/pyhecdss"
