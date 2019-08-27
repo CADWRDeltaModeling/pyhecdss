@@ -175,41 +175,8 @@ def doubleArray_frompointer(t: 'double *') -> "doubleArray *":
     return _pyheclib.doubleArray_frompointer(t)
 
 
-def chrlnb_(cline: 'char *', ilast: 'int *', _cline_len: 'slen_t') -> "void":
-    return _pyheclib.chrlnb_(cline, ilast, _cline_len)
-
-def juldat_(jul: 'int *', istyle: 'int *', cdate: 'char *', ndate: 'int *', _cdate_len: 'slen_t') -> "void":
-    return _pyheclib.juldat_(jul, istyle, cdate, ndate, _cdate_len)
-
-def m2ihm_(min: 'int *', ctime: 'char *', _ctime_len: 'slen_t') -> "int":
-    return _pyheclib.m2ihm_(min, ctime, _ctime_len)
-
 def zcat_(ifltab: 'int *', icunit: 'int *', icdunt: 'int *', inunit: 'int *', cinstr: 'char *', labrev: 'int *', ldosrt: 'int *', lcdcat: 'int *', norecs: 'int *', _cinstr_len: 'slen_t') -> "void":
     return _pyheclib.zcat_(ifltab, icunit, icdunt, inunit, cinstr, labrev, ldosrt, lcdcat, norecs, _cinstr_len)
-
-def zdtype_(ifltab: 'int *', cpath: 'char *', ndata: 'int *', lfound: 'int *', cdtype: 'char *', idtype: 'int *', _cpath_len: 'slen_t', _cdtype_len: 'slen_t') -> "void":
-    return _pyheclib.zdtype_(ifltab, cpath, ndata, lfound, cdtype, idtype, _cpath_len, _cdtype_len)
-
-def zfname_(cin: 'char *', cname: 'char *', nname: 'int *', lexist: 'int *', _cin_len: 'slen_t', _cname_len: 'slen_t') -> "void":
-    return _pyheclib.zfname_(cin, cname, nname, lexist, _cin_len, _cname_len)
-
-def zgintl_(intl: 'int *', chintl: 'char *', nodata: 'int *', istat: 'int *', _chintl_len: 'slen_t') -> "void":
-    return _pyheclib.zgintl_(intl, chintl, nodata, istat, _chintl_len)
-
-def zopen_(ifltab: 'int *', cfname: 'char *', istat: 'int *', _cfname_len: 'slen_t') -> "void":
-    return _pyheclib.zopen_(ifltab, cfname, istat, _cfname_len)
-
-def zset_(cflg: 'char *', cstr: 'char *', numb: 'int *', _cflg_len: 'slen_t', _cstr_len: 'slen_t') -> "void":
-    return _pyheclib.zset_(cflg, cstr, numb, _cflg_len, _cstr_len)
-
-def zsitsx_(ifltab: 'int *', cpath: 'char *', itimes: 'int *', values: 'float *', nvalue: 'int *', ibdate: 'int *', jqual: 'int *', lsqual: 'int *', cunits: 'char *', ctype: 'char *', iuhead: 'int *', nuhead: 'int *', inflag: 'int *', istat: 'int *', _cpath_len: 'slen_t', _cunits_len: 'slen_t', _ctype_len: 'slen_t') -> "void":
-    return _pyheclib.zsitsx_(ifltab, cpath, itimes, values, nvalue, ibdate, jqual, lsqual, cunits, ctype, iuhead, nuhead, inflag, istat, _cpath_len, _cunits_len, _ctype_len)
-
-def zritsxd_(ifltab: 'int *', cpath: 'char *', juls: 'int *', istime: 'int *', jule: 'int *', ietime: 'int *', itimes: 'int *', dvalues: 'double *', kvals: 'int *', nvals: 'int *', ibdate: 'int *', iqual: 'int *', lqual: 'int *', lqread: 'int *', cunits: 'char *', ctype: 'char *', iuhead: 'int *', kuhead: 'int *', nuhead: 'int *', inflag: 'int *', istat: 'int *', _cpath_len: 'slen_t', _cunits_len: 'slen_t', _ctype_len: 'slen_t') -> "void":
-    return _pyheclib.zritsxd_(ifltab, cpath, juls, istime, jule, ietime, itimes, dvalues, kvals, nvals, ibdate, iqual, lqual, lqread, cunits, ctype, iuhead, kuhead, nuhead, inflag, istat, _cpath_len, _cunits_len, _ctype_len)
-
-def zclose_(ifltab: 'int *') -> "void":
-    return _pyheclib.zclose_(ifltab)
 
 def fortranclose_(INPUT: 'int *') -> "int":
     return _pyheclib.fortranclose_(INPUT)
@@ -219,6 +186,9 @@ def fortranflush_(INPUT: 'int *') -> "void":
 
 def fortranopen_(INPUT: 'int *', filename: 'char *', _filename_len: 'slen_t') -> "int":
     return _pyheclib.fortranopen_(INPUT, filename, _filename_len)
+
+def zclose_(ifltab: 'int *') -> "void":
+    return _pyheclib.zclose_(ifltab)
 
 def hec_datjul(cdate: 'char *') -> "int *, int *":
     return _pyheclib.hec_datjul(cdate)

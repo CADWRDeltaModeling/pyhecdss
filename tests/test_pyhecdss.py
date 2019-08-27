@@ -37,18 +37,21 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         vseries=values.iloc[:,0]
         self.assertTrue(abs(vseries.at['01JAN1990 0430']-1215.6314) < 1e-03)
     def test_write_ts(self):
-        fname="test1.dss"
-        dssfile=pyhecdss.DSSFile(fname)
-        pathname='/HYDRO/1_UPSTREAM/FLOW//30MIN/ZEROED-OUT/'
+        fname="test_rts1.dss"
+        dssfile1=pyhecdss.DSSFile(fname)
+        pathname='/TEST1/ONLY1/VANILLA//1DAY/JUST-ONES/'
         startDateStr,endDateStr='01JAN1990 0100','01JAN1991 0100'
         dtr=pd.date_range(startDateStr,endDateStr,freq='1D')
-        df=pd.DataFrame(np.zeros(len(dtr),'d'),index=dtr)
+        df=pd.DataFrame(np.ones(len(dtr),'d'),index=dtr)
         cunits, ctype ='UNITS', 'INST-VAL'
-        dssfile.write_rts(pathname, df, cunits, ctype)
-        df2,cunits2,ctype2=dssfile.read_rts(pathname,startDateStr,endDateStr)
+        dssfile2=pyhecdss.DSSFile(fname)
+        dssfile2.write_rts(pathname, df, cunits, ctype)
+        startDateStr="01JAN1990"
+        endDateStr="01JAN1991"
+        df2,cunits2,ctype2=dssfile1.read_rts(pathname,startDateStr,endDateStr)
         self.assertEqual(ctype, ctype2)
         self.assertEqual(cunits, cunits2)
-        self.assertEquals(df, df2)
+        self.assertEqual(1,df.iloc[0,0])
     def test_read_its(self):
         fname="test1.dss"
         dssfile=pyhecdss.DSSFile(fname)
@@ -61,6 +64,21 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         vseries=values.iloc[:,0]
         self.assertTrue(abs(vseries.at['01AUG2017 1215']-1.0) < 1e-03)
         self.assertTrue(abs(vseries.at['01MAY1971 0000']-1.0) < 1e-03)
+    def test_write_its(self):
+        fname="test_its1.dss"
+        dssfile1=pyhecdss.DSSFile(fname)
+        pathname='/TEST/ITS1/VANILLA//IR-YEAR/RANDOM/'
+        ta=pd.to_datetime(['01apr1990','05nov1991','07apr1997'])
+        df=pd.DataFrame([0.5,0.6,0.7],index=ta,columns=["random"])
+        cunits, ctype ='CCC', 'INST-VAL'
+        dssfile2=pyhecdss.DSSFile(fname)
+        dssfile2.write_its(pathname, df, cunits, ctype)
+        df2,cunits2,ctype2=dssfile1.read_its(pathname, "01JAN1990", "01JAN1998")
+        self.assertEqual(ctype, ctype2)
+        self.assertEqual(cunits, cunits2)
+        self.assertEqual(df2.iloc[0,0],df.iloc[0,0])
+        self.assertEqual(df2.iloc[1,0],df.iloc[1,0])
+        self.assertEqual(df2.iloc[2,0],df.iloc[2,0])
     def test_read_catalog(self):
         fname="test1.dss"
         dssfile=pyhecdss.DSSFile(fname)

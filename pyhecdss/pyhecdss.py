@@ -183,6 +183,23 @@ class DSSFile:
         return itime
     def parse_pathname_epart(self,pathname):
         return pathname.split('/')[1:7][4]
+    def _number_between(startDateStr, endDateStr, delta=pd.to_timedelta(1,'Y')):
+        return (pd.to_datetime(endDateStr)-pd.to_datetime(startDateStr))/delta
+    def _get_timedelta_unit(epart):
+        if 'YEAR' in epart:
+            return 'Y'
+        elif 'MON' in epart:
+            return 'M'
+        elif 'WEEK' in epart:
+            return 'W'
+        elif 'DAY' in epart:
+            return 'D'
+        elif 'HOUR' in epart:
+            return 'H'
+        elif 'MIN' in epart:
+            return 'm'
+        else:
+            raise Exception("Unknown epart to time delta conversion for epart=%s"%epart)
     def _pad_to_end_of_block(self, endDateStr, interval):
         if interval.find('MON') >=0 or interval.find('YEAR') >=0:
             buffer=pd.DateOffset(years=10)
@@ -193,6 +210,28 @@ class DSSFile:
         else:
             buffer=pd.DateOffset(days=1)
         return (pd.to_datetime(endDateStr) + buffer).strftime('%d%b%Y').upper()
+    def _get_istat_for_zrrtsxd(self, istat):
+        """
+        C        ISTAT:   Integer status parameter, indicating the
+        C                 successfullness of the retrieval.
+        C                 ISTAT = 0  All ok.
+        C                 ISTAT = 1  Some missing data (still ok)
+        C                 ISTAT = 2  Missing data blocks, but some data found
+        C                 ISTAT = 3  Combination of 1 and 2 (some data found)
+        C                 ISTAT = 4  No data found, although a pathname was read
+        C                 ISTAT = 5  No pathname(s) found
+        C                 ISTAT > 9  Illegal call to ZRRTS
+        """
+        if istat == 0:
+            return "All good"
+        msg = "ISTAT: %d --> "%istat
+        if istat == 1:  msg = msg + "Some missing data (still ok)"
+        elif istat == 2:  msg = msg + "Missing data blocks, but some data found"
+        elif istat == 3:  msg = msg + "Combination of 1 and 2 (some data found)"
+        elif istat == 4:  msg = msg + "No data found, although a pathname was read"
+        elif istat == 5:  msg = msg + "No pathname(s) found"
+        elif istat > 9:  msg = msg + "Illegal call to ZRRTS"
+        return msg
     def read_rts(self,pathname,startDateStr=None, endDateStr=None):
         """
         read regular time series for pathname.
@@ -225,6 +264,8 @@ class DSSFile:
             nvals,cunits,ctype,iofset,istat=pyheclib.hec_zrrtsxd(self.ifltab, pathname, cdate, ctime,
                 dvalues)
             #FIXME: raise appropriate exception for istat value
+            #if istat != 0:
+            #    raise Exception(self._get_istat_for_zrrtsxd(istat))
             #FIXME: deal with non-zero iofset
             freqoffset=DSSFile.EPART_FREQ_MAP[interval]
             if ctype == 'INST-VAL':
@@ -259,27 +300,11 @@ class DSSFile:
         pathname="/".join(parts)
         istat=pyheclib.hec_zsrtsxd(self.ifltab, pathname,
             df.index[0].strftime("%d%b%Y").upper(), df.index[0].strftime("%H%M"),
-            df[0].values, cunits[:8], ctype[:8])
+            df.iloc[:,0].values, cunits[:8], ctype[:8])
+        #    pyheclib.hec_zsrtsxd(d.ifltab, pathname, df.index[0].strftime("%d%b%Y").upper(), df.index[0].strftime("%H%M"), df.iloc[:,0].values, cunits[:8], ctype[:8])
         #FIXME: raise exception with appropriate message for istat values
         return istat
-    def _number_between(startDateStr, endDateStr, delta=pd.to_timedelta(1,'Y')):
-        return (pd.to_datetime(endDateStr)-pd.to_datetime(startDateStr))/delta
-    def _get_timedelta_unit(epart):
-        if 'YEAR' in epart:
-            return 'Y'
-        elif 'MON' in epart:
-            return 'M'
-        elif 'WEEK' in epart:
-            return 'W'
-        elif 'DAY' in epart:
-            return 'D'
-        elif 'HOUR' in epart:
-            return 'H'
-        elif 'MIN' in epart:
-            return 'm'
-        else:
-            raise Exception("Unknown epart to time delta conversion for epart=%s"%epart)
-    def read_its(self, pathname, guess_vals_per_block=10000):
+    def read_its(self, pathname, startDateStr=None, endDateStr=None, guess_vals_per_block=10000):
         """
         reads the entire irregular time series record. The timewindow is derived
         from the D-PART of the pathname so make sure to read that from the catalog
@@ -287,9 +312,16 @@ class DSSFile:
         """
         parts=pathname.split('/')
         epart=parts[5]
-        tw=list(map(lambda x: x.strip(),parts[4].split('-')))
-        startDateStr=tw[0]
-        endDateStr=self._pad_to_end_of_block(tw[1],epart)
+        if len(parts[4].strip()) == 0:
+            if startDateStr == None or endDateStr == None:
+                raise Exception("Either pathname D PART contains timewindow or specify in startDateStr and endDateStr for this call")
+            startDateStr=(pd.to_datetime(startDateStr)-pd.offsets.YearBegin(0)).strftime('%d%b%Y').upper()
+            endDateStr=(pd.to_datetime(endDateStr)+pd.offsets.YearBegin(0)).strftime('%d%b%Y').upper()
+            parts[4]=startDateStr+" - "+endDateStr
+        else:
+            tw=list(map(lambda x: x.strip(),parts[4].split('-')))
+            startDateStr=tw[0]
+            endDateStr=self._pad_to_end_of_block(tw[1],epart)
         juls,istat=pyheclib.hec_datjul(startDateStr)
         jule,istat=pyheclib.hec_datjul(endDateStr)
         ietime=istime=0
@@ -308,5 +340,44 @@ class DSSFile:
         df=pd.DataFrame(dvalues[:nvals],index=pd.to_timedelta(itimes[:nvals],unit='m')+base_date,columns=[pathname])
         return df, cunits.strip(), ctype.strip()
         #return nvals, dvalues, itimes, base_date, cunits, ctype
-    def write_its(self, pathname, df, cunits, ctype):
-        pass
+    def write_its(self, pathname, df, cunits, ctype, interval=None):
+        """
+        write irregular time series to the pathname.
+
+        The timewindow part of the pathname (D PART) is used to establish the base julian date
+        for storage of the time values (minutes relative to that base julian date)
+
+        The interval is the block size to store irregular time series for efficient access
+        interval values should be "IR-YEAR", "IR-MONTH" or "IR-DAY"
+
+        Uses the provided pandas.DataFrame df index (time) and values
+        and also stores the units (cunits) and type (ctype)
+        """
+        parts=pathname.split('/')
+        #parts[5]=DSSFile.FREQ_EPART_MAP[df.index.freq]
+        if interval:
+            parts[5]=interval
+        else:
+            if len(parts[5]) == 0:
+                raise Exception("Specify interval = IR-YEAR or IR-MONTH or IR-DAY or provide it the pathname (5th position)")
+        epart=parts[5]
+        if len(parts[4]) == 0:
+            startDateStr = (df.index[0]-pd.offsets.YearBegin(1)).strftime('%d%b%Y').upper()
+            endDateStr = (df.index[-1]+pd.offsets.YearBegin(0)).strftime('%d%b%Y').upper()
+            parts[4] = startDateStr + " - " + endDateStr
+        else:
+            tw=list(map(lambda x: x.strip(),parts[4].split('-')))
+            startDateStr=tw[0]
+            endDateStr=tw[1] #self._pad_to_end_of_block(tw[1],epart)
+        juls,istat=pyheclib.hec_datjul(startDateStr)
+        jule,istat=pyheclib.hec_datjul(endDateStr)
+        ietime=istime=0
+        pathname="/".join(parts)
+        itimes=df.index-pd.to_datetime(startDateStr)
+        itimes=itimes.total_seconds()/60 # time in minutes since base date juls
+        itimes=itimes.values.astype('i') # conver to integer numpy
+        inflag=1 # replace data (merging should be done in memory)
+        istat=pyheclib.hec_zsitsxd(self.ifltab, pathname,
+            itimes, df.iloc[:,0].values, juls, cunits, ctype, inflag)
+        #FIXME: raise exception with appropriate message for istat values
+        return istat

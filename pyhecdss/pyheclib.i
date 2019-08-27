@@ -85,6 +85,8 @@ void hec_zsrtsxd(int *ifltab,
 //Store irregular time series
 %apply (double* INPLACE_ARRAY1, int DIM1) {(double *dvalues, int ndvalue)};
 %apply (int* INPLACE_ARRAY1, int DIM1) {(int *itimes, int ntvalue)};
+%apply (int *INPUT) { int *ibdate};
+%apply ( int *INPUT ) { int *inflag };
 void hec_zsitsxd(int *ifltab,
   char *cpath, slen_t _cpath_len,
   int *itimes, int ntvalue,
@@ -116,7 +118,7 @@ int hec_zrrtsxd(int *ifltab,
 %apply (double* INPLACE_ARRAY1, int DIM1) {(double *dvalues, int kdvals)};
 %apply (int *OUTPUT) { int *nvals};
 %apply (int *OUTPUT) { int *ibdate};
-%apply (int *INPUT) { int *inflag};
+%apply ( int *INPUT ) { int *inflag };
 void hec_zritsxd(int *ifltab,
    char *cpath, slen_t _cpath_len,
    int *juls, int *istime,

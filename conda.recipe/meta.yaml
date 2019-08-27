@@ -12,6 +12,7 @@ source:
 build:
   number: 0
   #skip:           true
+  script: python setup.py install --single-version-externally-managed --record=record.txt
 
 requirements:
   build:
@@ -28,9 +29,13 @@ requirements:
 test:
   imports:
     - pyhecdss
-  #commands:
-  #  run_test.bat
-
+  source_files:
+    - tests
+  requires:
+    - pytest
+    - pytest-cov
+  commands:
+    - (setlocal && cd tests && pytest && endlocal)
 about:
   home:           "http://dwrrhapp0179.ad.water.ca.gov/gitea/nsandhu/pyhecdss"
   license:        "BSD"

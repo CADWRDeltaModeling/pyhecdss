@@ -3,3 +3,5 @@
 Write regular time series
 Read irregular time series as data frame + units + type
 Performance improvement to using np.zeros instead of np.array(range...)
+0.2.1
+Write irregular time series
