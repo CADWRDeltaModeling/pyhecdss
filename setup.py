@@ -3,7 +3,7 @@ setup.py file for SWIG example
 """
 
 #from distutils.core import setup, Extension
-from setuptools import setup, Extension
+from setuptools import setup, Extension, find_packages
 
 # Third-party modules - we depend on numpy for everything
 import re
@@ -33,6 +33,17 @@ def find_version(*file_paths):
         return version_match.group(1)
     raise RuntimeError("Unable to find version string.")
 
+with open('README.rst') as readme_file:
+    readme = readme_file.read()
+
+with open('HISTORY.rst') as history_file:
+    history = history_file.read()
+
+requirements = ["numpy>=1.11,<2","pandas>=0.23"]
+
+setup_requirements = ['pytest-runner', ]
+
+test_requirements = ['pytest', ]
 # check_numpy_i() #--This is failing due SSL certificate issue
 #
 pyheclib_module = Extension('pyhecdss._pyheclib',
@@ -48,10 +59,31 @@ pyheclib_module = Extension('pyhecdss._pyheclib',
                             )
 
 setup(name='pyhecdss',
-      version=find_version("pyhecdss","__init__.py"),
-      author="Nicky Sandhu",
-      description="""Swig for HECLIB""",
-      ext_modules=[pyheclib_module],
-      packages=["pyhecdss"],
-      install_requires=["numpy>=1.11,<2","pandas>=0.23"],
-      )
+    author="Nicky Sandhu",
+    author_email='psandhu@water.ca.gov',
+    classifiers=[
+        'Development Status :: 2 - Pre-Alpha',
+        'Intended Audience :: Developers',
+        'License :: OSI Approved :: MIT License',
+        'Natural Language :: English',
+        'Programming Language :: Python :: 3',
+        'Programming Language :: Python :: 3.4',
+        'Programming Language :: Python :: 3.5',
+        'Programming Language :: Python :: 3.6',
+        'Programming Language :: Python :: 3.7',
+    ],
+    description="For reading/writing HEC-DSS files",
+    install_requires=requirements,
+    license="MIT license",
+    long_description=readme + '\n\n' + history,
+    include_package_data=True,
+    keywords='pyhecdss',
+    packages=find_packages(include=['pyhecdss']),
+    setup_requires=setup_requirements,
+    test_suite='tests',
+    tests_require=test_requirements,
+    url='https://github.com/dwr-psandhu/pyhecdss',
+    version=find_version("pyhecdss","__init__.py"),
+    zip_safe=False,
+    ext_modules=[pyheclib_module],
+)

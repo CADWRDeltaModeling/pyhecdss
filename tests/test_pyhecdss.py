@@ -40,9 +40,15 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         fname="test1.dss"
         dssfile=pyhecdss.DSSFile(fname)
         pathname='/HYDRO/1_UPSTREAM/FLOW//30MIN/ZEROED-OUT/'
-        dtr=pd.date_range('01JAN1990 0100','01JAN1991 0100',freq='1D')
+        startDateStr,endDateStr='01JAN1990 0100','01JAN1991 0100'
+        dtr=pd.date_range(startDateStr,endDateStr,freq='1D')
         df=pd.DataFrame(np.zeros(len(dtr),'d'),index=dtr)
-        dssfile.write_rts(pathname, df, 'UNITS', 'INST-VAL')
+        cunits, ctype ='UNITS', 'INST-VAL'
+        dssfile.write_rts(pathname, df, cunits, ctype)
+        df2,cunits2,ctype2=dssfile.read_rts(pathname,startDateStr,endDateStr)
+        self.assertEqual(ctype, ctype2)
+        self.assertEqual(cunits, cunits2)
+        self.assertEquals(df, df2)
     def test_read_its(self):
         fname="test1.dss"
         dssfile=pyhecdss.DSSFile(fname)

@@ -5,14 +5,13 @@
 %pointer_functions(int,intp);
 %pointer_functions(double,doublep);
 
-/* C arrays */
+/* C arrays -- prefer numpy mapping if possible. */
 %include "carrays.i"
 %array_class(int, intArray);
 %array_class(double, doubleArray);
 
 /* strings */
 %include "cstring.i"
-
 
 %{
 #define SWIG_FILE_WITH_INIT
@@ -22,6 +21,7 @@
 
 %include <typemaps.i>
 
+// numpy mappings -- copied from numpy 1.15 -- upgrade only if needed
 %include "numpy.i"
 
 %init%{
@@ -29,24 +29,16 @@
 %}
 
 typedef int slen_t;
-//
-void      chrlnb_(char *cline, int *ilast, slen_t _cline_len);
-void      juldat_(int *jul, int *istyle, char *cdate, int *ndate, slen_t _cdate_len);
-int       m2ihm_(int *min, char *ctime, slen_t _ctime_len);
+// -- straight up heclib functions
 void      zcat_(int *ifltab, int *icunit, int *icdunt, int *inunit, char *cinstr, int *labrev, int *ldosrt, int *lcdcat, int *norecs, slen_t _cinstr_len);
-void      zdtype_(int *ifltab, char *cpath, int *ndata, int *lfound, char *cdtype, int *idtype, slen_t _cpath_len, slen_t _cdtype_len);
-void      zfname_(char *cin, char *cname, int *nname, int *lexist, slen_t _cin_len, slen_t _cname_len);
-void      zgintl_(int *intl, char *chintl, int *nodata, int *istat, slen_t _chintl_len);
-void      zopen_(int *ifltab, char *cfname, int *istat, slen_t _cfname_len);
-void      zset_(char *cflg, char *cstr, int *numb, slen_t _cflg_len, slen_t _cstr_len);
-void      zsitsx_(int *ifltab, char *cpath, int *itimes, float *values, int *nvalue, int *ibdate, int *jqual, int *lsqual, char *cunits, char *ctype, int *iuhead, int *nuhead, int *inflag, int *istat, slen_t _cpath_len, slen_t _cunits_len, slen_t _ctype_len);
-void      zritsxd_(int *ifltab, char *cpath, int *juls, int *istime, int *jule, int *ietime, int *itimes, double *dvalues, int *kvals, int *nvals, int *ibdate, int *iqual, int *lqual, int *lqread, char *cunits, char *ctype, int *iuhead, int *kuhead, int *nuhead, int *inflag, int *istat, slen_t _cpath_len, slen_t _cunits_len, slen_t _ctype_len);
-void      zclose_(int *ifltab);
 int       fortranclose_(int *INPUT);
 void      fortranflush_(int *INPUT);
 int       fortranopen_(int *INPUT, char *filename, slen_t _filename_len);
+void      zclose_(int *ifltab);
+
 /*
-* wrapper functions mappings
+* wrapper functions mappings. This is done to usually rearrange arguments so
+* that they fit one of the defined typemaps from swig or numpy.i
 */
 
 %apply (int *OUTPUT) { int *jul };
