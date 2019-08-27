@@ -7,9 +7,33 @@ class DSSFile:
     #DSS missing conventions
     MISSING_VALUE=-901.0
     MISSING_RECORD=-902.0
+    FREQ_EPART_MAP = {
+        pd.tseries.offsets.Minute(n=1):"1MIN",
+        pd.tseries.offsets.Minute(n=2):"2MIN",
+        pd.tseries.offsets.Minute(n=3):"3MIN",
+        pd.tseries.offsets.Minute(n=4):"4MIN",
+        pd.tseries.offsets.Minute(n=5):"5MIN",
+        pd.tseries.offsets.Minute(n=10):"10MIN",
+        pd.tseries.offsets.Minute(n=15):"15MIN",
+        pd.tseries.offsets.Minute(n=20):"20MIN",
+        pd.tseries.offsets.Minute(n=30):"30MIN",
+        pd.tseries.offsets.Hour(n=1):"1HOUR",
+        pd.tseries.offsets.Hour(n=2):"2HOUR",
+        pd.tseries.offsets.Hour(n=3):"3HOUR",
+        pd.tseries.offsets.Hour(n=4):"4HOUR",
+        pd.tseries.offsets.Hour(n=6):"6HOUR",
+        pd.tseries.offsets.Hour(n=8):"8HOUR",
+        pd.tseries.offsets.Hour(n=12):"12HOUR",
+        pd.tseries.offsets.Day(n=1):"1DAY",
+        pd.tseries.offsets.Week(n=1):"1WEEK",
+        pd.tseries.offsets.MonthEnd(n=1):"1MON",
+        pd.tseries.offsets.YearEnd(n=1):"1YEAR"
+    }
+    EPART_FREQ_MAP={v: k for k, v in FREQ_EPART_MAP.items()}
+    #
     def __init__(self,fname):
         self.ifltab=pyheclib.intArray(600)
-        self.istat=pyheclib.new_intp()
+        self.istat=0
         self.fname=fname
         self.isopen=False
         self.open()
@@ -20,7 +44,7 @@ class DSSFile:
         Open DSS file
         """
         if (self.isopen): return
-        pyheclib.zopen_(self.ifltab,self.fname,self.istat,len(self.fname))
+        self.istat=pyheclib.hec_zopen(self.ifltab,self.fname)
         self.isopen=True
     def close(self):
         """
@@ -184,7 +208,7 @@ class DSSFile:
             if startDateStr is None or endDateStr is None:
                 twstr=pathname.split("/")[4]
                 if twstr.find("-") < 0 :
-                    raise "No start date or end date and twstr is "+twstr
+                    raise Exception("No start date or end date and twstr is "+twstr)
                 sdate,edate=twstr.split("-")
                 if startDateStr is None:
                     trim_first=True
@@ -197,48 +221,16 @@ class DSSFile:
             sdate = pd.to_datetime(startDateStr)
             cdate = sdate.date().strftime('%d%b%Y').upper()
             ctime = ''.join(sdate.time().isoformat().split(':')[:2])
-            dvalues = np.array(range(nvals),'d')
-            jqual=pyheclib.new_intp()
-            lqual=pyheclib.new_intp()
-            lqread=pyheclib.new_intp()
-            iuhead=pyheclib.new_intp()
-            kuhead=pyheclib.new_intp()
-            nuhead=pyheclib.new_intp()
-            iofset=pyheclib.new_intp()
-            jcomp=pyheclib.new_intp()
-            istat=pyheclib.new_intp()
-            pyheclib.intp_assign(kuhead,0)
-            pyheclib.intp_assign(lqual,0)
-            _cpath_len=len(pathname)
-            _cdate_len=len(cdate)
-            _ctime_len=len(ctime)
-            _cunits_len=8
-            _ctype_len=8
-            cunits,ctype=pyheclib.hec_zrrtsxd(self.ifltab, pathname, cdate, ctime,
-                dvalues,
-                jqual, lqual, lqread, iuhead, kuhead, nuhead, iofset, jcomp, istat,
-                 _cpath_len, _cdate_len, _ctime_len, _cunits_len, _ctype_len)
-            pyheclib.delete_intp(jqual)
-            pyheclib.delete_intp(lqual)
-            pyheclib.delete_intp(lqread)
-            pyheclib.delete_intp(iuhead)
-            pyheclib.delete_intp(kuhead)
-            pyheclib.delete_intp(nuhead)
-            pyheclib.delete_intp(iofset)
-            pyheclib.delete_intp(jcomp)
-            pyheclib.delete_intp(istat)
-            if interval.find('MON') >= 0:
-                interval=interval.replace('MON','M')
-            elif interval.find('HOUR') >= 0:
-                interval=interval.replace('HOUR','H')
-            elif interval.find('DAY') >= 0:
-                interval=interval.replace('DAY','D')
-            elif interval.find('YEAR') >= 0:
-                interval=interval.replace('YEAR','Y')
+            dvalues = np.zeros(nvals,'d') # PERF: could be np.empty if all initialized
+            nvals,cunits,ctype,iofset,istat=pyheclib.hec_zrrtsxd(self.ifltab, pathname, cdate, ctime,
+                dvalues)
+            #FIXME: raise appropriate exception for istat value
+            #FIXME: deal with non-zero iofset
+            freqoffset=DSSFile.EPART_FREQ_MAP[interval]
             if ctype == 'INST-VAL':
-                dindex=pd.date_range(startDateStr,periods=nvals,freq=interval)
+                dindex=pd.date_range(startDateStr,periods=nvals,freq=freqoffset)
             else:
-                dindex=pd.period_range(startDateStr,periods=nvals,freq=interval)
+                dindex=pd.period_range(startDateStr,periods=nvals,freq=freqoffset)
             df1=pd.DataFrame(data=dvalues,index=dindex,columns=[pathname])
             df1.replace([DSSFile.MISSING_VALUE,DSSFile.MISSING_RECORD],[np.nan,np.nan],inplace=True)
             if trim_first or trim_last:
@@ -256,3 +248,65 @@ class DSSFile:
             return df1,cunits.strip(),ctype.strip()
         finally:
             if not opened_already: self.close()
+    def write_rts(self, pathname, df, cunits, ctype):
+        """
+        write time series to this DSS file with the given pathname.
+        The time series is passed in as a pandas DataFrame
+        and associated units and types of length no greater than 8.
+        """
+        parts=pathname.split('/')
+        parts[5]=DSSFile.FREQ_EPART_MAP[df.index.freq]
+        pathname="/".join(parts)
+        istat=pyheclib.hec_zsrtsxd(self.ifltab, pathname,
+            df.index[0].strftime("%d%b%Y").upper(), df.index[0].strftime("%H%M"),
+            df[0].values, cunits[:8], ctype[:8])
+        #FIXME: raise exception with appropriate message for istat values
+        return istat
+    def _number_between(startDateStr, endDateStr, delta=pd.to_timedelta(1,'Y')):
+        return (pd.to_datetime(endDateStr)-pd.to_datetime(startDateStr))/delta
+    def _get_timedelta_unit(epart):
+        if 'YEAR' in epart:
+            return 'Y'
+        elif 'MON' in epart:
+            return 'M'
+        elif 'WEEK' in epart:
+            return 'W'
+        elif 'DAY' in epart:
+            return 'D'
+        elif 'HOUR' in epart:
+            return 'H'
+        elif 'MIN' in epart:
+            return 'm'
+        else:
+            raise Exception("Unknown epart to time delta conversion for epart=%s"%epart)
+    def read_its(self, pathname, guess_vals_per_block=10000):
+        """
+        reads the entire irregular time series record. The timewindow is derived
+        from the D-PART of the pathname so make sure to read that from the catalog
+        before calling this function
+        """
+        parts=pathname.split('/')
+        epart=parts[5]
+        tw=list(map(lambda x: x.strip(),parts[4].split('-')))
+        startDateStr=tw[0]
+        endDateStr=self._pad_to_end_of_block(tw[1],epart)
+        juls,istat=pyheclib.hec_datjul(startDateStr)
+        jule,istat=pyheclib.hec_datjul(endDateStr)
+        ietime=istime=0
+        # guess how many values to be read based on e part approximation
+        ktvals=DSSFile._number_between(startDateStr, endDateStr,
+            pd.to_timedelta(1,unit=DSSFile._get_timedelta_unit(epart)))
+        ktvals=guess_vals_per_block*int(ktvals)
+        kdvals=ktvals
+        itimes = np.zeros(ktvals,'i')
+        dvalues = np.zeros(kdvals,'d')
+        inflag = 0; # Retrieve both values preceding and following time window in addtion to time window
+        nvals, ibdate, cunits, ctype, istat = pyheclib.hec_zritsxd(self.ifltab, pathname, juls, istime, jule, ietime, itimes, dvalues, inflag)
+        if nvals == ktvals:
+            raise Exception("More values than guessed! %d. Call with guess_vals_per_block > 10000 "%ktvals)
+        base_date=pd.to_datetime('31DEC1899')+pd.to_timedelta(ibdate,'D')
+        df=pd.DataFrame(dvalues[:nvals],index=pd.to_timedelta(itimes[:nvals],unit='m')+base_date,columns=[pathname])
+        return df, cunits.strip(), ctype.strip()
+        #return nvals, dvalues, itimes, base_date, cunits, ctype
+    def write_its(self, pathname, df, cunits, ctype):
+        pass

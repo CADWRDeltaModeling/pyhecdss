@@ -208,18 +208,6 @@ def zsitsx_(ifltab: 'int *', cpath: 'char *', itimes: 'int *', values: 'float *'
 def zritsxd_(ifltab: 'int *', cpath: 'char *', juls: 'int *', istime: 'int *', jule: 'int *', ietime: 'int *', itimes: 'int *', dvalues: 'double *', kvals: 'int *', nvals: 'int *', ibdate: 'int *', iqual: 'int *', lqual: 'int *', lqread: 'int *', cunits: 'char *', ctype: 'char *', iuhead: 'int *', kuhead: 'int *', nuhead: 'int *', inflag: 'int *', istat: 'int *', _cpath_len: 'slen_t', _cunits_len: 'slen_t', _ctype_len: 'slen_t') -> "void":
     return _pyheclib.zritsxd_(ifltab, cpath, juls, istime, jule, ietime, itimes, dvalues, kvals, nvals, ibdate, iqual, lqual, lqread, cunits, ctype, iuhead, kuhead, nuhead, inflag, istat, _cpath_len, _cunits_len, _ctype_len)
 
-def zrpdd_(ifltab: 'int *', cpath: 'char *', nord: 'int *', ncurve: 'int *', ihoriz: 'int *', c1unit: 'char *', c1type: 'char *', c2unit: 'char *', c2type: 'char *', dvalues: 'double *', kvals: 'int *', nvals: 'int *', clabel: 'char *', klabel: 'int *', label: 'int *', iuhead: 'int *', kuhead: 'int *', nuhead: 'int *', istat: 'int *', _cpath_len: 'slen_t', _c1unit_len: 'slen_t', _c1type_len: 'slen_t', _c2unit_len: 'slen_t', _c2type_len: 'slen_t', _clabel_len: 'slen_t') -> "void":
-    return _pyheclib.zrpdd_(ifltab, cpath, nord, ncurve, ihoriz, c1unit, c1type, c2unit, c2type, dvalues, kvals, nvals, clabel, klabel, label, iuhead, kuhead, nuhead, istat, _cpath_len, _c1unit_len, _c1type_len, _c2unit_len, _c2type_len, _clabel_len)
-
-def zrrtsx_(ifltab: 'int *', cpath: 'char *', cdate: 'char *', ctime: 'char *', nvals: 'int *', svalues: 'float *', jqual: 'int *', lqual: 'int *', lqread: 'int *', iuhead: 'int *', kuhead: 'int *', nuhead: 'int *', iofset: 'int *', jcomp: 'int *', istat: 'int *', _cpath_len: 'slen_t', _cdate_len: 'slen_t', _ctime_len: 'slen_t', _cunits_len: 'slen_t', _ctype_len: 'slen_t') -> "char *, char *":
-    return _pyheclib.zrrtsx_(ifltab, cpath, cdate, ctime, nvals, svalues, jqual, lqual, lqread, iuhead, kuhead, nuhead, iofset, jcomp, istat, _cpath_len, _cdate_len, _ctime_len, _cunits_len, _ctype_len)
-
-def zrrtsxd_(ifltab: 'int *', cpath: 'char *', cdate: 'char *', ctime: 'char *', nvals: 'int *', dvalues: 'double *', jqual: 'int *', lqual: 'int *', lqread: 'int *', iuhead: 'int *', kuhead: 'int *', nuhead: 'int *', iofset: 'int *', jcomp: 'int *', istat: 'int *', _cpath_len: 'slen_t', _cdate_len: 'slen_t', _ctime_len: 'slen_t', _cunits_len: 'slen_t', _ctype_len: 'slen_t') -> "char *, char *":
-    return _pyheclib.zrrtsxd_(ifltab, cpath, cdate, ctime, nvals, dvalues, jqual, lqual, lqread, iuhead, kuhead, nuhead, iofset, jcomp, istat, _cpath_len, _cdate_len, _ctime_len, _cunits_len, _ctype_len)
-
-def hec_zrrtsxd(ifltab: 'int *', cpath: 'char *', cdate: 'char *', ctime: 'char *', numpyvalues: 'double *', jqual: 'int *', lqual: 'int *', lqread: 'int *', iuhead: 'int *', kuhead: 'int *', nuhead: 'int *', iofset: 'int *', jcomp: 'int *', istat: 'int *', _cpath_len: 'slen_t', _cdate_len: 'slen_t', _ctime_len: 'slen_t', _cunits_len: 'slen_t', _ctype_len: 'slen_t') -> "char *, char *":
-    return _pyheclib.hec_zrrtsxd(ifltab, cpath, cdate, ctime, numpyvalues, jqual, lqual, lqread, iuhead, kuhead, nuhead, iofset, jcomp, istat, _cpath_len, _cdate_len, _ctime_len, _cunits_len, _ctype_len)
-
 def zclose_(ifltab: 'int *') -> "void":
     return _pyheclib.zclose_(ifltab)
 
@@ -231,5 +219,32 @@ def fortranflush_(INPUT: 'int *') -> "void":
 
 def fortranopen_(INPUT: 'int *', filename: 'char *', _filename_len: 'slen_t') -> "int":
     return _pyheclib.fortranopen_(INPUT, filename, _filename_len)
+
+def hec_datjul(cdate: 'char *') -> "int *, int *":
+    return _pyheclib.hec_datjul(cdate)
+
+def hec_zinqir(ifltab: 'int *', cflg: 'char *', calpha: 'char *', inumb: 'int *') -> "char *":
+    return _pyheclib.hec_zinqir(ifltab, cflg, calpha, inumb)
+
+def hec_zset(cflg: 'char *', cstr: 'char *', numb: 'int *') -> "void":
+    return _pyheclib.hec_zset(cflg, cstr, numb)
+
+def hec_zgintl(intl: 'int *', chintl: 'char *', _chintl_len: 'slen_t', istat: 'int *') -> "int *, int *, int *":
+    return _pyheclib.hec_zgintl(intl, chintl, _chintl_len, istat)
+
+def hec_zopen(ifltab: 'int *', cfname: 'char *') -> "int *":
+    return _pyheclib.hec_zopen(ifltab, cfname)
+
+def hec_zsrtsxd(ifltab: 'int *', cpath: 'char *', cdate: 'char *', ctime: 'char *', numpyvalues: 'double *', cunits: 'char *', ctype: 'char *') -> "int *":
+    return _pyheclib.hec_zsrtsxd(ifltab, cpath, cdate, ctime, numpyvalues, cunits, ctype)
+
+def hec_zsitsxd(ifltab: 'int *', cpath: 'char *', itimes: 'int *', dvalues: 'double *', ibdate: 'int *', cunits: 'char *', ctype: 'char *', inflag: 'int *') -> "int *":
+    return _pyheclib.hec_zsitsxd(ifltab, cpath, itimes, dvalues, ibdate, cunits, ctype, inflag)
+
+def hec_zrrtsxd(ifltab: 'int *', cpath: 'char *', cdate: 'char *', ctime: 'char *', numpyvalues: 'double *') -> "char *, char *, int *, int *":
+    return _pyheclib.hec_zrrtsxd(ifltab, cpath, cdate, ctime, numpyvalues)
+
+def hec_zritsxd(ifltab: 'int *', cpath: 'char *', juls: 'int *', istime: 'int *', jule: 'int *', ietime: 'int *', itimes: 'int *', dvalues: 'double *', inflag: 'int *') -> "int *, int *, char *, char *, int *":
+    return _pyheclib.hec_zritsxd(ifltab, cpath, juls, istime, jule, ietime, itimes, dvalues, inflag)
 
 
