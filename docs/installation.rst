@@ -12,14 +12,14 @@ To install pyhecdss, run this command in your terminal:
 
 .. code-block:: console
 
-    $ pip install pyhecdss
+    $ conda install -c dwr-psandhu pyhecdss
 
 This is the preferred method to install pyhecdss, as it will always install the most recent stable release.
 
-If you don't have `pip`_ installed, this `Python installation guide`_ can guide
+If you don't have `conda`_ installed, this `Python installation guide`_ can guide
 you through the process.
 
-.. _pip: https://pip.pypa.io
+.. _conda: https://docs.conda.io/projects/conda/en/latest/user-guide/install/
 .. _Python installation guide: http://docs.python-guide.org/en/latest/starting/installation/
 
 

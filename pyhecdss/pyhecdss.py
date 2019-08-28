@@ -247,8 +247,11 @@ class DSSFile:
             if startDateStr is None or endDateStr is None:
                 twstr=pathname.split("/")[4]
                 if twstr.find("-") < 0 :
-                    raise Exception("No start date or end date and twstr is "+twstr)
-                sdate,edate=twstr.split("-")
+                    if len(twstr.strip())==0:
+                        raise Exception("No start date or end date and twstr is "+twstr)
+                    sdate = edate = twstr
+                else:
+                    sdate,edate=twstr.split("-")
                 if startDateStr is None:
                     trim_first=True
                     startDateStr=sdate.strip()

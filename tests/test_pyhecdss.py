@@ -6,6 +6,12 @@ import os
 class TestPyDsUtilsBasic(unittest.TestCase):
     @classmethod
     def setupClass(cls):
+        os.remove('./test_rts1.dss')
+        os.remove('./test_rts1.dsc')
+        os.remove('./test_rts1.dsd')
+        os.remove('./test_its1.dss')
+        os.remove('./test_its1.dsc')
+        os.remove('./test_its1.dsd')
         os.remove('./test.dsc')
         os.remove('./test.dsd')
         os.remove('./test.dsk')
@@ -26,16 +32,16 @@ class TestPyDsUtilsBasic(unittest.TestCase):
     def test_read_ts(self):
         fname="test1.dss"
         dssfile=pyhecdss.DSSFile(fname)
-        pathname='/HYDRO/1_UPSTREAM/FLOW/01DEC1989 - 01JAN1990/30MIN/HISTORICAL_V81/'
-        sdate='30DEC1989'
+        pathname='/SAMPLE/SIN/WAVE/01JAN1990/15MIN/SAMPLE1/'
+        sdate='01JAN1990'
         edate='31JAN1990'
         values,units,periodtype=dssfile.read_rts(pathname,sdate,edate)
-        self.assertEqual(units,'CFS')
+        self.assertEqual(units,'UNIT-X')
         self.assertEqual(periodtype,'INST-VAL')
-        self.assertEqual(len(values['10JAN1990':'11JAN1990'].values),48*2)
+        self.assertEqual(len(values['10JAN1990':'11JAN1990'].values),96*2) # 96 15 min values per day
         #get series
         vseries=values.iloc[:,0]
-        self.assertTrue(abs(vseries.at['01JAN1990 0430']-1215.6314) < 1e-03)
+        self.assertTrue(abs(vseries.at['01JAN1990 0430']-(-0.42578)) < 1e-03)
     def test_write_ts(self):
         fname="test_rts1.dss"
         dssfile1=pyhecdss.DSSFile(fname)
@@ -43,7 +49,7 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         startDateStr,endDateStr='01JAN1990 0100','01JAN1991 0100'
         dtr=pd.date_range(startDateStr,endDateStr,freq='1D')
         df=pd.DataFrame(np.ones(len(dtr),'d'),index=dtr)
-        cunits, ctype ='UNITS', 'INST-VAL'
+        cunits, ctype ='CCC', 'INST-VAL'
         dssfile2=pyhecdss.DSSFile(fname)
         dssfile2.write_rts(pathname, df, cunits, ctype)
         startDateStr="01JAN1990"
@@ -55,15 +61,15 @@ class TestPyDsUtilsBasic(unittest.TestCase):
     def test_read_its(self):
         fname="test1.dss"
         dssfile=pyhecdss.DSSFile(fname)
-        pathname='/HIST+GATE/CHWST000/POS/01JAN1971 - 01JAN2017/IR-YEAR/DWR-OM-JOC-DSM2/'
+        pathname='/SAMPLE/ITS1/RANDOM/01JAN1990 - 01JAN1992/IR-YEAR/SAMPLE2/'
         values,units,periodtype=dssfile.read_its(pathname)
-        self.assertEqual(units,'POS')
+        self.assertEqual(units,'YYY')
         self.assertEqual(periodtype,'INST-VAL')
-        self.assertEqual(len(values),58257)
+        self.assertEqual(len(values),3)
         #get series
         vseries=values.iloc[:,0]
-        self.assertTrue(abs(vseries.at['01AUG2017 1215']-1.0) < 1e-03)
-        self.assertTrue(abs(vseries.at['01MAY1971 0000']-1.0) < 1e-03)
+        self.assertTrue(abs(vseries.at['01JAN1990 0317']-1.5) < 1e-03)
+        self.assertTrue(abs(vseries.at['05SEP1992 2349']-2.7) < 1e-03)
     def test_write_its(self):
         fname="test_its1.dss"
         dssfile1=pyhecdss.DSSFile(fname)

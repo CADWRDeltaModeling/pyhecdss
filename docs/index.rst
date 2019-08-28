@@ -1,6 +1,5 @@
 Welcome to pyhecdss's documentation!
 ======================================
-
 .. toctree::
    :maxdepth: 2
    :caption: Contents:
@@ -8,6 +7,7 @@ Welcome to pyhecdss's documentation!
    readme
    installation
    usage
+   notebooks/sample_dss_files.ipynb
    modules
    contributing
    authors

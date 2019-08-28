@@ -6,4 +6,4 @@ To use pyhecdss in a project::
 
     import pyhecdss
 
-.. autofunction:: pyhecdss
+See the sample notebook for detailed demonstration

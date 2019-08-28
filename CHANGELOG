@@ -5,3 +5,6 @@ Read irregular time series as data frame + units + type
 Performance improvement to using np.zeros instead of np.array(range...)
 0.2.1
 Write irregular time series
+0.2.2
+Update tests to use a smaller test.dss files
+Added sphinx documentation and demo notebook
