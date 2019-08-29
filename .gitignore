@@ -4,6 +4,7 @@
 *.dsk
 # SWIG wrappter generated
 *_wrap.c
+pyhecdss/pyheclib.py
 #----- Generic Ignores imported from cookiecutter
 # Byte-compiled / optimized / DLL files
 __pycache__/

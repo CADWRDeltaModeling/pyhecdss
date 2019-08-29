@@ -12,7 +12,8 @@ source:
 build:
   number: 0
   #skip:           true
-  script: python setup.py install --single-version-externally-managed --record=record.txt
+  script: LDSHARED=g++ python setup.py install --single-version-externally-managed --record=record.txt # [unix]
+  script: python setup.py install --single-version-externally-managed --record=record.txt # [win]
 
 requirements:
   build:
@@ -35,9 +36,10 @@ test:
     - pytest
     - pytest-cov
   commands:
-    - (setlocal && cd tests && pytest && endlocal)
+    - (setlocal && cd tests && pytest && endlocal) # [win]
+    - (cd tests; pytest) # [unix]
 about:
   home:           "http://dwrrhapp0179.ad.water.ca.gov/gitea/nsandhu/pyhecdss"
-  license:        "BSD"
-  license_family: "BSD"
-  summary:        "Read HECDSS as pandas DataFrame"
+  license:        "MIT"
+  license_family: "MIT"
+  summary:        "Read HECDSS timeseries as pandas DataFrame"

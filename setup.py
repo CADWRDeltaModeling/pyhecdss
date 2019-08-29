@@ -44,17 +44,35 @@ requirements = ["numpy>=1.11,<2","pandas>=0.23"]
 setup_requirements = ['pytest-runner', ]
 
 test_requirements = ['pytest', ]
+
+
+##------------ COMPILE LINK OPTIONS for Linux and Windows ----------------#
+import platform
+
+if platform.system() == 'Linux':
+    extra_links = ['-fno-exceptions','-lgfortran','-shared']  # linux
+    libs = ['heclib6-VE'] # linux
+    libdirs = ['./extensions'] # linux
+    compile_args=['-D_GNU_SOURCE','-fno-exceptions'] # linux
+elif platform.system() == 'Windows':
+    extra_links = ['/FORCE:UNRESOLVED'] # windows
+    libs = ['extensions/heclib6-VE', 'ifconsol','legacy_stdio_definitions', 'User32', 'gdi32', ] # windows
+    libdirs = [r'd:\dev\pydss\swig', r'C:\Program Files (x86)\IntelSWTools\compilers_and_libraries\windows\compiler\lib\intel64'] # windows
+    compile_args=[] # windows
+else:
+    raise Exception("Unknown platform: "+platform.system()+"! You are on your own")
+
+
 # check_numpy_i() #--This is failing due SSL certificate issue
 #
 pyheclib_module = Extension('pyhecdss._pyheclib',
                             sources=['pyhecdss/pyheclib.i',
                                      'pyhecdss/hecwrapper.c'],
                             swig_opts=['-python', '-py3'],
-                            libraries=['extensions/heclib6-VE', 'ifconsol',
-                                       'legacy_stdio_definitions', 'User32', 'gdi32', ],
-                            library_dirs=[
-                                r'd:\dev\pydss\swig', r'C:\Program Files (x86)\IntelSWTools\compilers_and_libraries\windows\compiler\lib\intel64'],
-                            extra_link_args=['/FORCE:UNRESOLVED'],
+                            libraries=libs,
+                            library_dirs=libdirs,
+                            extra_compile_args=compile_args,
+                            extra_link_args=extra_links,
                             include_dirs=[get_numpy_include()],
                             )
 
