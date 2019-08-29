@@ -4,14 +4,12 @@ channels:
   - conda-forge
   - defaults
 dependencies:
-  - conda=4.7*=py37
-  - conda-build=3.18.9=py37
-  - nbsphinx=0.4.*=py_0
-  - numpy=1.16.4=py37
-  - pandas=0.23.*=py37
-  - pyhecdss=*=py37
-  - pytest=5.*=py37
+  - conda
+  - conda-build
+  - nbsphinx
+  - numpy
+  - pandas
   - python=3.7.*
-  - setuptools=41.*=py37
-  - sphinx=2.*=py_0
+  - sphinx
+  - pyhecdss
 prefix: /home/psandhu/.conda/envs/dss
