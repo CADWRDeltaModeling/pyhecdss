@@ -1,41 +1,17 @@
-name: pyhecdss
+name: dss
 channels:
+  - cadwr-dms
+  - conda-forge
   - defaults
 dependencies:
-  - atomicwrites=1.3.0=py37_1
-  - attrs=19.1.0=py37_1
-  - blas=1.0=mkl
-  - ca-certificates=2019.5.15=1
-  - certifi=2019.6.16=py37_1
-  - colorama=0.4.1=py37_0
-  - icc_rt=2019.0.0=h0cc432a_1
-  - importlib_metadata=0.19=py37_0
-  - intel-openmp=2019.4=245
-  - mkl=2019.4=245
-  - more-itertools=7.2.0=py37_0
-  - numpy=1.11.3=py37h35d8231_12
-  - numpy-base=1.11.3=py37hc3f5095_12
-  - openssl=1.1.1c=he774522_1
-  - packaging=19.1=py37_0
-  - pandas=0.23.4=py37h830ac7b_0
-  - pip=19.2.2=py37_0
-  - pluggy=0.12.0=py_0
-  - py=1.8.0=py37_0
-  - pyparsing=2.4.2=py_0
-  - pytest=5.0.1=py37_0
-  - python=3.7.4=h5263a28_0
-  - python-dateutil=2.8.0=py37_0
-  - pytz=2019.2=py_0
-  - setuptools=41.0.1=py37_0
-  - six=1.12.0=py37_0
-  - sqlite=3.29.0=he774522_0
-  - vc=14.1=h0510ff6_4
-  - vs2015_runtime=14.15.26706=h3a45250_4
-  - wcwidth=0.1.7=py37_0
-  - wheel=0.33.4=py37_0
-  - wincertstore=0.2=py37_0
-  - zipp=0.5.2=py_0
-  - pip:
-    - pyhecdss==0.1.5
-prefix: d:\Programs\Anaconda2\envs\dsm2\envs\pyhecdss
-
+  - conda=4.7*=py37
+  - conda-build=3.18.9=py37
+  - nbsphinx=0.4.*=py_0
+  - numpy=1.16.4=py37
+  - pandas=0.23.*=py37
+  - pyhecdss=*=py37
+  - pytest=5.*=py37
+  - python=3.7.*
+  - setuptools=41.*=py37
+  - sphinx=2.*=py_0
+prefix: /home/psandhu/.conda/envs/dss
