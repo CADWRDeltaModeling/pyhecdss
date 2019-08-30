@@ -3,21 +3,13 @@ pyhecdss
 ========
 
 
-.. image:: https://img.shields.io/pypi/v/pyhecdss.svg
-        :target: https://pypi.python.org/pypi/pyhecdss
-
-.. image:: https://readthedocs.org/projects/pyhecdss/badge/?version=latest
-        :target: https://pyhecdss.readthedocs.io/en/latest/?badge=latest
-        :alt: Documentation Status
-
-
 For reading/writing HEC-DSS files [https://www.hec.usace.army.mil/software/hec-dss/]
 HEC-DSS is an ancient database used by the Army Corps of Engineers and prevalent
 in water related models. This module is a bridge to read and write time series
 data from this data format and read it into pandas DataFrame
 
 * Free software: MIT license
-* Documentation: https://pyhecdss.readthedocs.io.
+* Documentation: https://cadwrdeltamodeling.github.io/pyhecdss/
 
 
 Features
