@@ -1,0 +1,255 @@
+
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta charset="utf-8" />
+    <title>pyhecdss package &#8212; pyhecdss 0.2.3 documentation</title>
+    <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <script type="text/javascript" src="_static/language_data.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="Contributing" href="contributing.html" />
+    <link rel="prev" title="pyhecdss" href="modules.html" />
+   
+  <link rel="stylesheet" href="_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  <div class="section" id="pyhecdss-package">
+<h1>pyhecdss package<a class="headerlink" href="#pyhecdss-package" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="submodules">
+<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
+</div>
+<div class="section" id="module-pyhecdss.pyhecdss">
+<span id="pyhecdss-pyhecdss-module"></span><h2>pyhecdss.pyhecdss module<a class="headerlink" href="#module-pyhecdss.pyhecdss" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="pyhecdss.pyhecdss.DSSFile">
+<em class="property">class </em><code class="sig-prename descclassname">pyhecdss.pyhecdss.</code><code class="sig-name descname">DSSFile</code><span class="sig-paren">(</span><em class="sig-param">fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="attribute">
+<dt id="pyhecdss.pyhecdss.DSSFile.EPART_FREQ_MAP">
+<code class="sig-name descname">EPART_FREQ_MAP</code><em class="property"> = {'10MIN': &lt;10 * Minutes&gt;, '12HOUR': &lt;12 * Hours&gt;, '15MIN': &lt;15 * Minutes&gt;, '1DAY': &lt;Day&gt;, '1HOUR': &lt;Hour&gt;, '1MIN': &lt;Minute&gt;, '1MON': &lt;MonthEnd&gt;, '1WEEK': &lt;Week: weekday=None&gt;, '1YEAR': &lt;YearEnd: month=12&gt;, '20MIN': &lt;20 * Minutes&gt;, '2HOUR': &lt;2 * Hours&gt;, '2MIN': &lt;2 * Minutes&gt;, '30MIN': &lt;30 * Minutes&gt;, '3HOUR': &lt;3 * Hours&gt;, '3MIN': &lt;3 * Minutes&gt;, '4HOUR': &lt;4 * Hours&gt;, '4MIN': &lt;4 * Minutes&gt;, '5MIN': &lt;5 * Minutes&gt;, '6HOUR': &lt;6 * Hours&gt;, '8HOUR': &lt;8 * Hours&gt;}</em><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.EPART_FREQ_MAP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyhecdss.pyhecdss.DSSFile.FREQ_EPART_MAP">
+<code class="sig-name descname">FREQ_EPART_MAP</code><em class="property"> = {&lt;Minute&gt;: '1MIN', &lt;2 * Minutes&gt;: '2MIN', &lt;3 * Minutes&gt;: '3MIN', &lt;4 * Minutes&gt;: '4MIN', &lt;5 * Minutes&gt;: '5MIN', &lt;10 * Minutes&gt;: '10MIN', &lt;15 * Minutes&gt;: '15MIN', &lt;20 * Minutes&gt;: '20MIN', &lt;30 * Minutes&gt;: '30MIN', &lt;Hour&gt;: '1HOUR', &lt;2 * Hours&gt;: '2HOUR', &lt;3 * Hours&gt;: '3HOUR', &lt;4 * Hours&gt;: '4HOUR', &lt;6 * Hours&gt;: '6HOUR', &lt;8 * Hours&gt;: '8HOUR', &lt;12 * Hours&gt;: '12HOUR', &lt;Day&gt;: '1DAY', &lt;Week: weekday=None&gt;: '1WEEK', &lt;MonthEnd&gt;: '1MON', &lt;YearEnd: month=12&gt;: '1YEAR'}</em><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.FREQ_EPART_MAP" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyhecdss.pyhecdss.DSSFile.MISSING_RECORD">
+<code class="sig-name descname">MISSING_RECORD</code><em class="property"> = -902.0</em><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.MISSING_RECORD" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="attribute">
+<dt id="pyhecdss.pyhecdss.DSSFile.MISSING_VALUE">
+<code class="sig-name descname">MISSING_VALUE</code><em class="property"> = -901.0</em><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.MISSING_VALUE" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.catalog">
+<code class="sig-name descname">catalog</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.catalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Catalog DSS Files</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.close">
+<code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.close" title="Permalink to this definition">¶</a></dt>
+<dd><p>Close DSS File</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.get_pathnames">
+<code class="sig-name descname">get_pathnames</code><span class="sig-paren">(</span><em class="sig-param">catalog_dataframe=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.get_pathnames"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.get_pathnames" title="Permalink to this definition">¶</a></dt>
+<dd><p>converts a catalog data frame into pathnames
+If catalog_dataframe is None then reads catalog to populate it</p>
+<p>returns a list of pathnames (condensed version, i.e. D part is time window)
+/A PART/B PART/C PART/DPART (START DATE “-” END DATE)/E PART/F PART/</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.get_version">
+<code class="sig-name descname">get_version</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.get_version"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.get_version" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get version of DSS File</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.julian_day">
+<code class="sig-name descname">julian_day</code><span class="sig-paren">(</span><em class="sig-param">date</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.julian_day"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.julian_day" title="Permalink to this definition">¶</a></dt>
+<dd><p>get julian day for the date. (count of days since beginning of year)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.m2ihm">
+<code class="sig-name descname">m2ihm</code><span class="sig-paren">(</span><em class="sig-param">minute</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.m2ihm"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.m2ihm" title="Permalink to this definition">¶</a></dt>
+<dd><p>24 hour style from mins</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.num_values_in_interval">
+<code class="sig-name descname">num_values_in_interval</code><span class="sig-paren">(</span><em class="sig-param">sdstr</em>, <em class="sig-param">edstr</em>, <em class="sig-param">istr</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.num_values_in_interval"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.num_values_in_interval" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get number of values in interval istr, using the start date and end date
+string</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.open">
+<code class="sig-name descname">open</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.open"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.open" title="Permalink to this definition">¶</a></dt>
+<dd><p>Open DSS file</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.parse_pathname_epart">
+<code class="sig-name descname">parse_pathname_epart</code><span class="sig-paren">(</span><em class="sig-param">pathname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.parse_pathname_epart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.parse_pathname_epart" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.read_catalog">
+<code class="sig-name descname">read_catalog</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.read_catalog"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.read_catalog" title="Permalink to this definition">¶</a></dt>
+<dd><p>Reads .dsd (condensed catalog) for the given dss file.
+Will run catalog if it doesn’t exist or is out of date</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.read_its">
+<code class="sig-name descname">read_its</code><span class="sig-paren">(</span><em class="sig-param">pathname</em>, <em class="sig-param">startDateStr=None</em>, <em class="sig-param">endDateStr=None</em>, <em class="sig-param">guess_vals_per_block=10000</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.read_its"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.read_its" title="Permalink to this definition">¶</a></dt>
+<dd><p>reads the entire irregular time series record. The timewindow is derived
+from the D-PART of the pathname so make sure to read that from the catalog
+before calling this function</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.read_rts">
+<code class="sig-name descname">read_rts</code><span class="sig-paren">(</span><em class="sig-param">pathname</em>, <em class="sig-param">startDateStr=None</em>, <em class="sig-param">endDateStr=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.read_rts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.read_rts" title="Permalink to this definition">¶</a></dt>
+<dd><p>read regular time series for pathname.
+if pathname D part contains a time window (START DATE “-” END DATE) and
+either start or end date is None it uses that to define start and end date</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.write_its">
+<code class="sig-name descname">write_its</code><span class="sig-paren">(</span><em class="sig-param">pathname</em>, <em class="sig-param">df</em>, <em class="sig-param">cunits</em>, <em class="sig-param">ctype</em>, <em class="sig-param">interval=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.write_its"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.write_its" title="Permalink to this definition">¶</a></dt>
+<dd><p>write irregular time series to the pathname.</p>
+<p>The timewindow part of the pathname (D PART) is used to establish the base julian date
+for storage of the time values (minutes relative to that base julian date)</p>
+<p>The interval is the block size to store irregular time series for efficient access
+interval values should be “IR-YEAR”, “IR-MONTH” or “IR-DAY”</p>
+<p>Uses the provided pandas.DataFrame df index (time) and values
+and also stores the units (cunits) and type (ctype)</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.write_rts">
+<code class="sig-name descname">write_rts</code><span class="sig-paren">(</span><em class="sig-param">pathname</em>, <em class="sig-param">df</em>, <em class="sig-param">cunits</em>, <em class="sig-param">ctype</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.write_rts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.write_rts" title="Permalink to this definition">¶</a></dt>
+<dd><p>write time series to this DSS file with the given pathname.
+The time series is passed in as a pandas DataFrame
+and associated units and types of length no greater than 8.</p>
+</dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="section" id="module-pyhecdss">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-pyhecdss" title="Permalink to this headline">¶</a></h2>
+</div>
+</div>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="index.html">pyhecdss</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="readme.html">pyhecdss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/sample_dss_files.html">Sample Demo</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">pyhecdss</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">pyhecdss package</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="history.html">History</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="index.html">Documentation overview</a><ul>
+  <li><a href="modules.html">pyhecdss</a><ul>
+      <li>Previous: <a href="modules.html" title="previous chapter">pyhecdss</a></li>
+      <li>Next: <a href="contributing.html" title="next chapter">Contributing</a></li>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Nicky Sandhu.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="_sources/pyhecdss.rst.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
