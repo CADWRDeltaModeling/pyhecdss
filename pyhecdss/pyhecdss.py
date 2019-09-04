@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 import time
+import warnings
 class DSSFile:
     #DSS missing conventions
     MISSING_VALUE=-901.0
@@ -242,10 +243,10 @@ class DSSFile:
             warnings.warn("Found file but failed to load any data", RuntimeWarning)
         elif istat == 5:
             # should this be an exception?
-            warnings.warn("File not found", RuntimeWarning)
+            raise RuntimeError("File not found")
         elif istat > 9:
             # should this be an exception?
-            warnings.warn("Illegal internal call", RuntimeWarning)
+            raise RuntimeError("Illegal internal call")
             
     def read_rts(self,pathname,startDateStr=None, endDateStr=None):
         """
