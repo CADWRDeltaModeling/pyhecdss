@@ -14,6 +14,8 @@ void hec_zopen(int *ifltab, char *cfname, int cflen, int *istat);
 void hec_zinqir(int *ifltab, char *cflg, slen_t _cflg_len, char *calpha, slen_t _calpha_len, int *inumb);
 // set params
 void hec_zset(char *cflg, slen_t _cflg_len, char *cstr,  slen_t _cstr_len, int *numb);
+// versioning info for filename
+void hec_zfver(char *cfname, slen_t _cfname_len, char *cver, int *iver);
 // E part  <--> interval conversions
 void hec_zgintl(int *intl, char *chintl,slen_t _chintl_len, int *nodata, int *istat);
 // Store regular time series

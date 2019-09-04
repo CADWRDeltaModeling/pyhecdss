@@ -1,6 +1,11 @@
 =========
 CHANGELOG
 =========
+0.2.4
+-----
+
+Fixes issues #2, #4: get_version(), set_message_level(), set_program_name() now supported at module level
+Fixes issues #1: HECDSS marks periods by end of time stamp bug
 
 0.2.3
 -----

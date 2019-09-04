@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pyhecdss.pyhecdss &#8212; pyhecdss 0.2.3 documentation</title>
+    <title>pyhecdss.pyhecdss &#8212; pyhecdss 0.2.4 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -36,6 +36,25 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="c1"># some static functions</span>
+<div class="viewcode-block" id="set_message_level"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.set_message_level">[docs]</a><span class="k">def</span> <span class="nf">set_message_level</span><span class="p">(</span><span class="n">level</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    set the verbosity level of the HEC-DSS library</span>
+<span class="sd">    level ranges from &quot;bort&quot; only (level 0) to &quot;internal&quot; (level &gt;10)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">pyheclib</span><span class="o">.</span><span class="n">hec_zset</span><span class="p">(</span><span class="s1">&#39;MLEVEL&#39;</span><span class="p">,</span><span class="s1">&#39;&#39;</span><span class="p">,</span><span class="n">level</span><span class="p">)</span></div>
+<div class="viewcode-block" id="set_program_name"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.set_program_name">[docs]</a><span class="k">def</span> <span class="nf">set_program_name</span><span class="p">(</span><span class="n">program_name</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    sets the name of the program (upto 6 chars long) to store with data</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">name</span><span class="o">=</span><span class="n">program_name</span><span class="p">[:</span><span class="nb">min</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span><span class="nb">len</span><span class="p">(</span><span class="n">program_name</span><span class="p">))]</span>
+    <span class="n">pyheclib</span><span class="o">.</span><span class="n">hec_zset</span><span class="p">(</span><span class="s1">&#39;PROGRAM&#39;</span><span class="p">,</span><span class="n">name</span><span class="p">,</span><span class="mi">0</span><span class="p">)</span></div>
+<div class="viewcode-block" id="get_version"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.get_version">[docs]</a><span class="k">def</span> <span class="nf">get_version</span><span class="p">(</span><span class="n">fname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get version of DSS File</span>
+<span class="sd">    returns a tuple of string version of 4 characters and integer version</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">pyheclib</span><span class="o">.</span><span class="n">hec_zfver</span><span class="p">(</span><span class="n">fname</span><span class="p">);</span></div>
 <div class="viewcode-block" id="DSSFile"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile">[docs]</a><span class="k">class</span> <span class="nc">DSSFile</span><span class="p">:</span>
     <span class="c1">#DSS missing conventions</span>
     <span class="n">MISSING_VALUE</span><span class="o">=-</span><span class="mf">901.0</span>
@@ -90,10 +109,11 @@
 <div class="viewcode-block" id="DSSFile.get_version"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.get_version">[docs]</a>    <span class="k">def</span> <span class="nf">get_version</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Get version of DSS File</span>
+<span class="sd">        returns a tuple of string version of 4 characters and integer version</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="c1">#needs to be done on a closed file</span>
         <span class="k">if</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">isopen</span><span class="p">):</span> <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-        <span class="n">pyheclib</span><span class="o">.</span><span class="n">zfver_</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">,</span> <span class="n">char</span> <span class="o">*</span><span class="n">cver</span><span class="p">,</span> <span class="nb">int</span> <span class="o">*</span><span class="n">iver</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">fname</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">cver</span><span class="p">));</span></div>
+        <span class="k">return</span> <span class="n">pyheclib</span><span class="o">.</span><span class="n">hec_zfver</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">);</span></div>
 <div class="viewcode-block" id="DSSFile.catalog"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.catalog">[docs]</a>    <span class="k">def</span> <span class="nf">catalog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        Catalog DSS Files</span>
@@ -299,16 +319,20 @@
             <span class="n">dvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">nvals</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">)</span> <span class="c1"># PERF: could be np.empty if all initialized</span>
             <span class="n">nvals</span><span class="p">,</span><span class="n">cunits</span><span class="p">,</span><span class="n">ctype</span><span class="p">,</span><span class="n">iofset</span><span class="p">,</span><span class="n">istat</span><span class="o">=</span><span class="n">pyheclib</span><span class="o">.</span><span class="n">hec_zrrtsxd</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ifltab</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">cdate</span><span class="p">,</span> <span class="n">ctime</span><span class="p">,</span>
                 <span class="n">dvalues</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">iofset</span> <span class="o">!=</span><span class="mi">0</span> <span class="p">:</span>
+                <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Warning: iofset value of non-zero is not handled: &#39;</span><span class="p">,</span><span class="n">iofset</span><span class="p">)</span>
             <span class="c1">#FIXME: raise appropriate exception for istat value</span>
             <span class="c1">#if istat != 0:</span>
             <span class="c1">#    raise Exception(self._get_istat_for_zrrtsxd(istat))</span>
             <span class="c1">#FIXME: deal with non-zero iofset</span>
             <span class="n">freqoffset</span><span class="o">=</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">EPART_FREQ_MAP</span><span class="p">[</span><span class="n">interval</span><span class="p">]</span>
-            <span class="k">if</span> <span class="n">ctype</span> <span class="o">==</span> <span class="s1">&#39;INST-VAL&#39;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">ctype</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;INST&#39;</span><span class="p">):</span>
                 <span class="n">dindex</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">,</span><span class="n">periods</span><span class="o">=</span><span class="n">nvals</span><span class="p">,</span><span class="n">freq</span><span class="o">=</span><span class="n">freqoffset</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">dindex</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">period_range</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">,</span><span class="n">periods</span><span class="o">=</span><span class="n">nvals</span><span class="p">,</span><span class="n">freq</span><span class="o">=</span><span class="n">freqoffset</span><span class="p">)</span>
+                <span class="n">sp</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">Period</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">,</span><span class="n">freq</span><span class="o">=</span><span class="n">freqoffset</span><span class="p">)</span><span class="o">-</span><span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">frequencies</span><span class="o">.</span><span class="n">to_offset</span><span class="p">(</span><span class="n">freqoffset</span><span class="p">)</span>
+                <span class="n">dindex</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">period_range</span><span class="p">(</span><span class="n">sp</span><span class="p">,</span><span class="n">periods</span><span class="o">=</span><span class="n">nvals</span><span class="p">,</span><span class="n">freq</span><span class="o">=</span><span class="n">freqoffset</span><span class="p">)</span>
             <span class="n">df1</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">dvalues</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="n">dindex</span><span class="p">,</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">pathname</span><span class="p">])</span>
+            <span class="c1"># cleanup missing values --&gt; NAN, trim dataset and units and period type strings</span>
             <span class="n">df1</span><span class="o">.</span><span class="n">replace</span><span class="p">([</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">MISSING_VALUE</span><span class="p">,</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">MISSING_RECORD</span><span class="p">],[</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">,</span><span class="n">np</span><span class="o">.</span><span class="n">nan</span><span class="p">],</span><span class="n">inplace</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">trim_first</span> <span class="ow">or</span> <span class="n">trim_last</span><span class="p">:</span>
                 <span class="k">if</span> <span class="n">trim_first</span><span class="p">:</span>
