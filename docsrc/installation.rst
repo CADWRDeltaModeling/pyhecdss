@@ -32,13 +32,13 @@ You can either clone the public repository:
 
 .. code-block:: console
 
-    $ git clone git://github.com/dwr-psandhu/pyhecdss
+    $ git clone https://github.com/CADWRDeltaModeling/pyhecdss.git
 
 Or download the `tarball`_:
 
 .. code-block:: console
 
-    $ curl  -OL https://github.com/dwr-psandhu/pyhecdss/tarball/master
+    $ curl  -OL https://github.com/CADWRDeltaModeling/pyhecdss/tarball/master
 
 Once you have a copy of the source, you can install it with:
 
@@ -47,5 +47,5 @@ Once you have a copy of the source, you can install it with:
     $ python setup.py install
 
 
-.. _Github repo: https://github.com/dwr-psandhu/pyhecdss
-.. _tarball: https://github.com/dwr-psandhu/pyhecdss/tarball/master
+.. _Github repo: https://github.com/CADWRDeltaModeling/pyhecdss
+.. _tarball: https://github.com/CADWRDeltaModeling/pyhecdss/tarball/master
