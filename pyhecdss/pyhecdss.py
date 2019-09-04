@@ -3,6 +3,25 @@ import pandas as pd
 import numpy as np
 import os
 import time
+# some static functions
+def set_message_level(level):
+    """
+    set the verbosity level of the HEC-DSS library
+    level ranges from "bort" only (level 0) to "internal" (level >10)
+    """
+    pyheclib.hec_zset('MLEVEL','',level)
+def set_program_name(program_name):
+    """
+    sets the name of the program (upto 6 chars long) to store with data
+    """
+    name=program_name[:min(6,len(program_name))]
+    pyheclib.hec_zset('PROGRAM',name,0)
+def get_version(fname):
+    """
+    Get version of DSS File
+    returns a tuple of string version of 4 characters and integer version
+    """
+    return pyheclib.hec_zfver(fname);
 class DSSFile:
     #DSS missing conventions
     MISSING_VALUE=-901.0
@@ -57,10 +76,11 @@ class DSSFile:
     def get_version(self):
         """
         Get version of DSS File
+        returns a tuple of string version of 4 characters and integer version
         """
         #needs to be done on a closed file
         if (self.isopen): self.close()
-        pyheclib.zfver_(self.fname, char *cver, int *iver, len(fname), len(cver));
+        return pyheclib.hec_zfver(self.fname);
     def catalog(self):
         """
         Catalog DSS Files
@@ -266,16 +286,20 @@ class DSSFile:
             dvalues = np.zeros(nvals,'d') # PERF: could be np.empty if all initialized
             nvals,cunits,ctype,iofset,istat=pyheclib.hec_zrrtsxd(self.ifltab, pathname, cdate, ctime,
                 dvalues)
+            if iofset !=0 :
+                print('Warning: iofset value of non-zero is not handled: ',iofset)
             #FIXME: raise appropriate exception for istat value
             #if istat != 0:
             #    raise Exception(self._get_istat_for_zrrtsxd(istat))
             #FIXME: deal with non-zero iofset
             freqoffset=DSSFile.EPART_FREQ_MAP[interval]
-            if ctype == 'INST-VAL':
+            if ctype.startswith('INST'):
                 dindex=pd.date_range(startDateStr,periods=nvals,freq=freqoffset)
             else:
-                dindex=pd.period_range(startDateStr,periods=nvals,freq=freqoffset)
+                sp=pd.Period(startDateStr,freq=freqoffset)-pd.tseries.frequencies.to_offset(freqoffset)
+                dindex=pd.period_range(sp,periods=nvals,freq=freqoffset)
             df1=pd.DataFrame(data=dvalues,index=dindex,columns=[pathname])
+            # cleanup missing values --> NAN, trim dataset and units and period type strings
             df1.replace([DSSFile.MISSING_VALUE,DSSFile.MISSING_RECORD],[np.nan,np.nan],inplace=True)
             if trim_first or trim_last:
                 if trim_first:

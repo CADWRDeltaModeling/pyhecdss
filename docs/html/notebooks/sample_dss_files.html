@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Sample Demo &#8212; pyhecdss 0.2.3 documentation</title>
+    <title>Sample Demo &#8212; pyhecdss 0.2.4 documentation</title>
     <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
@@ -264,13 +264,36 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 </div>
+<div class="section" id="Setting-message-level-and-program-name">
+<h2>Setting message level and program name<a class="headerlink" href="#Setting-message-level-and-program-name" title="Permalink to this headline">¶</a></h2>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">pyhecdss</span><span class="o">.</span><span class="n">set_message_level</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># highest level with debug level of output</span>
+<span class="n">pyhecdss</span><span class="o">.</span><span class="n">set_message_level</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># quiets messages to only aborts</span>
+<span class="n">pyhecdss</span><span class="o">.</span><span class="n">set_program_name</span><span class="p">(</span><span class="s1">&#39;PYTHON&#39;</span><span class="p">)</span> <span class="c1"># name used when writing to DSS files</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pyhecdss</span><span class="o">.</span><span class="n">get_version</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span> <span class="c1"># version of DSS file format as a string and integer tuple</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+[&#39;6-VE&#39;, 6]
+</pre></div></div>
+</div>
+</div>
 <div class="section" id="A-regular-time-series">
 <h2>A regular time series<a class="headerlink" href="#A-regular-time-series" title="Permalink to this headline">¶</a></h2>
 <p>Create a pandas DataFrame of a sin wave and then write it out a pathname.</p>
 <p>The concepts of regular time series is defined in HEC-DSS documentation. I would direct you there. There a limited number of period intervals supported by HEC-DSS formats.</p>
 <p>In addition to the pathname concept (pathnames consist of 6 parts A-F represented in a path like format /A/B/C/D/E/F/) the DSS format also stores units and the type of period (instantaneous or period and value or average as INST-VAL, PER-AVG, PER-VAL).</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[19]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -280,7 +303,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -290,7 +313,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[20]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
@@ -304,7 +327,7 @@ div.rendered_html tbody tr:hover {
 <p>Create a pandas DataFrame and write it out as a pathname</p>
 <p>Again very similar to the regular time series. For details on the concepts please refer to documentation for HEC-DSS</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[21]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -313,7 +336,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -322,7 +345,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nboutput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[22]:
 </pre></div>
 </div>
 <div class="output_area highlight-none notranslate"><div class="highlight"><pre>
@@ -331,7 +354,7 @@ div.rendered_html tbody tr:hover {
 </div>
 </div>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[23]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -410,7 +433,7 @@ CATALOG FILE OLD: Generating...
 <h2>Catalog filtering<a class="headerlink" href="#Catalog-filtering" title="Permalink to this headline">¶</a></h2>
 <p>The catalog dataframe from the read_catalog method can use the pandas DataFrame filtering/indexing features to create a filtered data frame. That can be then used with get_pathnames to return the filtered list of pathnames</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[24]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -518,7 +541,7 @@ CATALOG FILE OLD: Generating...
 <div class="section" id="Reading-Timeseries-Data">
 <h2>Reading Timeseries Data<a class="headerlink" href="#Reading-Timeseries-Data" title="Permalink to this headline">¶</a></h2>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[25]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -645,7 +668,7 @@ CATALOG FILE OLD: Generating...
 <h2>Closing DSS File<a class="headerlink" href="#Closing-DSS-File" title="Permalink to this headline">¶</a></h2>
 <p>Closing the DSS File is important as multi user access is possible but might hang if the other thread is writing and holding on to an open handle</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[26]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -658,7 +681,7 @@ CATALOG FILE OLD: Generating...
 <h2>Plotting and other features<a class="headerlink" href="#Plotting-and-other-features" title="Permalink to this headline">¶</a></h2>
 <p>Once the data is available as a pandas DataFrame, all the features such as plotting and analysis is available through that library.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[27]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -671,14 +694,14 @@ CATALOG FILE OLD: Generating...
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sample_dss_files_19_0.png" src="../_images/notebooks_sample_dss_files_19_0.png" />
+<img alt="../_images/notebooks_sample_dss_files_21_0.png" src="../_images/notebooks_sample_dss_files_21_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sample_dss_files_19_1.png" src="../_images/notebooks_sample_dss_files_19_1.png" />
+<img alt="../_images/notebooks_sample_dss_files_21_1.png" src="../_images/notebooks_sample_dss_files_21_1.png" />
 </div>
 </div>
 </div>
@@ -709,6 +732,7 @@ CATALOG FILE OLD: Generating...
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Sample Demo</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Example-of-writing-a-DSS-File">Example of writing a DSS File</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Opening-and-closing-a-DSS-File">Opening and closing a DSS File</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Setting-message-level-and-program-name">Setting message level and program name</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#A-regular-time-series">A regular time series</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#An-irregular-time-series">An irregular time series</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Catalog-filtering">Catalog filtering</a></li>
@@ -720,6 +744,7 @@ CATALOG FILE OLD: Generating...
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">pyhecdss</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">CHANGELOG</a></li>
 </ul>
 
 <div class="relations">

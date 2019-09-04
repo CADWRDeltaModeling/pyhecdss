@@ -47,6 +47,12 @@ void      zclose_(int *ifltab);
 void hec_datjul(char *cdate,  slen_t _cdate_len, int *jul, int *ierr);
 %apply (char *STRING, int LENGTH) { (char *cflg, slen_t _cflg_len) };
 %apply (char *STRING, int LENGTH) { (char *cstr, slen_t _cstr_len) };
+
+// versioning info for filename
+%apply (char *STRING, int LENGTH) { (char *cfname, slen_t _cfname_len) };
+%cstring_bounded_output(char *cver, 4);
+%apply (int *OUTPUT) { int *iver };
+void hec_zfver(char *cfname, slen_t _cfname_len, char *cver, int *iver);
 %apply (int *OUTPUT) { int *numb };
 %cstring_bounded_output(char *calpha, 80);
 %apply (char *STRING, int LENGTH) { (char *calpha, slen_t _calpha_len) };

@@ -95,5 +95,21 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         dssfile=pyhecdss.DSSFile(fname)
         pathnames=dssfile.get_pathnames()
         self.assertTrue(len(pathnames)>0)
+    def test_version(self):
+        fname="test1.dss"
+        cver,iver=pyhecdss.get_version(fname)
+        self.assertEqual(6,iver)
+        self.assertEqual('6-VE',cver)
+    def test_set_message_level(self):
+        fname="test1.dss"
+        print("No easy way to check automatically. Just look at screen and see if lot of messages are printed?")
+        pyhecdss.set_message_level(10)
+        d1=pyhecdss.DSSFile(fname)
+        d1.close()
+        print('No easy way to check automatically. Just look at screen and no DSS messages should be printed')
+        pyhecdss.set_message_level(0)
+        d1=pyhecdss.DSSFile(fname)
+        d1.close()
+
 if __name__ == '__main__':
     unittest.main()

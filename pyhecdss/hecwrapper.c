@@ -11,6 +11,11 @@ void hec_zopen(int *ifltab, char *cfname, int cflen, int *istat){
 void hec_zinqir(int *ifltab, char *cflg, slen_t _cflg_len, char *calpha, slen_t _calpha_len, int *inumb){
   zinqir_(ifltab, cflg, calpha, inumb, _cflg_len, _calpha_len);
 }
+// versioning info for filename
+void hec_zfver(char *cfname, slen_t _cfname_len, char *cver, int *iver){
+  slen_t _cver_len=4; // refer to pyheclib.i for length match
+  zfver_(cfname, cver, iver, _cfname_len, _cver_len);
+}
 // set params
 void hec_zset(char *cflg, slen_t _cflg_len, char *cstr,  slen_t _cstr_len, int *numb){
   zset_(cflg, cstr, numb, _cflg_len, _cstr_len);
