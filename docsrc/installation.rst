@@ -46,6 +46,16 @@ Once you have a copy of the source, you can install it with:
 
     $ python setup.py install
 
+This library has dependencies on Intel Fortran AND Intel Compiler for Windows and Intel Parallel Composer libraries. You will need the following
+libraries 
+
+.. code-block::
+
+     setup.py changes --
+     libs = ['extensions/heclib6-VE', 'extensions/ifconsol','extensions/libifcoremt',
+             'extensions/libifport','extensions/libmmt','extensions/libirc',
+             'extensions/svml_disp','extensions/IFWIN','legacy_stdio_definitions',
+             'User32', 'gdi32', ] 
 
 .. _Github repo: https://github.com/CADWRDeltaModeling/pyhecdss
 .. _tarball: https://github.com/CADWRDeltaModeling/pyhecdss/tarball/master
