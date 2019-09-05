@@ -110,6 +110,14 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         pyhecdss.set_message_level(0)
         d1=pyhecdss.DSSFile(fname)
         d1.close()
+    def test_except_on_bad_path(self):
+        fname="test1.dss"
+        dssfile=pyhecdss.DSSFile(fname)
+        pathname='/SAMPLE/INVALID_MARKER/WAVE/01JAN1990/15MIN/SAMPLE1/'
+        sdate='01JAN1990'
+        edate='31JAN1990'
+        # values,units,periodtype=dssfile.read_rts(pathname,sdate,edate)
+        self.assertRasies(RuntimeException, dssfile.read_rts(pathname,sdate,edate))
 
 if __name__ == '__main__':
     unittest.main()
