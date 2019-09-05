@@ -71,7 +71,7 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         self.assertTrue(abs(vseries.at['01JAN1990 0317']-1.5) < 1e-03)
         self.assertTrue(abs(vseries.at['05SEP1992 2349']-2.7) < 1e-03)
     def test_write_its(self):
-        fname="test_its1.dss"
+        fname="test1.dss"
         dssfile1=pyhecdss.DSSFile(fname)
         pathname='/TEST/ITS1/VANILLA//IR-YEAR/RANDOM/'
         ta=pd.to_datetime(['01apr1990','05nov1991','07apr1997'])
@@ -117,7 +117,7 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         sdate='01JAN1990'
         edate='31JAN1990'
         # values,units,periodtype=dssfile.read_rts(pathname,sdate,edate)
-        self.assertRasies(RuntimeException, dssfile.read_rts(pathname,sdate,edate))
+        self.assertRaises(RuntimeError, dssfile.read_rts, pathname, sdate, edate)
 
 if __name__ == '__main__':
     unittest.main()

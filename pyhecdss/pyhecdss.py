@@ -110,6 +110,7 @@ class DSSFile:
                 labrev, ldsort, lcdcat, nrecs, len(cinstr))
             return pyheclib.intp_value(nrecs)
         except:
+            #warnings.warn("Exception occurred while catalogging")
             pass
         finally:
             pyheclib.fortranflush_(icunit)
@@ -258,12 +259,12 @@ class DSSFile:
             # everything is ok
             pass
         elif istat == 1 or istat == 2 or istat == 3:
-            warnings.warn("Some data or data blocks are missing [istat=" + istat + "]", RuntimeWarning)
+            warnings.warn("Some data or data blocks are missing [istat=" + str(istat) + "]", RuntimeWarning)
         elif istat == 4:
             warnings.warn("Found file but failed to load any data", RuntimeWarning)
         elif istat == 5:
             # should this be an exception?
-            raise RuntimeError("File not found")
+            raise RuntimeError("Path not found")
         elif istat > 9:
             # should this be an exception?
             raise RuntimeError("Illegal internal call")
@@ -307,7 +308,7 @@ class DSSFile:
             #FIXME: raise appropriate exception for istat value
             #if istat != 0:
             #    raise Exception(self._get_istat_for_zrrtsxd(istat))
-            _respond_to_istat_state(istat)
+            self._respond_to_istat_state(istat)
             
             #FIXME: deal with non-zero iofset
             freqoffset=DSSFile.EPART_FREQ_MAP[interval]
@@ -347,7 +348,7 @@ class DSSFile:
             df.index[0].strftime("%d%b%Y").upper(), df.index[0].strftime("%H%M"),
             df.iloc[:,0].values, cunits[:8], ctype[:8])
         #    pyheclib.hec_zsrtsxd(d.ifltab, pathname, df.index[0].strftime("%d%b%Y").upper(), df.index[0].strftime("%H%M"), df.iloc[:,0].values, cunits[:8], ctype[:8])
-        _respond_to_istat_state(istat)
+        self._respond_to_istat_state(istat)
     def read_its(self, pathname, startDateStr=None, endDateStr=None, guess_vals_per_block=10000):
         """
         reads the entire irregular time series record. The timewindow is derived
@@ -378,7 +379,7 @@ class DSSFile:
         dvalues = np.zeros(kdvals,'d')
         inflag = 0; # Retrieve both values preceding and following time window in addtion to time window
         nvals, ibdate, cunits, ctype, istat = pyheclib.hec_zritsxd(self.ifltab, pathname, juls, istime, jule, ietime, itimes, dvalues, inflag)
-        _respond_to_istat_state(istat)
+        self._respond_to_istat_state(istat)
         if nvals == ktvals:
             raise Exception("More values than guessed! %d. Call with guess_vals_per_block > 10000 "%ktvals)
         base_date=pd.to_datetime('31DEC1899')+pd.to_timedelta(ibdate,'D')
@@ -424,5 +425,5 @@ class DSSFile:
         inflag=1 # replace data (merging should be done in memory)
         istat=pyheclib.hec_zsitsxd(self.ifltab, pathname,
             itimes, df.iloc[:,0].values, juls, cunits, ctype, inflag)
-        _respond_to_istat_state(istat)
+        self._respond_to_istat_state(istat)
         #return istat
