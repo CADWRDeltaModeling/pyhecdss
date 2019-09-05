@@ -1,6 +1,12 @@
 =========
 CHANGELOG
 =========
+0.2.5
+-----
+Merged pull request from Henry:
+issues warnings or throws exception based on return value from functions
+fixed minor typo(s), added tests
+
 0.2.4
 -----
 

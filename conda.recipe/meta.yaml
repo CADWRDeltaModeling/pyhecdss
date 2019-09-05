@@ -6,7 +6,6 @@ package:
   version:        "{{ data['version'] }}"
 
 source:
-  #git_url: http://dwrrhapp0179.ad.water.ca.gov/gitea/nsandhu/pyhecdss.git
   path: ..
 
 build:
@@ -39,7 +38,7 @@ test:
     - (setlocal && cd tests && pytest && endlocal) # [win]
     - (cd tests; pytest) # [unix]
 about:
-  home:           "http://dwrrhapp0179.ad.water.ca.gov/gitea/nsandhu/pyhecdss"
+  home:           "https://github.com/CADWRDeltaModeling/pyhecdss"
   license:        "MIT"
   license_family: "MIT"
   summary:        "Read HECDSS timeseries as pandas DataFrame"
