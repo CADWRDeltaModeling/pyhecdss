@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 import os
 import time
+import warnings
 # some static functions
 def set_message_level(level):
     """
@@ -199,7 +200,7 @@ class DSSFile:
         """
         ihr=minute/60
         imin=minute-(ihr*60)
-        itime=ihr*100+min
+        itime=ihr*100+imin
         return itime
     def parse_pathname_epart(self,pathname):
         return pathname.split('/')[1:7][4]
@@ -252,6 +253,21 @@ class DSSFile:
         elif istat == 5:  msg = msg + "No pathname(s) found"
         elif istat > 9:  msg = msg + "Illegal call to ZRRTS"
         return msg
+    def _respond_to_istat_state(self, istat):
+        if istat == 0:
+            # everything is ok
+            pass
+        elif istat == 1 or istat == 2 or istat == 3:
+            warnings.warn("Some data or data blocks are missing [istat=" + istat + "]", RuntimeWarning)
+        elif istat == 4:
+            warnings.warn("Found file but failed to load any data", RuntimeWarning)
+        elif istat == 5:
+            # should this be an exception?
+            raise RuntimeError("File not found")
+        elif istat > 9:
+            # should this be an exception?
+            raise RuntimeError("Illegal internal call")
+            
     def read_rts(self,pathname,startDateStr=None, endDateStr=None):
         """
         read regular time series for pathname.
@@ -291,6 +307,8 @@ class DSSFile:
             #FIXME: raise appropriate exception for istat value
             #if istat != 0:
             #    raise Exception(self._get_istat_for_zrrtsxd(istat))
+            _respond_to_istat_state(istat)
+            
             #FIXME: deal with non-zero iofset
             freqoffset=DSSFile.EPART_FREQ_MAP[interval]
             if ctype.startswith('INST'):
@@ -329,8 +347,7 @@ class DSSFile:
             df.index[0].strftime("%d%b%Y").upper(), df.index[0].strftime("%H%M"),
             df.iloc[:,0].values, cunits[:8], ctype[:8])
         #    pyheclib.hec_zsrtsxd(d.ifltab, pathname, df.index[0].strftime("%d%b%Y").upper(), df.index[0].strftime("%H%M"), df.iloc[:,0].values, cunits[:8], ctype[:8])
-        #FIXME: raise exception with appropriate message for istat values
-        return istat
+        _respond_to_istat_state(istat)
     def read_its(self, pathname, startDateStr=None, endDateStr=None, guess_vals_per_block=10000):
         """
         reads the entire irregular time series record. The timewindow is derived
@@ -361,6 +378,7 @@ class DSSFile:
         dvalues = np.zeros(kdvals,'d')
         inflag = 0; # Retrieve both values preceding and following time window in addtion to time window
         nvals, ibdate, cunits, ctype, istat = pyheclib.hec_zritsxd(self.ifltab, pathname, juls, istime, jule, ietime, itimes, dvalues, inflag)
+        _respond_to_istat_state(istat)
         if nvals == ktvals:
             raise Exception("More values than guessed! %d. Call with guess_vals_per_block > 10000 "%ktvals)
         base_date=pd.to_datetime('31DEC1899')+pd.to_timedelta(ibdate,'D')
@@ -406,5 +424,5 @@ class DSSFile:
         inflag=1 # replace data (merging should be done in memory)
         istat=pyheclib.hec_zsitsxd(self.ifltab, pathname,
             itimes, df.iloc[:,0].values, juls, cunits, ctype, inflag)
-        #FIXME: raise exception with appropriate message for istat values
-        return istat
+        _respond_to_istat_state(istat)
+        #return istat
