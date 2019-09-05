@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pyhecdss.pyhecdss &#8212; pyhecdss 0.2.4 documentation</title>
+    <title>pyhecdss.pyhecdss &#8212; pyhecdss 0.2.5 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -36,6 +36,7 @@
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
+<span class="kn">import</span> <span class="nn">warnings</span>
 <span class="c1"># some static functions</span>
 <div class="viewcode-block" id="set_message_level"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.set_message_level">[docs]</a><span class="k">def</span> <span class="nf">set_message_level</span><span class="p">(</span><span class="n">level</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -142,6 +143,7 @@
                 <span class="n">labrev</span><span class="p">,</span> <span class="n">ldsort</span><span class="p">,</span> <span class="n">lcdcat</span><span class="p">,</span> <span class="n">nrecs</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">cinstr</span><span class="p">))</span>
             <span class="k">return</span> <span class="n">pyheclib</span><span class="o">.</span><span class="n">intp_value</span><span class="p">(</span><span class="n">nrecs</span><span class="p">)</span>
         <span class="k">except</span><span class="p">:</span>
+            <span class="c1">#warnings.warn(&quot;Exception occurred while catalogging&quot;)</span>
             <span class="k">pass</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="n">pyheclib</span><span class="o">.</span><span class="n">fortranflush_</span><span class="p">(</span><span class="n">icunit</span><span class="p">)</span>
@@ -232,7 +234,7 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">ihr</span><span class="o">=</span><span class="n">minute</span><span class="o">/</span><span class="mi">60</span>
         <span class="n">imin</span><span class="o">=</span><span class="n">minute</span><span class="o">-</span><span class="p">(</span><span class="n">ihr</span><span class="o">*</span><span class="mi">60</span><span class="p">)</span>
-        <span class="n">itime</span><span class="o">=</span><span class="n">ihr</span><span class="o">*</span><span class="mi">100</span><span class="o">+</span><span class="nb">min</span>
+        <span class="n">itime</span><span class="o">=</span><span class="n">ihr</span><span class="o">*</span><span class="mi">100</span><span class="o">+</span><span class="n">imin</span>
         <span class="k">return</span> <span class="n">itime</span></div>
 <div class="viewcode-block" id="DSSFile.parse_pathname_epart"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.parse_pathname_epart">[docs]</a>    <span class="k">def</span> <span class="nf">parse_pathname_epart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pathname</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">pathname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="mi">7</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span></div>
@@ -285,6 +287,21 @@
         <span class="k">elif</span> <span class="n">istat</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>  <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">+</span> <span class="s2">&quot;No pathname(s) found&quot;</span>
         <span class="k">elif</span> <span class="n">istat</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">:</span>  <span class="n">msg</span> <span class="o">=</span> <span class="n">msg</span> <span class="o">+</span> <span class="s2">&quot;Illegal call to ZRRTS&quot;</span>
         <span class="k">return</span> <span class="n">msg</span>
+    <span class="k">def</span> <span class="nf">_respond_to_istat_state</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">istat</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">istat</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="c1"># everything is ok</span>
+            <span class="k">pass</span>
+        <span class="k">elif</span> <span class="n">istat</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">istat</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">istat</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Some data or data blocks are missing [istat=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">istat</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">istat</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;Found file but failed to load any data&quot;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">istat</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
+            <span class="c1"># should this be an exception?</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Path not found&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">istat</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">:</span>
+            <span class="c1"># should this be an exception?</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Illegal internal call&quot;</span><span class="p">)</span>
+            
 <div class="viewcode-block" id="DSSFile.read_rts"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.read_rts">[docs]</a>    <span class="k">def</span> <span class="nf">read_rts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">pathname</span><span class="p">,</span><span class="n">startDateStr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDateStr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        read regular time series for pathname.</span>
@@ -324,6 +341,8 @@
             <span class="c1">#FIXME: raise appropriate exception for istat value</span>
             <span class="c1">#if istat != 0:</span>
             <span class="c1">#    raise Exception(self._get_istat_for_zrrtsxd(istat))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_respond_to_istat_state</span><span class="p">(</span><span class="n">istat</span><span class="p">)</span>
+            
             <span class="c1">#FIXME: deal with non-zero iofset</span>
             <span class="n">freqoffset</span><span class="o">=</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">EPART_FREQ_MAP</span><span class="p">[</span><span class="n">interval</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">ctype</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;INST&#39;</span><span class="p">):</span>
@@ -362,8 +381,7 @@
             <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">%b%Y&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(),</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H%M&quot;</span><span class="p">),</span>
             <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">cunits</span><span class="p">[:</span><span class="mi">8</span><span class="p">],</span> <span class="n">ctype</span><span class="p">[:</span><span class="mi">8</span><span class="p">])</span>
         <span class="c1">#    pyheclib.hec_zsrtsxd(d.ifltab, pathname, df.index[0].strftime(&quot;%d%b%Y&quot;).upper(), df.index[0].strftime(&quot;%H%M&quot;), df.iloc[:,0].values, cunits[:8], ctype[:8])</span>
-        <span class="c1">#FIXME: raise exception with appropriate message for istat values</span>
-        <span class="k">return</span> <span class="n">istat</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_respond_to_istat_state</span><span class="p">(</span><span class="n">istat</span><span class="p">)</span></div>
 <div class="viewcode-block" id="DSSFile.read_its"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.read_its">[docs]</a>    <span class="k">def</span> <span class="nf">read_its</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">startDateStr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDateStr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">guess_vals_per_block</span><span class="o">=</span><span class="mi">10000</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        reads the entire irregular time series record. The timewindow is derived</span>
@@ -394,6 +412,7 @@
         <span class="n">dvalues</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">kdvals</span><span class="p">,</span><span class="s1">&#39;d&#39;</span><span class="p">)</span>
         <span class="n">inflag</span> <span class="o">=</span> <span class="mi">0</span><span class="p">;</span> <span class="c1"># Retrieve both values preceding and following time window in addtion to time window</span>
         <span class="n">nvals</span><span class="p">,</span> <span class="n">ibdate</span><span class="p">,</span> <span class="n">cunits</span><span class="p">,</span> <span class="n">ctype</span><span class="p">,</span> <span class="n">istat</span> <span class="o">=</span> <span class="n">pyheclib</span><span class="o">.</span><span class="n">hec_zritsxd</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ifltab</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">juls</span><span class="p">,</span> <span class="n">istime</span><span class="p">,</span> <span class="n">jule</span><span class="p">,</span> <span class="n">ietime</span><span class="p">,</span> <span class="n">itimes</span><span class="p">,</span> <span class="n">dvalues</span><span class="p">,</span> <span class="n">inflag</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_respond_to_istat_state</span><span class="p">(</span><span class="n">istat</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">nvals</span> <span class="o">==</span> <span class="n">ktvals</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span><span class="s2">&quot;More values than guessed! </span><span class="si">%d</span><span class="s2">. Call with guess_vals_per_block &gt; 10000 &quot;</span><span class="o">%</span><span class="n">ktvals</span><span class="p">)</span>
         <span class="n">base_date</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;31DEC1899&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">ibdate</span><span class="p">,</span><span class="s1">&#39;D&#39;</span><span class="p">)</span>
@@ -439,8 +458,8 @@
         <span class="n">inflag</span><span class="o">=</span><span class="mi">1</span> <span class="c1"># replace data (merging should be done in memory)</span>
         <span class="n">istat</span><span class="o">=</span><span class="n">pyheclib</span><span class="o">.</span><span class="n">hec_zsitsxd</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ifltab</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span>
             <span class="n">itimes</span><span class="p">,</span> <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">juls</span><span class="p">,</span> <span class="n">cunits</span><span class="p">,</span> <span class="n">ctype</span><span class="p">,</span> <span class="n">inflag</span><span class="p">)</span>
-        <span class="c1">#FIXME: raise exception with appropriate message for istat values</span>
-        <span class="k">return</span> <span class="n">istat</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_respond_to_istat_state</span><span class="p">(</span><span class="n">istat</span><span class="p">)</span></div></div>
+        <span class="c1">#return istat</span>
 </pre></div>
 
           </div>

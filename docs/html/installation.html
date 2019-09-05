@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>Installation &#8212; pyhecdss 0.2.4 documentation</title>
+    <title>Installation &#8212; pyhecdss 0.2.5 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -57,6 +57,15 @@ you through the process.</p>
 </div>
 <p>Once you have a copy of the source, you can install it with:</p>
 <div class="highlight-console notranslate"><div class="highlight"><pre><span></span><span class="gp">$</span> python setup.py install
+</pre></div>
+</div>
+<p>This library has dependencies on Intel Fortran AND Intel Compiler for Windows and Intel Parallel Composer libraries. You will need the following
+libraries</p>
+<div class="highlight-shell notranslate"><div class="highlight"><pre><span></span>setup.py changes --
+<span class="nv">libs</span> <span class="o">=</span> <span class="o">[</span><span class="s1">&#39;extensions/heclib6-VE&#39;</span>, <span class="s1">&#39;extensions/ifconsol&#39;</span>,<span class="s1">&#39;extensions/libifcoremt&#39;</span>,
+        <span class="s1">&#39;extensions/libifport&#39;</span>,<span class="s1">&#39;extensions/libmmt&#39;</span>,<span class="s1">&#39;extensions/libirc&#39;</span>,
+        <span class="s1">&#39;extensions/svml_disp&#39;</span>,<span class="s1">&#39;extensions/IFWIN&#39;</span>,<span class="s1">&#39;legacy_stdio_definitions&#39;</span>,
+        <span class="s1">&#39;User32&#39;</span>, <span class="s1">&#39;gdi32&#39;</span>, <span class="o">]</span>
 </pre></div>
 </div>
 </div>

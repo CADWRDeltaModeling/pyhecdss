@@ -3,7 +3,7 @@ CHANGELOG
 =========
 0.2.5
 -----
-Merged pull request from Henry:
+Merged pull request from HenryDane:
 issues warnings or throws exception based on return value from functions
 fixed minor typo(s), added tests
 
