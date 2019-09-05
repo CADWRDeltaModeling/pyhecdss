@@ -81,7 +81,6 @@ class DSSFile:
         """
         #needs to be done on a closed file
         if (self.isopen): self.close()
-        pyheclib.zfver_(self.fname, char *cver, int *iver, len(fname), len(cver));
         return pyheclib.hec_zfver(self.fname);
     def catalog(self):
         """
