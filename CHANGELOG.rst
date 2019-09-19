@@ -1,6 +1,12 @@
 =========
 CHANGELOG
 =========
+0.2.6
+-----
+Performance tests added to showcase pyhecdss is the fastest
+Fixed issue #10: Period data stored shifted to end of time stamp (HEC-DSS convention)
+Fixed issue #9: Check for missing directories before opening DSS file (avoids crashes)
+
 0.2.5
 -----
 Merged pull request from HenryDane:
