@@ -1,4 +1,5 @@
 import unittest
+import pytest
 import pyhecdss
 import numpy as np
 import pandas as pd
@@ -118,6 +119,22 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         edate='31JAN1990'
         # values,units,periodtype=dssfile.read_rts(pathname,sdate,edate)
         self.assertRaises(RuntimeError, dssfile.read_rts, pathname, sdate, edate)
+
+    def test_missing_dir(self):
+        '''
+        missing directory in filename causes crash. So check before trying to open
+        '''
+        fname='testnew.dss'
+        if os.path.exists(fname):
+            os.remove(fname)
+        d=pyhecdss.DSSFile(fname)
+        d.close()
+        assert os.path.exists(fname)
+        with pytest.raises(FileNotFoundError):
+            fname2='no_such_dir/testnew.dss'
+            d=pyhecdss.DSSFile(fname2)
+            d.close()
+    
 
 if __name__ == '__main__':
     unittest.main()

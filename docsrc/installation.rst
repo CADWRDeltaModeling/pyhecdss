@@ -13,6 +13,7 @@ To install pyhecdss, run this command in your terminal:
 .. code-block:: console
 
     $ conda install -c cadwr-dms pyhecdss
+    $ conda install -c anaconda libgfortran # May be needed on linux if libgfortran is not installed along with gcc
 
 This is the preferred method to install pyhecdss, as it will always install the most recent stable release.
 
