@@ -6,6 +6,9 @@ tests/test*.ds*
 # SWIG wrappter generated
 *_wrap.c
 pyhecdss/pyheclib.py
+#--ignore notebooks and perftest
+notebooks/
+perftest/
 #----- Generic Ignores imported from cookiecutter
 # Byte-compiled / optimized / DLL files
 __pycache__/
