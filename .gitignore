@@ -1,4 +1,5 @@
 # HEC DSS related extensions
+tests/test*.ds*
 *.dsc
 *.dsd
 *.dsk

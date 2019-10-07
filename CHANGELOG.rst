@@ -1,6 +1,10 @@
 =========
 CHANGELOG
 =========
+0.2.7
+-----
+Partial fixes for offset: Fixed for INST-* timeseries but not PER-* timeseries (issue #12)
+
 0.2.6
 -----
 Performance tests added to showcase pyhecdss is the fastest

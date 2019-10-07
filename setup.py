@@ -36,7 +36,7 @@ def find_version(*file_paths):
 with open('README.rst') as readme_file:
     readme = readme_file.read()
 
-with open('HISTORY.rst') as history_file:
+with open('CHANGELOG.rst') as history_file:
     history = history_file.read()
 
 requirements = ["numpy>=1.16,<2","pandas>=0.23"]

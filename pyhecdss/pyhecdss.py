@@ -358,18 +358,19 @@ class DSSFile:
             dvalues = np.zeros(nvals, 'd')
             nvals, cunits, ctype, iofset, istat = pyheclib.hec_zrrtsxd(self.ifltab, pathname, cdate, ctime,
                                                                        dvalues)
-            if iofset != 0:
-                print('Warning: iofset value of non-zero is not handled: ', iofset)
             # FIXME: raise appropriate exception for istat value
             # if istat != 0:
             #    raise Exception(self._get_istat_for_zrrtsxd(istat))
             self._respond_to_istat_state(istat)
 
-            # FIXME: deal with non-zero iofset
+            # FIXME: deal with non-zero iofset for period data,i.e. else part of if stmt below
             freqoffset = DSSFile.EPART_FREQ_MAP[interval]
             if ctype.startswith('INST'):
+                startDateWithOffset=pd.to_datetime(startDateStr)
+                if iofset !=0:
+                    startDateWithOffset=pd.to_datetime(startDateStr)-freqoffset+pd.to_timedelta('%dT'%iofset)
                 dindex = pd.date_range(
-                    startDateStr, periods=nvals, freq=freqoffset)
+                    startDateWithOffset, periods=nvals, freq=freqoffset)
             else:
                 sp = pd.Period(startDateStr, freq=freqoffset) - \
                     pd.tseries.frequencies.to_offset(freqoffset)
