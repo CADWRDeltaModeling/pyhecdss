@@ -21,10 +21,12 @@ requirements:
     - numpy {{ numpy }}
     - swig
     - pandas >=0.23
+
   run:
     - python >=3.7
     - numpy  >=1.16
     - pandas >=0.23
+    # - libgfortran >=3.0 # needed by linux but from channel anaconda https://github.com/CADWRDeltaModeling/pyhecdss/issues/8
 
 test:
   imports:

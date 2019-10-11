@@ -50,8 +50,9 @@ test_requirements = ['pytest', ]
 import platform
 
 if platform.system() == 'Linux':
-    extra_links = ['-fno-exceptions','-lgfortran','-shared']  # linux
-    libs = ['heclib6-VE'] # linux
+    # https://stackoverflow.com/questions/329059/what-is-gxx-personality-v0-for
+    extra_links = ['-fno-exceptions','-fno-rtti','-shared','-lgfortran','-lstdc++']  # linux -static-libgcc -static-libstdc++ -static-libgfortran not working!
+    libs = ['heclib6-WE'] # linux
     libdirs = ['./extensions'] # linux
     compile_args=['-D_GNU_SOURCE','-fno-exceptions'] # linux
 elif platform.system() == 'Windows':

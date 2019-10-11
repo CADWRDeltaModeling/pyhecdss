@@ -9,7 +9,7 @@ Partial fixes for offset: Fixed for INST-* timeseries but not PER-* timeseries (
 -----
 Performance tests added to showcase pyhecdss is the fastest
 Fixed issue #10: Period data stored shifted to end of time stamp (HEC-DSS convention)
-Fixed issue #9: Check for missing directories before opening DSS file (avoids crashes)
+Fixing libgfortran dependency on linux by statically linking the library
 
 0.2.5
 -----
