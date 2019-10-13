@@ -11,7 +11,7 @@ source:
 build:
   number: 0
   #skip:           true
-  script: LDSHARED=g++ python setup.py install --single-version-externally-managed --record=record.txt # [unix]
+  script: python setup.py install --single-version-externally-managed --record=record.txt # [unix]
   script: python setup.py install --single-version-externally-managed --record=record.txt # [win]
 
 requirements:
@@ -21,12 +21,12 @@ requirements:
     - numpy {{ numpy }}
     - swig
     - pandas >=0.23
+    - pytest-runner >=5.0
 
   run:
     - python >=3.7
     - numpy  >=1.16
     - pandas >=0.23
-    # - libgfortran >=3.0 # needed by linux but from channel anaconda https://github.com/CADWRDeltaModeling/pyhecdss/issues/8
 
 test:
   imports:

@@ -41,7 +41,7 @@ with open('CHANGELOG.rst') as history_file:
 
 requirements = ["numpy>=1.16,<2","pandas>=0.23"]
 
-setup_requirements = ['pytest-runner', ]
+setup_requirements = ['pytest-runner>=5.0', ]
 
 test_requirements = ['pytest', ]
 
@@ -51,7 +51,8 @@ import platform
 
 if platform.system() == 'Linux':
     # https://stackoverflow.com/questions/329059/what-is-gxx-personality-v0-for
-    extra_links = ['-fno-exceptions','-fno-rtti','-shared','-lgfortran','-lstdc++']  # linux -static-libgcc -static-libstdc++ -static-libgfortran not working!
+    extra_links = ['-fno-exceptions','-fno-rtti','-shared',
+                   '-lgfortran','-lstdc++']  
     libs = ['heclib6-WE'] # linux
     libdirs = ['./extensions'] # linux
     compile_args=['-D_GNU_SOURCE','-fno-exceptions'] # linux
@@ -69,7 +70,7 @@ else:
 pyheclib_module = Extension('pyhecdss._pyheclib',
                             sources=['pyhecdss/pyheclib.i',
                                      'pyhecdss/hecwrapper.c'],
-                            swig_opts=['-python', '-py3'],
+                            swig_opts=['-py3'],
                             libraries=libs,
                             library_dirs=libdirs,
                             extra_compile_args=compile_args,
