@@ -1,6 +1,10 @@
 =========
 CHANGELOG
 =========
+0.2.8
+-----
+Recompiled heclib in linux with latest compilers to resolve issue 8
+
 0.2.7
 -----
 Partial fixes for offset: Fixed for INST-* timeseries but not PER-* timeseries (issue #12)
