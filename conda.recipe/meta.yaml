@@ -19,7 +19,6 @@ requirements:
     - python
     - setuptools
     - numpy {{ numpy }}
-    - swig
     - pandas >=0.23
     - pytest-runner >=5.0
 
