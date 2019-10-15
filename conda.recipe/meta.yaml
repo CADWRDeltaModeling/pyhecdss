@@ -19,6 +19,7 @@ requirements:
     - numpy {{ numpy }}
     - pandas >=0.23
     - pytest-runner >=5.0
+    - swig
 
   run:
     - python >=3.7
