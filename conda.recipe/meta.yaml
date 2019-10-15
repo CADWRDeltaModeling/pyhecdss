@@ -11,8 +11,6 @@ source:
 build:
   number: 0
   #skip:           true
-  script: python setup.py install --single-version-externally-managed --record=record.txt # [unix]
-  script: python setup.py install --single-version-externally-managed --record=record.txt # [win]
 
 requirements:
   build:
