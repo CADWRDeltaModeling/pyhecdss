@@ -70,7 +70,7 @@ else:
 pyheclib_module = Extension('pyhecdss._pyheclib',
                             sources=['pyhecdss/pyheclib.i',
                                      'pyhecdss/hecwrapper.c'],
-                            swig_opts=['-py3'],
+                            swig_opts=['-py3', ],
                             libraries=libs,
                             library_dirs=libdirs,
                             extra_compile_args=compile_args,
