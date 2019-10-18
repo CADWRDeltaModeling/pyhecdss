@@ -406,12 +406,12 @@ class DSSFile:
         parts[5] = DSSFile.FREQ_EPART_MAP[df.index.freq]
         pathname = "/".join(parts)
         if isinstance(df.index[0], pd.Period):
-            sp = df.index[0]+df.index.freq
+            sp = df.index[0].to_timestamp(how='end')
         else:
             sp = df.index[0]
         istat = pyheclib.hec_zsrtsxd(self.ifltab, pathname,
                                      sp.strftime("%d%b%Y").upper(
-                                     ), sp.strftime("%H%M"),
+                                     ), sp.round(freq='T').strftime("%H%M"),
                                      df.iloc[:, 0].values, cunits[:8], ctype[:8])
         self._respond_to_istat_state(istat)
 

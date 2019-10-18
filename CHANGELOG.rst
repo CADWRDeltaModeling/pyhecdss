@@ -1,6 +1,10 @@
 =========
 CHANGELOG
 =========
+0.2.9
+-----
+Fixed issue with end of timestamp writing to dss files for "PER-*" data type
+
 0.2.8
 -----
 Recompiled heclib in linux with latest compilers to resolve issue 8
