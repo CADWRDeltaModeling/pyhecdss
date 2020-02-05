@@ -119,7 +119,6 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         edate='31JAN1990'
         # values,units,periodtype=dssfile.read_rts(pathname,sdate,edate)
         self.assertRaises(RuntimeError, dssfile.read_rts, pathname, sdate, edate)
-
     def test_missing_dir(self):
         '''
         missing directory in filename causes crash. So check before trying to open
@@ -134,6 +133,17 @@ class TestPyDsUtilsBasic(unittest.TestCase):
             fname2='no_such_dir/testnew.dss'
             d=pyhecdss.DSSFile(fname2)
             d.close()
+    def test_num_values_in_interval(self):
+        fname='testnew.dss'
+        if os.path.exists(fname):
+            os.remove(fname)
+        d=pyhecdss.DSSFile(fname)
+        d.close()
+        #only checking if values are greater than expected, HECLIB will return the exact number of values found
+        assert d.num_values_in_interval('01JAN2000','01FEB2000','1DAY') > 31
+        assert d.num_values_in_interval('01JAN2000','01FEB2000','1MON') > 1
+        assert d.num_values_in_interval('01JAN2000','01FEB2000','1YEAR') > 0
+        
     
 
 if __name__ == '__main__':

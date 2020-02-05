@@ -217,9 +217,9 @@ class DSSFile:
         string
         """
         if istr.find('MON') >= 0:  # less number of estimates will lead to overestimating values
-            td = pd.to_timedelta(int(istr[:istr.find('MON')]), 'M')
+            td = np.timedelta64(int(istr[:istr.find('MON')]), 'M')
         elif istr.find('YEAR') >= 0:
-            td = pd.to_timedelta(int(istr[:istr.find('YEAR')]), 'Y')
+            td = np.timedelta64(int(istr[:istr.find('YEAR')]), 'Y')
         else:
             td = pd.to_timedelta(istr)
         return int((pd.to_datetime(edstr)-pd.to_datetime(sdstr))/td)+1
