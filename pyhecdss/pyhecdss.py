@@ -242,8 +242,11 @@ class DSSFile:
     def parse_pathname_epart(self, pathname):
         return pathname.split('/')[1:7][4]
 
-    def _number_between(startDateStr, endDateStr, delta=pd.to_timedelta(1, 'Y')):
-        return (pd.to_datetime(endDateStr)-pd.to_datetime(startDateStr))/delta
+    def _number_between(startDateStr, endDateStr, delta=np.timedelta64(1, 'D')):
+        """
+        This is just a guess at number of values to be read so going over is ok.
+        """
+        return round((pd.to_datetime(endDateStr)-pd.to_datetime(startDateStr))/delta+1)
 
     def _get_timedelta_unit(epart):
         if 'YEAR' in epart:
@@ -441,7 +444,7 @@ class DSSFile:
         ietime = istime = 0
         # guess how many values to be read based on e part approximation
         ktvals = DSSFile._number_between(startDateStr, endDateStr,
-                                         pd.to_timedelta(1, unit=DSSFile._get_timedelta_unit(epart)))
+                                         np.timedelta64(1, DSSFile._get_timedelta_unit(epart)))
         ktvals = guess_vals_per_block*int(ktvals)
         kdvals = ktvals
         itimes = np.zeros(ktvals, 'i')
