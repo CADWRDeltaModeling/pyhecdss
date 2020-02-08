@@ -22,7 +22,7 @@ requirements:
     - swig
 
   run:
-    - python >=3.5
+    - python >=3.5,<4.0
     - numpy  >=1.16
     - pandas >=0.23
 
