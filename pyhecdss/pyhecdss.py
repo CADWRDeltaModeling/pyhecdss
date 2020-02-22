@@ -4,8 +4,12 @@ import numpy as np
 import os
 import time
 import warnings
+from datetime import datetime, timedelta
+from calendar import monthrange
+from dateutil.parser import parse
 # some static functions
 
+DATE_FMT_STR = '%d%b%Y'
 
 def set_message_level(level):
     """
@@ -59,6 +63,11 @@ class DSSFile:
     }
     EPART_FREQ_MAP = {v: k for k, v in FREQ_EPART_MAP.items()}
     #
+    """
+    vectorized version of timedelta
+    """
+    timedelta_minutes=np.vectorize(lambda x: timedelta(minutes=int(x)))
+
 
     def __init__(self, fname):
         self.isopen = False
@@ -216,13 +225,8 @@ class DSSFile:
         Get number of values in interval istr, using the start date and end date
         string
         """
-        if istr.find('MON') >= 0:  # less number of estimates will lead to overestimating values
-            td = np.timedelta64(int(istr[:istr.find('MON')]), 'M')
-        elif istr.find('YEAR') >= 0:
-            td = np.timedelta64(int(istr[:istr.find('YEAR')]), 'Y')
-        else:
-            td = pd.to_timedelta(istr)
-        return int((pd.to_datetime(edstr)-pd.to_datetime(sdstr))/td)+1
+        td=DSSFile._get_timedelta_for_interval(istr)
+        return int((parse(edstr)-parse(sdstr))/td)+1
 
     def julian_day(self, date):
         """
@@ -242,39 +246,38 @@ class DSSFile:
     def parse_pathname_epart(self, pathname):
         return pathname.split('/')[1:7][4]
 
-    def _number_between(startDateStr, endDateStr, delta=np.timedelta64(1, 'D')):
+    def _number_between(startDateStr, endDateStr, delta=timedelta(days=1)):
         """
         This is just a guess at number of values to be read so going over is ok.
         """
-        return round((pd.to_datetime(endDateStr)-pd.to_datetime(startDateStr))/delta+1)
+        return round((parse(endDateStr)-parse(startDateStr))/delta+1)
 
-    def _get_timedelta_unit(epart):
-        if 'YEAR' in epart:
-            return 'Y'
-        elif 'MON' in epart:
-            return 'M'
-        elif 'WEEK' in epart:
-            return 'W'
-        elif 'DAY' in epart:
-            return 'D'
-        elif 'HOUR' in epart:
-            return 'H'
-        elif 'MIN' in epart:
-            return 'm'
+    def _get_timedelta_for_interval(interval):
+        """
+        get minimum timedelta for interval defined by string. e.g. for month it is 28 days (minimum)
+        """
+        if interval.find('MON') >= 0:  # less number of estimates will lead to overestimating values
+            td = timedelta(days=28)
+        elif interval.find('YEAR') >= 0:
+            td = timedelta(days=365)
         else:
-            raise Exception(
-                "Unknown epart to time delta conversion for epart=%s" % epart)
+            td = timedelta(seconds=DSSFile.EPART_FREQ_MAP[interval].nanos/1e9)
+        return td
 
     def _pad_to_end_of_block(self, endDateStr, interval):
+        edate=parse(endDateStr)
         if interval.find('MON') >= 0 or interval.find('YEAR') >= 0:
-            buffer = pd.DateOffset(years=10)
+            edate=datetime((edate.year//10+1)*10,1,1)
         elif interval.find('DAY') >= 0:
-            buffer = pd.DateOffset(years=1)
+            edate=datetime(edate.year+1,1,1)
         elif interval.find('HOUR') >= 0 or interval.find('MIN') >= 0:
-            buffer = pd.DateOffset(months=1)
+            if edate.month == 12:
+                edate=datetime(edate.year+1,1,1)
+            else:
+                edate=datetime(edate.year,edate.month+1,1)
         else:
-            buffer = pd.DateOffset(days=1)
-        return (pd.to_datetime(endDateStr) + buffer).strftime('%d%b%Y').upper()
+            edate = edate+timedelta(days=1)
+        return edate.strftime(DATE_FMT_STR).upper()
 
     def _get_istat_for_zrrtsxd(self, istat):
         """
@@ -352,9 +355,8 @@ class DSSFile:
                     endDateStr = edate.strip()
                     endDateStr = self._pad_to_end_of_block(
                         endDateStr, interval)
-            nvals = self.num_values_in_interval(
-                startDateStr, endDateStr, interval)
-            sdate = pd.to_datetime(startDateStr)
+            nvals = self.num_values_in_interval(startDateStr, endDateStr, interval)
+            sdate = parse(startDateStr)
             cdate = sdate.date().strftime('%d%b%Y').upper()
             ctime = ''.join(sdate.time().isoformat().split(':')[:2])
             # PERF: could be np.empty if all initialized
@@ -369,9 +371,9 @@ class DSSFile:
             # FIXME: deal with non-zero iofset for period data,i.e. else part of if stmt below
             freqoffset = DSSFile.EPART_FREQ_MAP[interval]
             if ctype.startswith('INST'):
-                startDateWithOffset=pd.to_datetime(startDateStr)
+                startDateWithOffset=parse(startDateStr)
                 if iofset !=0:
-                    startDateWithOffset=pd.to_datetime(startDateStr)-freqoffset+pd.to_timedelta('%dT'%iofset)
+                    startDateWithOffset=parse(startDateStr)-freqoffset+timedelta(minutes=iofset)
                 dindex = pd.date_range(
                     startDateWithOffset, periods=nvals, freq=freqoffset)
             else:
@@ -430,10 +432,12 @@ class DSSFile:
             if startDateStr == None or endDateStr == None:
                 raise Exception(
                     "Either pathname D PART contains timewindow or specify in startDateStr and endDateStr for this call")
-            startDateStr = (pd.to_datetime(startDateStr) -
-                            pd.offsets.YearBegin(0)).strftime('%d%b%Y').upper()
-            endDateStr = (pd.to_datetime(endDateStr) +
-                          pd.offsets.YearBegin(0)).strftime('%d%b%Y').upper()
+            nsdate = parse(startDateStr)
+            nsbdate= datetime(nsdate.year,1,1)
+            nedate = parse(endDateStr)
+            nebdate = datetime(nedate.year,1,1)
+            startDateStr = nsbdate.strftime(DATE_FMT_STR)
+            endDateStr = nebdate.strftime(DATE_FMT_STR)
             parts[4] = startDateStr+" - "+endDateStr
         else:
             tw = list(map(lambda x: x.strip(), parts[4].split('-')))
@@ -443,8 +447,7 @@ class DSSFile:
         jule, istat = pyheclib.hec_datjul(endDateStr)
         ietime = istime = 0
         # guess how many values to be read based on e part approximation
-        ktvals = DSSFile._number_between(startDateStr, endDateStr,
-                                         np.timedelta64(1, DSSFile._get_timedelta_unit(epart)))
+        ktvals = DSSFile._number_between(startDateStr, endDateStr, DSSFile._get_timedelta_for_interval(epart))
         ktvals = guess_vals_per_block*int(ktvals)
         kdvals = ktvals
         itimes = np.zeros(ktvals, 'i')
@@ -456,9 +459,8 @@ class DSSFile:
         if nvals == ktvals:
             raise Exception(
                 "More values than guessed! %d. Call with guess_vals_per_block > 10000 " % ktvals)
-        base_date = pd.to_datetime('31DEC1899')+pd.to_timedelta(ibdate, 'D')
-        df = pd.DataFrame(dvalues[:nvals], index=pd.to_timedelta(
-            itimes[:nvals], unit='m')+base_date, columns=[pathname])
+        base_date = parse('31DEC1899')+timedelta(days=ibdate)
+        df = pd.DataFrame(dvalues[:nvals], index=base_date+DSSFile.timedelta_minutes(itimes[:nvals]), columns=[pathname])
         return df, cunits.strip(), ctype.strip()
         # return nvals, dvalues, itimes, base_date, cunits, ctype
 
@@ -498,7 +500,7 @@ class DSSFile:
         jule, istat = pyheclib.hec_datjul(endDateStr)
         ietime = istime = 0
         pathname = "/".join(parts)
-        itimes = df.index-pd.to_datetime(startDateStr)
+        itimes = df.index-parse(startDateStr)
         itimes = itimes.total_seconds()/60  # time in minutes since base date juls
         itimes = itimes.values.astype('i')  # conver to integer numpy
         inflag = 1  # replace data (merging should be done in memory)

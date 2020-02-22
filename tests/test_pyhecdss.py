@@ -15,6 +15,8 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         os.remove('./test_its1.dsd')
         os.remove('./test.dsc')
         os.remove('./test.dsd')
+        os.remove('./test.dsc')
+        os.remove('./test.dsd')
         os.remove('./test.dsk')
     @classmethod
     def tearDownClass(cls):
