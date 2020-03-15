@@ -324,6 +324,29 @@ class DSSFile:
         elif istat > 9:
             # should this be an exception?
             raise RuntimeError("Illegal internal call")
+    
+    def _parse_times(self, pathname, startDateStr=None, endDateStr=None):
+        '''
+        parse times based on pathname or startDateStr and endDateStr
+        start date and end dates may be padded to include a larger interval
+        '''
+        interval = self.parse_pathname_epart(pathname)
+        if startDateStr is None or endDateStr is None:
+            twstr = pathname.split("/")[4]
+            if twstr.find("-") < 0:
+                if len(twstr.strip()) == 0:
+                    raise Exception(
+                        "No start date or end date and twstr is "+twstr)
+                sdate = edate = twstr
+            else:
+                sdate, edate = twstr.split("-")
+            if startDateStr is None:
+                startDateStr = sdate.strip()
+            if endDateStr is None:
+                endDateStr = edate.strip()
+                endDateStr = self._pad_to_end_of_block(
+                    endDateStr, interval)
+        return startDateStr, endDateStr
 
     def read_rts(self, pathname, startDateStr=None, endDateStr=None):
         """
@@ -336,25 +359,9 @@ class DSSFile:
             if not opened_already:
                 self.open()
             interval = self.parse_pathname_epart(pathname)
-            trim_first = False
-            trim_last = False
-            if startDateStr is None or endDateStr is None:
-                twstr = pathname.split("/")[4]
-                if twstr.find("-") < 0:
-                    if len(twstr.strip()) == 0:
-                        raise Exception(
-                            "No start date or end date and twstr is "+twstr)
-                    sdate = edate = twstr
-                else:
-                    sdate, edate = twstr.split("-")
-                if startDateStr is None:
-                    trim_first = True
-                    startDateStr = sdate.strip()
-                if endDateStr is None:
-                    trim_last = True
-                    endDateStr = edate.strip()
-                    endDateStr = self._pad_to_end_of_block(
-                        endDateStr, interval)
+            trim_first = startDateStr is None
+            trim_last = endDateStr is None
+            startDateStr, endDateStr = self._parse_times(pathname, startDateStr, endDateStr)
             nvals = self.num_values_in_interval(startDateStr, endDateStr, interval)
             sdate = parse(startDateStr)
             cdate = sdate.date().strftime('%d%b%Y').upper()
@@ -426,23 +433,8 @@ class DSSFile:
         from the D-PART of the pathname so make sure to read that from the catalog
         before calling this function
         """
-        parts = pathname.split('/')
-        epart = parts[5]
-        if len(parts[4].strip()) == 0:
-            if startDateStr == None or endDateStr == None:
-                raise Exception(
-                    "Either pathname D PART contains timewindow or specify in startDateStr and endDateStr for this call")
-            nsdate = parse(startDateStr)
-            nsbdate= datetime(nsdate.year,1,1)
-            nedate = parse(endDateStr)
-            nebdate = datetime(nedate.year,1,1)
-            startDateStr = nsbdate.strftime(DATE_FMT_STR)
-            endDateStr = nebdate.strftime(DATE_FMT_STR)
-            parts[4] = startDateStr+" - "+endDateStr
-        else:
-            tw = list(map(lambda x: x.strip(), parts[4].split('-')))
-            startDateStr = tw[0]
-            endDateStr = self._pad_to_end_of_block(tw[1], epart)
+        epart = self.parse_pathname_epart(pathname)
+        startDateStr,endDateStr=self._parse_times(pathname, startDateStr, endDateStr)
         juls, istat = pyheclib.hec_datjul(startDateStr)
         jule, istat = pyheclib.hec_datjul(endDateStr)
         ietime = istime = 0
