@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pyhecdss package &#8212; pyhecdss 0.2.7 documentation</title>
+    <title>pyhecdss package &#8212; pyhecdss 0.5.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -12,6 +12,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="Contributing" href="contributing.html" />
@@ -46,7 +47,8 @@
 <dl class="attribute">
 <dt id="pyhecdss.pyhecdss.DSSFile.EPART_FREQ_MAP">
 <code class="sig-name descname">EPART_FREQ_MAP</code><em class="property"> = {'10MIN': &lt;10 * Minutes&gt;, '12HOUR': &lt;12 * Hours&gt;, '15MIN': &lt;15 * Minutes&gt;, '1DAY': &lt;Day&gt;, '1HOUR': &lt;Hour&gt;, '1MIN': &lt;Minute&gt;, '1MON': &lt;MonthEnd&gt;, '1WEEK': &lt;Week: weekday=None&gt;, '1YEAR': &lt;YearEnd: month=12&gt;, '20MIN': &lt;20 * Minutes&gt;, '2HOUR': &lt;2 * Hours&gt;, '2MIN': &lt;2 * Minutes&gt;, '30MIN': &lt;30 * Minutes&gt;, '3HOUR': &lt;3 * Hours&gt;, '3MIN': &lt;3 * Minutes&gt;, '4HOUR': &lt;4 * Hours&gt;, '4MIN': &lt;4 * Minutes&gt;, '5MIN': &lt;5 * Minutes&gt;, '6HOUR': &lt;6 * Hours&gt;, '8HOUR': &lt;8 * Hours&gt;}</em><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.EPART_FREQ_MAP" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>vectorized version of timedelta</p>
+</dd></dl>
 
 <dl class="attribute">
 <dt id="pyhecdss.pyhecdss.DSSFile.FREQ_EPART_MAP">
@@ -144,6 +146,11 @@ if pathname D part contains a time window (START DATE “-” END DATE) and
 either start or end date is None it uses that to define start and end date</p>
 </dd></dl>
 
+<dl class="attribute">
+<dt id="pyhecdss.pyhecdss.DSSFile.timedelta_minutes">
+<code class="sig-name descname">timedelta_minutes</code><em class="property"> = &lt;numpy.vectorize object&gt;</em><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.timedelta_minutes" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 <dl class="method">
 <dt id="pyhecdss.pyhecdss.DSSFile.write_its">
 <code class="sig-name descname">write_its</code><span class="sig-paren">(</span><em class="sig-param">pathname</em>, <em class="sig-param">df</em>, <em class="sig-param">cunits</em>, <em class="sig-param">ctype</em>, <em class="sig-param">interval=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.write_its"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.write_its" title="Permalink to this definition">¶</a></dt>
@@ -164,6 +171,24 @@ The time series is passed in as a pandas DataFrame
 and associated units and types of length no greater than 8.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="pyhecdss.pyhecdss.get_rts">
+<code class="sig-prename descclassname">pyhecdss.pyhecdss.</code><code class="sig-name descname">get_rts</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">pathname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#get_rts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.get_rts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Gets regular time series matching the pathname from the filename.
+Opens and reads pathname from filename and then closes it (slightly inefficient)</p>
+<p>filename: a path to DSS file
+pathname: a string of the form /A/B/C/D/E/F that is parsed to match all parts except D
+which if not blank is used to determine the time window to retrieve
+D should be specified in the format of ddMMMYYYY HHmm - ddMMMYYYY HHmm</p>
+<p>a list of tuple (pandas DataFrame, units, period type) for timeseries found or an empty list</p>
+<p>Assumes that all matching are Regular time series ( as opposed to Irregular, See DSS terminolog)</p>
+<p>Get time series based on a part of pathname, e.g.</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pyhecdss</span><span class="o">.</span><span class="n">get_rts</span><span class="p">(</span><span class="s1">&#39;test1.dss&#39;</span><span class="p">,</span> <span class="s1">&#39;//SIN/////&#39;</span><span class="p">)</span>
+<span class="go">[(rts,units,type),...]</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="function">
@@ -261,7 +286,7 @@ level ranges from “bort” only (level 0) to “internal” (level &gt;10)</p>
       &copy;2019, Nicky Sandhu.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

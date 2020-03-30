@@ -1,4 +1,5 @@
 rem only needed if you add submodules etc..
 rem sphinx-apidoc -o . ../pyhecdss
-make clean && make html
-xcopy /Y /E /H _build\* ..\docs
+call make clean
+call make html
+call xcopy /y /s /e _build\* ..\docs

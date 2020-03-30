@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pyhecdss.pyhecdss &#8212; pyhecdss 0.2.7 documentation</title>
+    <title>pyhecdss.pyhecdss &#8212; pyhecdss 0.5.0 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -12,6 +12,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="../../_static/language_data.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
    
@@ -31,14 +32,18 @@
           <div class="body" role="main">
             
   <h1>Source code for pyhecdss.pyhecdss</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">.</span> <span class="k">import</span> <span class="n">pyheclib</span>
+<span></span><span class="kn">from</span> <span class="nn">.</span> <span class="kn">import</span> <span class="n">pyheclib</span>
 <span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
+<span class="kn">from</span> <span class="nn">calendar</span> <span class="kn">import</span> <span class="n">monthrange</span>
+<span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="kn">import</span> <span class="n">parse</span>
 <span class="c1"># some static functions</span>
 
+<span class="n">DATE_FMT_STR</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">%b%Y&#39;</span>
 
 <div class="viewcode-block" id="set_message_level"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.set_message_level">[docs]</a><span class="k">def</span> <span class="nf">set_message_level</span><span class="p">(</span><span class="n">level</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -63,6 +68,57 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">pyheclib</span><span class="o">.</span><span class="n">hec_zfver</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
 
+<div class="viewcode-block" id="get_rts"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.get_rts">[docs]</a><span class="k">def</span> <span class="nf">get_rts</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">pathname</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Gets regular time series matching the pathname from the filename.</span>
+<span class="sd">    Opens and reads pathname from filename and then closes it (slightly inefficient)</span>
+
+<span class="sd">    Parameters</span>
+<span class="sd">    ----------</span>
+
+<span class="sd">    filename: a path to DSS file</span>
+<span class="sd">    pathname: a string of the form /A/B/C/D/E/F that is parsed to match all parts except D</span>
+<span class="sd">    which if not blank is used to determine the time window to retrieve</span>
+<span class="sd">    D should be specified in the format of ddMMMYYYY HHmm - ddMMMYYYY HHmm</span>
+
+<span class="sd">    Returns</span>
+<span class="sd">    -------</span>
+
+<span class="sd">    a list of tuple (pandas DataFrame, units, period type) for timeseries found or an empty list</span>
+
+<span class="sd">    Notes</span>
+<span class="sd">    -----</span>
+<span class="sd">    Assumes that all matching are Regular time series ( as opposed to Irregular, See DSS terminolog)</span>
+
+<span class="sd">    Examples</span>
+<span class="sd">    --------</span>
+
+<span class="sd">    Get time series based on a part of pathname, e.g.</span>
+
+<span class="sd">    &gt;&gt;&gt; pyhecdss.get_rts(&#39;test1.dss&#39;, &#39;//SIN/////&#39;)</span>
+<span class="sd">    [(rts,units,type),...]</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">dssh</span><span class="o">=</span><span class="n">DSSFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">dfcat</span><span class="o">=</span><span class="n">dssh</span><span class="o">.</span><span class="n">read_catalog</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">pp</span><span class="o">=</span><span class="n">pathname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="n">cond</span><span class="o">=</span><span class="kc">True</span>
+        <span class="k">for</span> <span class="n">p</span><span class="p">,</span><span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pp</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="n">pp</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">7</span><span class="p">],[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">cond</span> <span class="o">=</span> <span class="n">cond</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">dfcat</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">==</span><span class="n">p</span><span class="p">)</span>
+        <span class="n">plist</span><span class="o">=</span><span class="n">dssh</span><span class="o">.</span><span class="n">get_pathnames</span><span class="p">(</span><span class="n">dfcat</span><span class="p">[</span><span class="n">cond</span><span class="p">])</span>
+        <span class="n">twstr</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="n">pp</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">startDateStr</span><span class="o">=</span><span class="n">endDateStr</span><span class="o">=</span><span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">twstr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">twstr</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="n">x</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">twstr</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">))))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">startDateStr</span><span class="o">=</span><span class="n">twstr</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">dssh</span><span class="o">.</span><span class="n">read_rts</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">plist</span><span class="p">]</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">dssh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[]</span></div>
 
 <div class="viewcode-block" id="DSSFile"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile">[docs]</a><span class="k">class</span> <span class="nc">DSSFile</span><span class="p">:</span>
     <span class="c1"># DSS missing conventions</span>
@@ -92,8 +148,13 @@
     <span class="p">}</span>
     <span class="n">EPART_FREQ_MAP</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">FREQ_EPART_MAP</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="c1">#</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    vectorized version of timedelta</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">timedelta_minutes</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">vectorize</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="n">x</span><span class="p">)))</span>
 
-    <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">isopen</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_check_dir_exists</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ifltab</span> <span class="o">=</span> <span class="n">pyheclib</span><span class="o">.</span><span class="n">intArray</span><span class="p">(</span><span class="mi">600</span><span class="p">)</span>
@@ -101,7 +162,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">fname</span> <span class="o">=</span> <span class="n">fname</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="nf">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_check_dir_exists</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fname</span><span class="p">):</span>
@@ -249,13 +310,8 @@
 <span class="sd">        Get number of values in interval istr, using the start date and end date</span>
 <span class="sd">        string</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">istr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MON&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># less number of estimates will lead to overestimating values</span>
-            <span class="n">td</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">istr</span><span class="p">[:</span><span class="n">istr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MON&#39;</span><span class="p">)]),</span> <span class="s1">&#39;M&#39;</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="n">istr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;YEAR&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">td</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">istr</span><span class="p">[:</span><span class="n">istr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;YEAR&#39;</span><span class="p">)]),</span> <span class="s1">&#39;Y&#39;</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">td</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">istr</span><span class="p">)</span>
-        <span class="k">return</span> <span class="nb">int</span><span class="p">((</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">edstr</span><span class="p">)</span><span class="o">-</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">sdstr</span><span class="p">))</span><span class="o">/</span><span class="n">td</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span></div>
+        <span class="n">td</span><span class="o">=</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">_get_timedelta_for_interval</span><span class="p">(</span><span class="n">istr</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">int</span><span class="p">((</span><span class="n">parse</span><span class="p">(</span><span class="n">edstr</span><span class="p">)</span><span class="o">-</span><span class="n">parse</span><span class="p">(</span><span class="n">sdstr</span><span class="p">))</span><span class="o">/</span><span class="n">td</span><span class="p">)</span><span class="o">+</span><span class="mi">1</span></div>
 
 <div class="viewcode-block" id="DSSFile.julian_day"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.julian_day">[docs]</a>    <span class="k">def</span> <span class="nf">julian_day</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">date</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -275,36 +331,38 @@
 <div class="viewcode-block" id="DSSFile.parse_pathname_epart"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.parse_pathname_epart">[docs]</a>    <span class="k">def</span> <span class="nf">parse_pathname_epart</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">pathname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="mi">7</span><span class="p">][</span><span class="mi">4</span><span class="p">]</span></div>
 
-    <span class="k">def</span> <span class="nf">_number_between</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s1">&#39;Y&#39;</span><span class="p">)):</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">endDateStr</span><span class="p">)</span><span class="o">-</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">))</span><span class="o">/</span><span class="n">delta</span>
+    <span class="k">def</span> <span class="nf">_number_between</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">,</span> <span class="n">delta</span><span class="o">=</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This is just a guess at number of values to be read so going over is ok.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">round</span><span class="p">((</span><span class="n">parse</span><span class="p">(</span><span class="n">endDateStr</span><span class="p">)</span><span class="o">-</span><span class="n">parse</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">))</span><span class="o">/</span><span class="n">delta</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_get_timedelta_unit</span><span class="p">(</span><span class="n">epart</span><span class="p">):</span>
-        <span class="k">if</span> <span class="s1">&#39;YEAR&#39;</span> <span class="ow">in</span> <span class="n">epart</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;Y&#39;</span>
-        <span class="k">elif</span> <span class="s1">&#39;MON&#39;</span> <span class="ow">in</span> <span class="n">epart</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;M&#39;</span>
-        <span class="k">elif</span> <span class="s1">&#39;WEEK&#39;</span> <span class="ow">in</span> <span class="n">epart</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;W&#39;</span>
-        <span class="k">elif</span> <span class="s1">&#39;DAY&#39;</span> <span class="ow">in</span> <span class="n">epart</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;D&#39;</span>
-        <span class="k">elif</span> <span class="s1">&#39;HOUR&#39;</span> <span class="ow">in</span> <span class="n">epart</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;H&#39;</span>
-        <span class="k">elif</span> <span class="s1">&#39;MIN&#39;</span> <span class="ow">in</span> <span class="n">epart</span><span class="p">:</span>
-            <span class="k">return</span> <span class="s1">&#39;m&#39;</span>
+    <span class="k">def</span> <span class="nf">_get_timedelta_for_interval</span><span class="p">(</span><span class="n">interval</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        get minimum timedelta for interval defined by string. e.g. for month it is 28 days (minimum)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">interval</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MON&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>  <span class="c1"># less number of estimates will lead to overestimating values</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">28</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="n">interval</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;YEAR&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">365</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                <span class="s2">&quot;Unknown epart to time delta conversion for epart=</span><span class="si">%s</span><span class="s2">&quot;</span> <span class="o">%</span> <span class="n">epart</span><span class="p">)</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">EPART_FREQ_MAP</span><span class="p">[</span><span class="n">interval</span><span class="p">]</span><span class="o">.</span><span class="n">nanos</span><span class="o">/</span><span class="mf">1e9</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">td</span>
 
     <span class="k">def</span> <span class="nf">_pad_to_end_of_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
+        <span class="n">edate</span><span class="o">=</span><span class="n">parse</span><span class="p">(</span><span class="n">endDateStr</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">interval</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MON&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">interval</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;YEAR&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">buffer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DateOffset</span><span class="p">(</span><span class="n">years</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+            <span class="n">edate</span><span class="o">=</span><span class="n">datetime</span><span class="p">((</span><span class="n">edate</span><span class="o">.</span><span class="n">year</span><span class="o">//</span><span class="mi">10</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span><span class="o">*</span><span class="mi">10</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">interval</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;DAY&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">buffer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DateOffset</span><span class="p">(</span><span class="n">years</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="n">edate</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="n">edate</span><span class="o">.</span><span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">interval</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;HOUR&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">interval</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MIN&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">buffer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DateOffset</span><span class="p">(</span><span class="n">months</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">edate</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">12</span><span class="p">:</span>
+                <span class="n">edate</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="n">edate</span><span class="o">.</span><span class="n">year</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">edate</span><span class="o">=</span><span class="n">datetime</span><span class="p">(</span><span class="n">edate</span><span class="o">.</span><span class="n">year</span><span class="p">,</span><span class="n">edate</span><span class="o">.</span><span class="n">month</span><span class="o">+</span><span class="mi">1</span><span class="p">,</span><span class="mi">1</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">buffer</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DateOffset</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">endDateStr</span><span class="p">)</span> <span class="o">+</span> <span class="n">buffer</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">%b%Y&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
+            <span class="n">edate</span> <span class="o">=</span> <span class="n">edate</span><span class="o">+</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">edate</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="n">DATE_FMT_STR</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">_get_istat_for_zrrtsxd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">istat</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -351,6 +409,29 @@
         <span class="k">elif</span> <span class="n">istat</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">:</span>
             <span class="c1"># should this be an exception?</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Illegal internal call&quot;</span><span class="p">)</span>
+    
+    <span class="k">def</span> <span class="nf">_parse_times</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">startDateStr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDateStr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        parse times based on pathname or startDateStr and endDateStr</span>
+<span class="sd">        start date and end dates may be padded to include a larger interval</span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">interval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_pathname_epart</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">startDateStr</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">endDateStr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">twstr</span> <span class="o">=</span> <span class="n">pathname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">4</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">twstr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">twstr</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
+                        <span class="s2">&quot;No start date or end date and twstr is &quot;</span><span class="o">+</span><span class="n">twstr</span><span class="p">)</span>
+                <span class="n">sdate</span> <span class="o">=</span> <span class="n">edate</span> <span class="o">=</span> <span class="n">twstr</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">sdate</span><span class="p">,</span> <span class="n">edate</span> <span class="o">=</span> <span class="n">twstr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">startDateStr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">startDateStr</span> <span class="o">=</span> <span class="n">sdate</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">endDateStr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">endDateStr</span> <span class="o">=</span> <span class="n">edate</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+                <span class="n">endDateStr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pad_to_end_of_block</span><span class="p">(</span>
+                    <span class="n">endDateStr</span><span class="p">,</span> <span class="n">interval</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span>
 
 <div class="viewcode-block" id="DSSFile.read_rts"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.read_rts">[docs]</a>    <span class="k">def</span> <span class="nf">read_rts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">startDateStr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDateStr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
@@ -363,28 +444,11 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">opened_already</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
             <span class="n">interval</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_pathname_epart</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
-            <span class="n">trim_first</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="n">trim_last</span> <span class="o">=</span> <span class="kc">False</span>
-            <span class="k">if</span> <span class="n">startDateStr</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">endDateStr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">twstr</span> <span class="o">=</span> <span class="n">pathname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">)[</span><span class="mi">4</span><span class="p">]</span>
-                <span class="k">if</span> <span class="n">twstr</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
-                    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">twstr</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                        <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                            <span class="s2">&quot;No start date or end date and twstr is &quot;</span><span class="o">+</span><span class="n">twstr</span><span class="p">)</span>
-                    <span class="n">sdate</span> <span class="o">=</span> <span class="n">edate</span> <span class="o">=</span> <span class="n">twstr</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">sdate</span><span class="p">,</span> <span class="n">edate</span> <span class="o">=</span> <span class="n">twstr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">startDateStr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">trim_first</span> <span class="o">=</span> <span class="kc">True</span>
-                    <span class="n">startDateStr</span> <span class="o">=</span> <span class="n">sdate</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-                <span class="k">if</span> <span class="n">endDateStr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">trim_last</span> <span class="o">=</span> <span class="kc">True</span>
-                    <span class="n">endDateStr</span> <span class="o">=</span> <span class="n">edate</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
-                    <span class="n">endDateStr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pad_to_end_of_block</span><span class="p">(</span>
-                        <span class="n">endDateStr</span><span class="p">,</span> <span class="n">interval</span><span class="p">)</span>
-            <span class="n">nvals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_values_in_interval</span><span class="p">(</span>
-                <span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">,</span> <span class="n">interval</span><span class="p">)</span>
-            <span class="n">sdate</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">)</span>
+            <span class="n">trim_first</span> <span class="o">=</span> <span class="n">startDateStr</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="n">trim_last</span> <span class="o">=</span> <span class="n">endDateStr</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_parse_times</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">)</span>
+            <span class="n">nvals</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">num_values_in_interval</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">,</span> <span class="n">interval</span><span class="p">)</span>
+            <span class="n">sdate</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">)</span>
             <span class="n">cdate</span> <span class="o">=</span> <span class="n">sdate</span><span class="o">.</span><span class="n">date</span><span class="p">()</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">%b%Y&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
             <span class="n">ctime</span> <span class="o">=</span> <span class="s1">&#39;&#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">sdate</span><span class="o">.</span><span class="n">time</span><span class="p">()</span><span class="o">.</span><span class="n">isoformat</span><span class="p">()</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;:&#39;</span><span class="p">)[:</span><span class="mi">2</span><span class="p">])</span>
             <span class="c1"># PERF: could be np.empty if all initialized</span>
@@ -399,9 +463,9 @@
             <span class="c1"># FIXME: deal with non-zero iofset for period data,i.e. else part of if stmt below</span>
             <span class="n">freqoffset</span> <span class="o">=</span> <span class="n">DSSFile</span><span class="o">.</span><span class="n">EPART_FREQ_MAP</span><span class="p">[</span><span class="n">interval</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">ctype</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;INST&#39;</span><span class="p">):</span>
-                <span class="n">startDateWithOffset</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">)</span>
+                <span class="n">startDateWithOffset</span><span class="o">=</span><span class="n">parse</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">iofset</span> <span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
-                    <span class="n">startDateWithOffset</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">)</span><span class="o">-</span><span class="n">freqoffset</span><span class="o">+</span><span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">T&#39;</span><span class="o">%</span><span class="n">iofset</span><span class="p">)</span>
+                    <span class="n">startDateWithOffset</span><span class="o">=</span><span class="n">parse</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">)</span><span class="o">-</span><span class="n">freqoffset</span><span class="o">+</span><span class="n">timedelta</span><span class="p">(</span><span class="n">minutes</span><span class="o">=</span><span class="n">iofset</span><span class="p">)</span>
                 <span class="n">dindex</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span>
                     <span class="n">startDateWithOffset</span><span class="p">,</span> <span class="n">periods</span><span class="o">=</span><span class="n">nvals</span><span class="p">,</span> <span class="n">freq</span><span class="o">=</span><span class="n">freqoffset</span><span class="p">)</span>
             <span class="k">else</span><span class="p">:</span>
@@ -416,11 +480,11 @@
                 <span class="k">if</span> <span class="n">trim_first</span><span class="p">:</span>
                     <span class="n">first_index</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">first_valid_index</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">first_index</span> <span class="o">=</span> <span class="mi">0</span>
+                    <span class="n">first_index</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
                 <span class="k">if</span> <span class="n">trim_last</span><span class="p">:</span>
                     <span class="n">last_index</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">last_valid_index</span><span class="p">()</span>
                 <span class="k">else</span><span class="p">:</span>
-                    <span class="n">last_index</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">last_index</span> <span class="o">=</span> <span class="n">df1</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
                 <span class="n">df1</span> <span class="o">=</span> <span class="n">df1</span><span class="p">[</span><span class="n">first_index</span><span class="p">:</span><span class="n">last_index</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">df1</span> <span class="o">=</span> <span class="n">df1</span>
@@ -439,12 +503,12 @@
         <span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">DSSFile</span><span class="o">.</span><span class="n">FREQ_EPART_MAP</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">freq</span><span class="p">]</span>
         <span class="n">pathname</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">Period</span><span class="p">):</span>
-            <span class="n">sp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">+</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">freq</span>
+            <span class="n">sp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_timestamp</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;end&#39;</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">sp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
         <span class="n">istat</span> <span class="o">=</span> <span class="n">pyheclib</span><span class="o">.</span><span class="n">hec_zsrtsxd</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">ifltab</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span>
                                      <span class="n">sp</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;</span><span class="si">%d</span><span class="s2">%b%Y&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">(</span>
-                                     <span class="p">),</span> <span class="n">sp</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H%M&quot;</span><span class="p">),</span>
+                                     <span class="p">),</span> <span class="n">sp</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">freq</span><span class="o">=</span><span class="s1">&#39;T&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s2">&quot;%H%M&quot;</span><span class="p">),</span>
                                      <span class="n">df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">,</span> <span class="n">cunits</span><span class="p">[:</span><span class="mi">8</span><span class="p">],</span> <span class="n">ctype</span><span class="p">[:</span><span class="mi">8</span><span class="p">])</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_respond_to_istat_state</span><span class="p">(</span><span class="n">istat</span><span class="p">)</span></div>
 
@@ -454,27 +518,13 @@
 <span class="sd">        from the D-PART of the pathname so make sure to read that from the catalog</span>
 <span class="sd">        before calling this function</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">parts</span> <span class="o">=</span> <span class="n">pathname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
-        <span class="n">epart</span> <span class="o">=</span> <span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">startDateStr</span> <span class="o">==</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">endDateStr</span> <span class="o">==</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
-                    <span class="s2">&quot;Either pathname D PART contains timewindow or specify in startDateStr and endDateStr for this call&quot;</span><span class="p">)</span>
-            <span class="n">startDateStr</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">)</span> <span class="o">-</span>
-                            <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">YearBegin</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">%b%Y&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-            <span class="n">endDateStr</span> <span class="o">=</span> <span class="p">(</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">endDateStr</span><span class="p">)</span> <span class="o">+</span>
-                          <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">YearBegin</span><span class="p">(</span><span class="mi">0</span><span class="p">))</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">%b%Y&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
-            <span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span> <span class="o">=</span> <span class="n">startDateStr</span><span class="o">+</span><span class="s2">&quot; - &quot;</span><span class="o">+</span><span class="n">endDateStr</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">tw</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">parts</span><span class="p">[</span><span class="mi">4</span><span class="p">]</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;-&#39;</span><span class="p">)))</span>
-            <span class="n">startDateStr</span> <span class="o">=</span> <span class="n">tw</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
-            <span class="n">endDateStr</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pad_to_end_of_block</span><span class="p">(</span><span class="n">tw</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">epart</span><span class="p">)</span>
+        <span class="n">epart</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">parse_pathname_epart</span><span class="p">(</span><span class="n">pathname</span><span class="p">)</span>
+        <span class="n">startDateStr</span><span class="p">,</span><span class="n">endDateStr</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_parse_times</span><span class="p">(</span><span class="n">pathname</span><span class="p">,</span> <span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">)</span>
         <span class="n">juls</span><span class="p">,</span> <span class="n">istat</span> <span class="o">=</span> <span class="n">pyheclib</span><span class="o">.</span><span class="n">hec_datjul</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">)</span>
         <span class="n">jule</span><span class="p">,</span> <span class="n">istat</span> <span class="o">=</span> <span class="n">pyheclib</span><span class="o">.</span><span class="n">hec_datjul</span><span class="p">(</span><span class="n">endDateStr</span><span class="p">)</span>
         <span class="n">ietime</span> <span class="o">=</span> <span class="n">istime</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="c1"># guess how many values to be read based on e part approximation</span>
-        <span class="n">ktvals</span> <span class="o">=</span> <span class="n">DSSFile</span><span class="o">.</span><span class="n">_number_between</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">,</span>
-                                         <span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">unit</span><span class="o">=</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">_get_timedelta_unit</span><span class="p">(</span><span class="n">epart</span><span class="p">)))</span>
+        <span class="n">ktvals</span> <span class="o">=</span> <span class="n">DSSFile</span><span class="o">.</span><span class="n">_number_between</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">,</span> <span class="n">DSSFile</span><span class="o">.</span><span class="n">_get_timedelta_for_interval</span><span class="p">(</span><span class="n">epart</span><span class="p">))</span>
         <span class="n">ktvals</span> <span class="o">=</span> <span class="n">guess_vals_per_block</span><span class="o">*</span><span class="nb">int</span><span class="p">(</span><span class="n">ktvals</span><span class="p">)</span>
         <span class="n">kdvals</span> <span class="o">=</span> <span class="n">ktvals</span>
         <span class="n">itimes</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="n">ktvals</span><span class="p">,</span> <span class="s1">&#39;i&#39;</span><span class="p">)</span>
@@ -486,9 +536,8 @@
         <span class="k">if</span> <span class="n">nvals</span> <span class="o">==</span> <span class="n">ktvals</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">Exception</span><span class="p">(</span>
                 <span class="s2">&quot;More values than guessed! </span><span class="si">%d</span><span class="s2">. Call with guess_vals_per_block &gt; 10000 &quot;</span> <span class="o">%</span> <span class="n">ktvals</span><span class="p">)</span>
-        <span class="n">base_date</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;31DEC1899&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span><span class="n">ibdate</span><span class="p">,</span> <span class="s1">&#39;D&#39;</span><span class="p">)</span>
-        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dvalues</span><span class="p">[:</span><span class="n">nvals</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_timedelta</span><span class="p">(</span>
-            <span class="n">itimes</span><span class="p">[:</span><span class="n">nvals</span><span class="p">],</span> <span class="n">unit</span><span class="o">=</span><span class="s1">&#39;m&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">base_date</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">pathname</span><span class="p">])</span>
+        <span class="n">base_date</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="s1">&#39;31DEC1899&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">ibdate</span><span class="p">)</span>
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dvalues</span><span class="p">[:</span><span class="n">nvals</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">base_date</span><span class="o">+</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">timedelta_minutes</span><span class="p">(</span><span class="n">itimes</span><span class="p">[:</span><span class="n">nvals</span><span class="p">]),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">pathname</span><span class="p">])</span>
         <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">cunits</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">ctype</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
         <span class="c1"># return nvals, dvalues, itimes, base_date, cunits, ctype</span>
 
@@ -528,7 +577,7 @@
         <span class="n">jule</span><span class="p">,</span> <span class="n">istat</span> <span class="o">=</span> <span class="n">pyheclib</span><span class="o">.</span><span class="n">hec_datjul</span><span class="p">(</span><span class="n">endDateStr</span><span class="p">)</span>
         <span class="n">ietime</span> <span class="o">=</span> <span class="n">istime</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="n">pathname</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
-        <span class="n">itimes</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">-</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">)</span>
+        <span class="n">itimes</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">-</span><span class="n">parse</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">)</span>
         <span class="n">itimes</span> <span class="o">=</span> <span class="n">itimes</span><span class="o">.</span><span class="n">total_seconds</span><span class="p">()</span><span class="o">/</span><span class="mi">60</span>  <span class="c1"># time in minutes since base date juls</span>
         <span class="n">itimes</span> <span class="o">=</span> <span class="n">itimes</span><span class="o">.</span><span class="n">values</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;i&#39;</span><span class="p">)</span>  <span class="c1"># conver to integer numpy</span>
         <span class="n">inflag</span> <span class="o">=</span> <span class="mi">1</span>  <span class="c1"># replace data (merging should be done in memory)</span>
@@ -601,7 +650,7 @@
       &copy;2019, Nicky Sandhu.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.1.2</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
     </div>
