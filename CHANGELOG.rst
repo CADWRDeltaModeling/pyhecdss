@@ -1,6 +1,26 @@
 =========
 CHANGELOG
 =========
+0.5.0
+-----
+Added helper function for simple timeseries retrieval
+
+0.4.1
+-----
+regular and irregular timeseries now share same time window parsing logic
+
+0.4.0
+-----
+fixes for issue #16: pandas timestamp limitations
+
+0.3.1
+-----
+another fix for pandas 1.0.0 upgrade - issue #15
+
+0.3.0
+-----
+fix for issue 15: units 'M' and 'Y' no longer supported
+
 0.2.9
 -----
 Fixed issue with end of timestamp writing to dss files for "PER-*" data type
