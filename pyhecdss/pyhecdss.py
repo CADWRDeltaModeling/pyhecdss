@@ -34,6 +34,57 @@ def get_version(fname):
     """
     return pyheclib.hec_zfver(fname)
 
+def get_rts(filename, pathname):
+    """
+    Gets regular time series matching the pathname from the filename.
+    Opens and reads pathname from filename and then closes it (slightly inefficient)
+
+    Parameters
+    ----------
+
+    filename: a path to DSS file
+    pathname: a string of the form /A/B/C/D/E/F that is parsed to match all parts except D
+    which if not blank is used to determine the time window to retrieve
+    D should be specified in the format of ddMMMYYYY HHmm - ddMMMYYYY HHmm
+
+    Returns
+    -------
+
+    a list of tuple (pandas DataFrame, units, period type) for timeseries found or an empty list
+
+    Notes
+    -----
+    Assumes that all matching are Regular time series ( as opposed to Irregular, See DSS terminolog)
+
+    Examples
+    --------
+
+    Get time series based on a part of pathname, e.g.
+
+    >>> pyhecdss.get_rts('test1.dss', '//SIN/////')
+    [(rts,units,type),...]
+
+    """
+    dssh=DSSFile(filename)
+    dfcat=dssh.read_catalog()
+    try:
+        pp=pathname.split('/')
+        cond=True
+        for p,n in zip(pp[1:4]+pp[5:7],['A','B','C','E','F']):
+            if len(p)>0:
+                cond = cond & (dfcat[n]==p)
+        plist=dssh.get_pathnames(dfcat[cond])
+        twstr = str.strip(pp[4])
+        startDateStr=endDateStr=None
+        if len(twstr) > 0:
+            if str.find(twstr,'-') >= 0:
+                startDateStr, endDateStr = list(map(lambda x: None if x == '' else x, map(str.strip,str.split(twstr,'-'))))
+            else:
+                startDateStr=twstr
+        return [dssh.read_rts(p,startDateStr, endDateStr) for p in plist]
+    finally:
+        dssh.close()
+    return []
 
 class DSSFile:
     # DSS missing conventions
@@ -395,11 +446,11 @@ class DSSFile:
                 if trim_first:
                     first_index = df1.first_valid_index()
                 else:
-                    first_index = 0
+                    first_index = df1.index[0]
                 if trim_last:
                     last_index = df1.last_valid_index()
                 else:
-                    last_index = None
+                    last_index = df1.index[-1]
                 df1 = df1[first_index:last_index]
             else:
                 df1 = df1
