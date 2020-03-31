@@ -1,6 +1,10 @@
 =========
 CHANGELOG
 =========
+0.5.1
+-----
+Fixed for '*' in catalog file in case of missing periods
+
 0.5.0
 -----
 Added helper function for simple timeseries retrieval

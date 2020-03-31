@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pyhecdss.pyhecdss &#8212; pyhecdss 0.5.0 documentation</title>
+    <title>pyhecdss.pyhecdss &#8212; pyhecdss 0.5.1 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -424,7 +424,7 @@
                         <span class="s2">&quot;No start date or end date and twstr is &quot;</span><span class="o">+</span><span class="n">twstr</span><span class="p">)</span>
                 <span class="n">sdate</span> <span class="o">=</span> <span class="n">edate</span> <span class="o">=</span> <span class="n">twstr</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">sdate</span><span class="p">,</span> <span class="n">edate</span> <span class="o">=</span> <span class="n">twstr</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
+                <span class="n">sdate</span><span class="p">,</span> <span class="n">edate</span> <span class="o">=</span> <span class="n">twstr</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span><span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">startDateStr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">startDateStr</span> <span class="o">=</span> <span class="n">sdate</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
             <span class="k">if</span> <span class="n">endDateStr</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>

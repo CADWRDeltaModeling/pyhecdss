@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>CHANGELOG &#8212; pyhecdss 0.5.0 documentation</title>
+    <title>CHANGELOG &#8212; pyhecdss 0.5.1 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -35,76 +35,80 @@
   <div class="section" id="changelog">
 <h1>CHANGELOG<a class="headerlink" href="#changelog" title="Permalink to this headline">¶</a></h1>
 <div class="section" id="id1">
-<h2>0.5.0<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
-<p>Added helper function for simple timeseries retrieval</p>
+<h2>0.5.1<a class="headerlink" href="#id1" title="Permalink to this headline">¶</a></h2>
+<p>Fixed for ‘*’ in catalog file in case of missing periods</p>
 </div>
 <div class="section" id="id2">
-<h2>0.4.1<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
-<p>regular and irregular timeseries now share same time window parsing logic</p>
+<h2>0.5.0<a class="headerlink" href="#id2" title="Permalink to this headline">¶</a></h2>
+<p>Added helper function for simple timeseries retrieval</p>
 </div>
 <div class="section" id="id3">
-<h2>0.4.0<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
-<p>fixes for issue #16: pandas timestamp limitations</p>
+<h2>0.4.1<a class="headerlink" href="#id3" title="Permalink to this headline">¶</a></h2>
+<p>regular and irregular timeseries now share same time window parsing logic</p>
 </div>
 <div class="section" id="id4">
-<h2>0.3.1<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
-<p>another fix for pandas 1.0.0 upgrade - issue #15</p>
+<h2>0.4.0<a class="headerlink" href="#id4" title="Permalink to this headline">¶</a></h2>
+<p>fixes for issue #16: pandas timestamp limitations</p>
 </div>
 <div class="section" id="id5">
-<h2>0.3.0<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
-<p>fix for issue 15: units ‘M’ and ‘Y’ no longer supported</p>
+<h2>0.3.1<a class="headerlink" href="#id5" title="Permalink to this headline">¶</a></h2>
+<p>another fix for pandas 1.0.0 upgrade - issue #15</p>
 </div>
 <div class="section" id="id6">
-<h2>0.2.9<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
-<p>Fixed issue with end of timestamp writing to dss files for “PER-<a href="#id7"><span class="problematic" id="id8">*</span></a>” data type</p>
+<h2>0.3.0<a class="headerlink" href="#id6" title="Permalink to this headline">¶</a></h2>
+<p>fix for issue 15: units ‘M’ and ‘Y’ no longer supported</p>
 </div>
-<div class="section" id="id9">
-<h2>0.2.8<a class="headerlink" href="#id9" title="Permalink to this headline">¶</a></h2>
-<p>Recompiled heclib in linux with latest compilers to resolve issue 8</p>
+<div class="section" id="id7">
+<h2>0.2.9<a class="headerlink" href="#id7" title="Permalink to this headline">¶</a></h2>
+<p>Fixed issue with end of timestamp writing to dss files for “PER-<a href="#id8"><span class="problematic" id="id9">*</span></a>” data type</p>
 </div>
 <div class="section" id="id10">
-<h2>0.2.7<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
-<p>Partial fixes for offset: Fixed for INST-* timeseries but not PER-* timeseries (issue #12)</p>
+<h2>0.2.8<a class="headerlink" href="#id10" title="Permalink to this headline">¶</a></h2>
+<p>Recompiled heclib in linux with latest compilers to resolve issue 8</p>
 </div>
 <div class="section" id="id11">
-<h2>0.2.6<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<h2>0.2.7<a class="headerlink" href="#id11" title="Permalink to this headline">¶</a></h2>
+<p>Partial fixes for offset: Fixed for INST-* timeseries but not PER-* timeseries (issue #12)</p>
+</div>
+<div class="section" id="id12">
+<h2>0.2.6<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
 <p>Performance tests added to showcase pyhecdss is the fastest
 Fixed issue #10: Period data stored shifted to end of time stamp (HEC-DSS convention)
 Fixing libgfortran dependency on linux by statically linking the library</p>
 </div>
-<div class="section" id="id12">
-<h2>0.2.5<a class="headerlink" href="#id12" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id13">
+<h2>0.2.5<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
 <p>Merged pull request from HenryDane:
 issues warnings or throws exception based on return value from functions
 fixed minor typo(s), added tests</p>
 </div>
-<div class="section" id="id13">
-<h2>0.2.4<a class="headerlink" href="#id13" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id14">
+<h2>0.2.4<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
 <p>Fixes issues #2, #4: get_version(), set_message_level(), set_program_name() now supported at module level
 Fixes issues #1: HECDSS marks periods by end of time stamp bug</p>
 </div>
-<div class="section" id="id14">
-<h2>0.2.3<a class="headerlink" href="#id14" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id15">
+<h2>0.2.3<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
 <p>Added linux 64bit support
 Corrected license to MIT for conda distribution</p>
 </div>
-<div class="section" id="id15">
-<h2>0.2.2<a class="headerlink" href="#id15" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id16">
+<h2>0.2.2<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
 <p>Update tests to use a smaller test.dss files
 Added sphinx documentation and demo notebook</p>
 </div>
-<div class="section" id="id16">
-<h2>0.2.1<a class="headerlink" href="#id16" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id17">
+<h2>0.2.1<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
 <p>Write irregular time series</p>
 </div>
-<div class="section" id="id17">
-<h2>0.2.0<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id18">
+<h2>0.2.0<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
 <p>Write regular time series
 Read irregular time series as data frame + units + type
 Performance improvement to using np.zeros instead of np.array(range…)</p>
 </div>
-<div class="section" id="id18">
-<h2>0.1.6<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="id19">
+<h2>0.1.6<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -135,22 +139,23 @@ Performance improvement to using np.zeros instead of np.array(range…)</p>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
 <li class="toctree-l1 current"><a class="current reference internal" href="#">CHANGELOG</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#id1">0.5.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id2">0.4.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id3">0.4.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id4">0.3.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id5">0.3.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id6">0.2.9</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id9">0.2.8</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id10">0.2.7</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id11">0.2.6</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id12">0.2.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id13">0.2.4</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id14">0.2.3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id15">0.2.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id16">0.2.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id17">0.2.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id18">0.1.6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id1">0.5.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id2">0.5.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id3">0.4.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id4">0.4.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id5">0.3.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id6">0.3.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id7">0.2.9</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id10">0.2.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id11">0.2.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id12">0.2.6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id13">0.2.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id14">0.2.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id15">0.2.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id16">0.2.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id17">0.2.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id18">0.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id19">0.1.6</a></li>
 </ul>
 </li>
 </ul>

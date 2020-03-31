@@ -390,7 +390,7 @@ class DSSFile:
                         "No start date or end date and twstr is "+twstr)
                 sdate = edate = twstr
             else:
-                sdate, edate = twstr.split("-")
+                sdate, edate = twstr.replace("*","").split("-")
             if startDateStr is None:
                 startDateStr = sdate.strip()
             if endDateStr is None:
