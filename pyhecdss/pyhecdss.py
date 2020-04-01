@@ -4,6 +4,7 @@ import numpy as np
 import os
 import time
 import warnings
+import logging
 from datetime import datetime, timedelta
 from calendar import monthrange
 from dateutil.parser import parse
@@ -216,7 +217,7 @@ class DSSFile:
         """
         fdname = self.fname[:self.fname.rfind(".")]+".dsd"
         if not os.path.exists(fdname):
-            print("NO CATALOG FOUND: Generating...")
+            logging.info("NO CATALOG FOUND: Generating...")
             self.catalog()
         else:
             if os.path.exists(self.fname):
@@ -224,17 +225,17 @@ class DSSFile:
                     os.path.getmtime(self.fname)))
                 fdtime = pd.to_datetime(time.ctime(os.path.getmtime(fdname)))
                 if ftime > fdtime:
-                    print("CATALOG FILE OLD: Generating...")
+                    logging.info("CATALOG FILE OLD: Generating...")
                     self.catalog()
             else:
-                print("Warning: No DSS File found. Using catalog file as is")
+                logging.warn("No DSS File found. Using catalog file as is")
         #
         with open(fdname, 'r') as fd:
             lines = fd.readlines()
         columns = ['Tag', 'A Part', 'B Part',
                    'C Part', 'F Part', 'E Part', 'D Part']
         if len(lines) < 9:
-            print("Warning: catalog is empty! for filename: ", fdname)
+            logging.warn("catalog is empty! for filename: ", fdname)
             return None
         colline = lines[7]
         column_indices = []
