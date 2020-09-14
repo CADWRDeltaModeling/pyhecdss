@@ -365,10 +365,10 @@ class DSSFile:
             # everything is ok
             pass
         elif istat == 1 or istat == 2 or istat == 3:
-            warnings.warn(
+            logging.debug(
                 "Some data or data blocks are missing [istat=" + str(istat) + "]", RuntimeWarning)
         elif istat == 4:
-            warnings.warn(
+            logging.debug(
                 "Found file but failed to load any data", RuntimeWarning)
         elif istat == 5:
             # should this be an exception?
