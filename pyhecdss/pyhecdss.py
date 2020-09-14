@@ -87,6 +87,42 @@ def get_rts(filename, pathname):
         dssh.close()
     return []
 
+def get_matching_rts(filename, pathname=None, path_parts=None):
+    '''Opens the DSS file and reads matching pathname or path parts
+    
+    Args:
+
+    :param filename: DSS filename containing data
+    :param pathname: The DSS pathname A-F parts like string /A/B/C/D/E/F/
+     where A-F is either blank implying match all or a regular expression to be matched
+    or
+    :param pathparts: if A-F regular expression contains the "/" character use the path_parts array instead
+    
+    *One of pathname or pathparts must be specified*
+
+    :returns: an array of tuples of ( data as dataframe, units as string, type as string one of INST-VAL, PER-VAL)
+    '''
+    dssh=DSSFile(filename)
+    dfcat=dssh.read_catalog()
+    try:
+        pp=pathname.split('/')
+        cond=True
+        for p,n in zip(pp[1:4]+pp[5:7],['A','B','C','E','F']):
+            if len(p)>0:
+                cond = cond & (dfcat[n].str.match(p))
+        plist=dssh.get_pathnames(dfcat[cond])
+        twstr = str.strip(pp[4])
+        startDateStr=endDateStr=None
+        if len(twstr) > 0:
+            if str.find(twstr,'-') >= 0:
+                startDateStr, endDateStr = list(map(lambda x: None if x == '' else x, map(str.strip,str.split(twstr,'-'))))
+            else:
+                startDateStr=twstr
+        return [dssh.read_rts(p,startDateStr, endDateStr) for p in plist]
+    finally:
+        dssh.close()
+    return []
+
 class DSSFile:
     # DSS missing conventions
     MISSING_VALUE = -901.0
