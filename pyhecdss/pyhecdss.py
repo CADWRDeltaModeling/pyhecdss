@@ -11,6 +11,7 @@ from dateutil.parser import parse
 # some static functions
 
 DATE_FMT_STR = '%d%b%Y'
+_USE_CONDENSED=False
 
 def set_message_level(level):
     """
@@ -245,27 +246,11 @@ class DSSFile:
             pyheclib.fortranclose_(inunit)
             if not opened_already:
                 self.close()
-
-    def read_catalog(self):
-        """
-        Reads .dsd (condensed catalog) for the given dss file.
-        Will run catalog if it doesn't exist or is out of date
-        """
-        fdname = self.fname[:self.fname.rfind(".")]+".dsd"
-        if not os.path.exists(fdname):
-            logging.info("NO CATALOG FOUND: Generating...")
-            self.catalog()
-        else:
-            if os.path.exists(self.fname):
-                ftime = pd.to_datetime(time.ctime(
-                    os.path.getmtime(self.fname)))
-                fdtime = pd.to_datetime(time.ctime(os.path.getmtime(fdname)))
-                if ftime > fdtime:
-                    logging.info("CATALOG FILE OLD: Generating...")
-                    self.catalog()
-            else:
-                logging.warn("No DSS File found. Using catalog file as is")
-        #
+    
+    def _read_catalog_dsd(self, fdname):
+        '''
+        read condensed catalog from fname into a data frame
+        '''
         with open(fdname, 'r') as fd:
             lines = fd.readlines()
         columns = ['Tag', 'A Part', 'B Part',
@@ -293,6 +278,56 @@ class DSSFile:
             a[cix, ilx] = s
             ilx = ilx+1
         df = pd.DataFrame(a.transpose(), columns=list('TABCFED'))
+        return df
+
+    def _read_catalog_dsc(self, fcname):
+        '''
+        read full catalog from fc name and create condensed catalog on the fly
+        returns data frame 
+        '''
+        df=pd.read_fwf(fcname,skiprows=8,colspecs=[(0,8),(8,15),(15,500)])
+        df=df.dropna()
+        df[list('ABCDEF')]=df['Record Pathname'].str.split('/',expand=True).iloc[:,1:7]
+        dfg=df.groupby(['A','B','C','F','E'])
+        dfmin,dfmax=dfg.min(),dfg.max()
+        tagmax='T'+str(dfmax.Tag.str[1:].astype('int').max())
+        dfc=dfmin['D']+'-'+dfmax['D']
+        dfc=dfc.reset_index()
+        dfc.insert(0,'T',tagmax)
+        return dfc
+    
+    def _check_condensed_catalog_file_and_recatalog(self, condensed=True):
+        if condensed:
+            ext='.dsd'
+        else:
+            ext='.dsc'
+        fdname = self.fname[:self.fname.rfind(".")]+ext
+        if not os.path.exists(fdname):
+            logging.debug("NO CATALOG FOUND: Generating...")
+            self.catalog()
+        else:
+            if os.path.exists(self.fname):
+                ftime = pd.to_datetime(time.ctime(
+                    os.path.getmtime(self.fname)))
+                fdtime = pd.to_datetime(time.ctime(os.path.getmtime(fdname)))
+                if ftime > fdtime:
+                    logging.debug("CATALOG FILE OLD: Generating...")
+                    self.catalog()
+            else:
+                logging.debug("No DSS File found. Using catalog file as is")
+        #
+        return fdname
+
+    def read_catalog(self):
+        """
+        Reads .dsd (condensed catalog) for the given dss file.
+        Will run catalog if it doesn't exist or is out of date
+        """
+        fdname=self._check_condensed_catalog_file_and_recatalog(condensed=_USE_CONDENSED)
+        if _USE_CONDENSED:
+            df=self._read_catalog_dsd(fdname)
+        else:
+            df=self._read_catalog_dsc(fdname)
         return df
 
     def get_pathnames(self, catalog_dataframe=None):
