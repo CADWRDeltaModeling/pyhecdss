@@ -407,11 +407,9 @@ class DSSFile:
             logging.debug(
                 "Found file but failed to load any data", RuntimeWarning)
         elif istat == 5:
-            # should this be an exception?
-            raise RuntimeError("Path not found")
+            logging.debug("Path not found")
         elif istat > 9:
-            # should this be an exception?
-            raise RuntimeError("Illegal internal call")
+            logging.debug("Illegal internal call")
     
     def _parse_times(self, pathname, startDateStr=None, endDateStr=None):
         '''

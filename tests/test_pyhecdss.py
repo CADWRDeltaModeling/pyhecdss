@@ -119,8 +119,8 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         pathname='/SAMPLE/INVALID_MARKER/WAVE/01JAN1990/15MIN/SAMPLE1/'
         sdate='01JAN1990'
         edate='31JAN1990'
+        # changed to a debugging level message so no error is now raised on missing pathname
         # values,units,periodtype=dssfile.read_rts(pathname,sdate,edate)
-        self.assertRaises(RuntimeError, dssfile.read_rts, pathname, sdate, edate)
     def test_missing_dir(self):
         '''
         missing directory in filename causes crash. So check before trying to open
