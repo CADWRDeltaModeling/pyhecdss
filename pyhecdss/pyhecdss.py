@@ -128,29 +128,8 @@ class DSSFile:
     # DSS missing conventions
     MISSING_VALUE = -901.0
     MISSING_RECORD = -902.0
-    FREQ_EPART_MAP = {
-        pd.tseries.offsets.Minute(n=1): "1MIN",
-        pd.tseries.offsets.Minute(n=2): "2MIN",
-        pd.tseries.offsets.Minute(n=3): "3MIN",
-        pd.tseries.offsets.Minute(n=4): "4MIN",
-        pd.tseries.offsets.Minute(n=5): "5MIN",
-        pd.tseries.offsets.Minute(n=10): "10MIN",
-        pd.tseries.offsets.Minute(n=15): "15MIN",
-        pd.tseries.offsets.Minute(n=20): "20MIN",
-        pd.tseries.offsets.Minute(n=30): "30MIN",
-        pd.tseries.offsets.Hour(n=1): "1HOUR",
-        pd.tseries.offsets.Hour(n=2): "2HOUR",
-        pd.tseries.offsets.Hour(n=3): "3HOUR",
-        pd.tseries.offsets.Hour(n=4): "4HOUR",
-        pd.tseries.offsets.Hour(n=6): "6HOUR",
-        pd.tseries.offsets.Hour(n=8): "8HOUR",
-        pd.tseries.offsets.Hour(n=12): "12HOUR",
-        pd.tseries.offsets.Day(n=1): "1DAY",
-        pd.tseries.offsets.Week(n=1): "1WEEK",
-        pd.tseries.offsets.MonthEnd(n=1): "1MON",
-        pd.tseries.offsets.YearEnd(n=1): "1YEAR"
-    }
-    EPART_FREQ_MAP = {v: k for k, v in FREQ_EPART_MAP.items()}
+    #
+    FREQ_NAME_MAP={"T":"MIN","H":"HOUR","D":"DAY","W":"WEEK","M":"MON","A-DEC":"YEAR"}
     #
     """
     vectorized version of timedelta
@@ -384,7 +363,7 @@ class DSSFile:
         elif interval.find('YEAR') >= 0:
             td = timedelta(days=365)
         else:
-            td = timedelta(seconds=DSSFile.EPART_FREQ_MAP[interval].nanos/1e9)
+            td = timedelta(seconds=DSSFile.get_freq_from_epart(interval).nanos/1e9)
         return td
 
     def _pad_to_end_of_block(self, endDateStr, interval):
@@ -497,7 +476,7 @@ class DSSFile:
             self._respond_to_istat_state(istat)
 
             # FIXME: deal with non-zero iofset for period data,i.e. else part of if stmt below
-            freqoffset = DSSFile.EPART_FREQ_MAP[interval]
+            freqoffset = DSSFile.get_freq_from_epart(interval)
             if ctype.startswith('INST'):
                 startDateWithOffset=parse(startDateStr)
                 if iofset !=0:
@@ -529,6 +508,27 @@ class DSSFile:
             if not opened_already:
                 self.close()
 
+    def get_epart_from_freq(freq):
+        return "%d%s"%(freq.n,DSSFile.FREQ_NAME_MAP[freq.name])
+
+    def get_freq_from_epart(epart):
+        if epart.find('MON') >= 0: 
+            td = pd.offsets.MonthEnd(n=int(str.split(epart,'MON')[0]))
+        elif epart.find('DAY') >=0:
+            td = pd.offsets.Day(n=int(str.split(epart,'DAY')[0]))
+        elif epart.find('HOUR') >=0:
+            td = pd.offsets.Hour(n=int(str.split(epart,'HOUR')[0]))
+        elif epart.find('MIN') >=0:
+            td = pd.offsets.Minute(n=int(str.split(epart,'MIN')[0]))
+        elif epart.find('YEAR') >= 0:
+            td = pd.offsets.YearEnd(n=int(str.split(epart,'YEAR')[0]))
+        elif epart.find('WEEK') >=0:
+            td = pd.offsets.Minute(n=int(str.split(epart,'MIN')[0]))
+        else:
+            raise RuntimeError('Could not understand interval: ',epart)
+        return td
+  
+
     def write_rts(self, pathname, df, cunits, ctype):
         """
         write time series to this DSS file with the given pathname.
@@ -536,7 +536,7 @@ class DSSFile:
         and associated units and types of length no greater than 8.
         """
         parts = pathname.split('/')
-        parts[5] = DSSFile.FREQ_EPART_MAP[df.index.freq]
+        parts[5] = DSSFile.get_epart_from_freq(df.index.freq)
         pathname = "/".join(parts)
         if isinstance(df.index[0], pd.Period):
             sp = df.index[0].to_timestamp(how='end')
