@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pyhecdss.pyhecdss &#8212; pyhecdss 0.5.1 documentation</title>
+    <title>pyhecdss.pyhecdss &#8212; pyhecdss 0.6.0 documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -38,12 +38,14 @@
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">time</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">calendar</span> <span class="kn">import</span> <span class="n">monthrange</span>
 <span class="kn">from</span> <span class="nn">dateutil.parser</span> <span class="kn">import</span> <span class="n">parse</span>
 <span class="c1"># some static functions</span>
 
 <span class="n">DATE_FMT_STR</span> <span class="o">=</span> <span class="s1">&#39;</span><span class="si">%d</span><span class="s1">%b%Y&#39;</span>
+<span class="n">_USE_CONDENSED</span><span class="o">=</span><span class="kc">False</span>
 
 <div class="viewcode-block" id="set_message_level"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.set_message_level">[docs]</a><span class="k">def</span> <span class="nf">set_message_level</span><span class="p">(</span><span class="n">level</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
@@ -120,33 +122,48 @@
         <span class="n">dssh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
     <span class="k">return</span> <span class="p">[]</span></div>
 
+<div class="viewcode-block" id="get_matching_rts"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.get_matching_rts">[docs]</a><span class="k">def</span> <span class="nf">get_matching_rts</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">pathname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_parts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="sd">&#39;&#39;&#39;Opens the DSS file and reads matching pathname or path parts</span>
+<span class="sd">    </span>
+<span class="sd">    Args:</span>
+
+<span class="sd">    :param filename: DSS filename containing data</span>
+<span class="sd">    :param pathname: The DSS pathname A-F parts like string /A/B/C/D/E/F/</span>
+<span class="sd">     where A-F is either blank implying match all or a regular expression to be matched</span>
+<span class="sd">    or</span>
+<span class="sd">    :param pathparts: if A-F regular expression contains the &quot;/&quot; character use the path_parts array instead</span>
+<span class="sd">    </span>
+<span class="sd">    *One of pathname or pathparts must be specified*</span>
+
+<span class="sd">    :returns: an array of tuples of ( data as dataframe, units as string, type as string one of INST-VAL, PER-VAL)</span>
+<span class="sd">    &#39;&#39;&#39;</span>
+    <span class="n">dssh</span><span class="o">=</span><span class="n">DSSFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="n">dfcat</span><span class="o">=</span><span class="n">dssh</span><span class="o">.</span><span class="n">read_catalog</span><span class="p">()</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">pp</span><span class="o">=</span><span class="n">pathname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
+        <span class="n">cond</span><span class="o">=</span><span class="kc">True</span>
+        <span class="k">for</span> <span class="n">p</span><span class="p">,</span><span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pp</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="n">pp</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">7</span><span class="p">],[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">]):</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
+                <span class="n">cond</span> <span class="o">=</span> <span class="n">cond</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">dfcat</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+        <span class="n">plist</span><span class="o">=</span><span class="n">dssh</span><span class="o">.</span><span class="n">get_pathnames</span><span class="p">(</span><span class="n">dfcat</span><span class="p">[</span><span class="n">cond</span><span class="p">])</span>
+        <span class="n">twstr</span> <span class="o">=</span> <span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">(</span><span class="n">pp</span><span class="p">[</span><span class="mi">4</span><span class="p">])</span>
+        <span class="n">startDateStr</span><span class="o">=</span><span class="n">endDateStr</span><span class="o">=</span><span class="kc">None</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">twstr</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">str</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">twstr</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="n">x</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">twstr</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">))))</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">startDateStr</span><span class="o">=</span><span class="n">twstr</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">dssh</span><span class="o">.</span><span class="n">read_rts</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">plist</span><span class="p">]</span>
+    <span class="k">finally</span><span class="p">:</span>
+        <span class="n">dssh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+    <span class="k">return</span> <span class="p">[]</span></div>
+
 <div class="viewcode-block" id="DSSFile"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile">[docs]</a><span class="k">class</span> <span class="nc">DSSFile</span><span class="p">:</span>
     <span class="c1"># DSS missing conventions</span>
     <span class="n">MISSING_VALUE</span> <span class="o">=</span> <span class="o">-</span><span class="mf">901.0</span>
     <span class="n">MISSING_RECORD</span> <span class="o">=</span> <span class="o">-</span><span class="mf">902.0</span>
-    <span class="n">FREQ_EPART_MAP</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Minute</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;1MIN&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Minute</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;2MIN&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Minute</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;3MIN&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Minute</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;4MIN&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Minute</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">5</span><span class="p">):</span> <span class="s2">&quot;5MIN&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Minute</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span> <span class="s2">&quot;10MIN&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Minute</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">15</span><span class="p">):</span> <span class="s2">&quot;15MIN&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Minute</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">20</span><span class="p">):</span> <span class="s2">&quot;20MIN&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Minute</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">30</span><span class="p">):</span> <span class="s2">&quot;30MIN&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Hour</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;1HOUR&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Hour</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">2</span><span class="p">):</span> <span class="s2">&quot;2HOUR&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Hour</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">3</span><span class="p">):</span> <span class="s2">&quot;3HOUR&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Hour</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">4</span><span class="p">):</span> <span class="s2">&quot;4HOUR&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Hour</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span> <span class="s2">&quot;6HOUR&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Hour</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">8</span><span class="p">):</span> <span class="s2">&quot;8HOUR&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Hour</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">12</span><span class="p">):</span> <span class="s2">&quot;12HOUR&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Day</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;1DAY&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Week</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;1WEEK&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">MonthEnd</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;1MON&quot;</span><span class="p">,</span>
-        <span class="n">pd</span><span class="o">.</span><span class="n">tseries</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">YearEnd</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span> <span class="s2">&quot;1YEAR&quot;</span>
-    <span class="p">}</span>
-    <span class="n">EPART_FREQ_MAP</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">FREQ_EPART_MAP</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="c1">#</span>
+    <span class="n">FREQ_NAME_MAP</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;T&quot;</span><span class="p">:</span><span class="s2">&quot;MIN&quot;</span><span class="p">,</span><span class="s2">&quot;H&quot;</span><span class="p">:</span><span class="s2">&quot;HOUR&quot;</span><span class="p">,</span><span class="s2">&quot;D&quot;</span><span class="p">:</span><span class="s2">&quot;DAY&quot;</span><span class="p">,</span><span class="s2">&quot;W&quot;</span><span class="p">:</span><span class="s2">&quot;WEEK&quot;</span><span class="p">,</span><span class="s2">&quot;M&quot;</span><span class="p">:</span><span class="s2">&quot;MON&quot;</span><span class="p">,</span><span class="s2">&quot;A-DEC&quot;</span><span class="p">:</span><span class="s2">&quot;YEAR&quot;</span><span class="p">}</span>
     <span class="c1">#</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    vectorized version of timedelta</span>
@@ -242,33 +259,17 @@
             <span class="n">pyheclib</span><span class="o">.</span><span class="n">fortranclose_</span><span class="p">(</span><span class="n">inunit</span><span class="p">)</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">opened_already</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
-
-<div class="viewcode-block" id="DSSFile.read_catalog"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.read_catalog">[docs]</a>    <span class="k">def</span> <span class="nf">read_catalog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-        <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">        Reads .dsd (condensed catalog) for the given dss file.</span>
-<span class="sd">        Will run catalog if it doesn&#39;t exist or is out of date</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">fdname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)]</span><span class="o">+</span><span class="s2">&quot;.dsd&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fdname</span><span class="p">):</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;NO CATALOG FOUND: Generating...&quot;</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">()</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">):</span>
-                <span class="n">ftime</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">ctime</span><span class="p">(</span>
-                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">)))</span>
-                <span class="n">fdtime</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">ctime</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">fdname</span><span class="p">)))</span>
-                <span class="k">if</span> <span class="n">ftime</span> <span class="o">&gt;</span> <span class="n">fdtime</span><span class="p">:</span>
-                    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;CATALOG FILE OLD: Generating...&quot;</span><span class="p">)</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">()</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: No DSS File found. Using catalog file as is&quot;</span><span class="p">)</span>
-        <span class="c1">#</span>
+    
+    <span class="k">def</span> <span class="nf">_read_catalog_dsd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fdname</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        read condensed catalog from fname into a data frame</span>
+<span class="sd">        &#39;&#39;&#39;</span>
         <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">fdname</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">fd</span><span class="p">:</span>
             <span class="n">lines</span> <span class="o">=</span> <span class="n">fd</span><span class="o">.</span><span class="n">readlines</span><span class="p">()</span>
         <span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Tag&#39;</span><span class="p">,</span> <span class="s1">&#39;A Part&#39;</span><span class="p">,</span> <span class="s1">&#39;B Part&#39;</span><span class="p">,</span>
                    <span class="s1">&#39;C Part&#39;</span><span class="p">,</span> <span class="s1">&#39;F Part&#39;</span><span class="p">,</span> <span class="s1">&#39;E Part&#39;</span><span class="p">,</span> <span class="s1">&#39;D Part&#39;</span><span class="p">]</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">9</span><span class="p">:</span>
-            <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Warning: catalog is empty! for filename: &quot;</span><span class="p">,</span> <span class="n">fdname</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;catalog is empty! for filename: &quot;</span><span class="p">,</span> <span class="n">fdname</span><span class="p">)</span>
             <span class="k">return</span> <span class="kc">None</span>
         <span class="n">colline</span> <span class="o">=</span> <span class="n">lines</span><span class="p">[</span><span class="mi">7</span><span class="p">]</span>
         <span class="n">column_indices</span> <span class="o">=</span> <span class="p">[]</span>
@@ -290,6 +291,56 @@
             <span class="n">a</span><span class="p">[</span><span class="n">cix</span><span class="p">,</span> <span class="n">ilx</span><span class="p">]</span> <span class="o">=</span> <span class="n">s</span>
             <span class="n">ilx</span> <span class="o">=</span> <span class="n">ilx</span><span class="o">+</span><span class="mi">1</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="s1">&#39;TABCFED&#39;</span><span class="p">))</span>
+        <span class="k">return</span> <span class="n">df</span>
+
+    <span class="k">def</span> <span class="nf">_read_catalog_dsc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fcname</span><span class="p">):</span>
+        <span class="sd">&#39;&#39;&#39;</span>
+<span class="sd">        read full catalog from fc name and create condensed catalog on the fly</span>
+<span class="sd">        returns data frame </span>
+<span class="sd">        &#39;&#39;&#39;</span>
+        <span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_fwf</span><span class="p">(</span><span class="n">fcname</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">colspecs</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">),(</span><span class="mi">8</span><span class="p">,</span><span class="mi">15</span><span class="p">),(</span><span class="mi">15</span><span class="p">,</span><span class="mi">500</span><span class="p">)])</span>
+        <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="n">df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="s1">&#39;ABCDEF&#39;</span><span class="p">)]</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Record Pathname&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span>
+        <span class="n">dfg</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">])</span>
+        <span class="n">dfmin</span><span class="p">,</span><span class="n">dfmax</span><span class="o">=</span><span class="n">dfg</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="n">dfg</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
+        <span class="n">tagmax</span><span class="o">=</span><span class="s1">&#39;T&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">dfmax</span><span class="o">.</span><span class="n">Tag</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+        <span class="n">dfc</span><span class="o">=</span><span class="n">dfmin</span><span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">]</span><span class="o">+</span><span class="s1">&#39;-&#39;</span><span class="o">+</span><span class="n">dfmax</span><span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">]</span>
+        <span class="n">dfc</span><span class="o">=</span><span class="n">dfc</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+        <span class="n">dfc</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;T&#39;</span><span class="p">,</span><span class="n">tagmax</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">dfc</span>
+    
+    <span class="k">def</span> <span class="nf">_check_condensed_catalog_file_and_recatalog</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">condensed</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">condensed</span><span class="p">:</span>
+            <span class="n">ext</span><span class="o">=</span><span class="s1">&#39;.dsd&#39;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">ext</span><span class="o">=</span><span class="s1">&#39;.dsc&#39;</span>
+        <span class="n">fdname</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">[:</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">)]</span><span class="o">+</span><span class="n">ext</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">fdname</span><span class="p">):</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;NO CATALOG FOUND: Generating...&quot;</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">):</span>
+                <span class="n">ftime</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">ctime</span><span class="p">(</span>
+                    <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fname</span><span class="p">)))</span>
+                <span class="n">fdtime</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">time</span><span class="o">.</span><span class="n">ctime</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">getmtime</span><span class="p">(</span><span class="n">fdname</span><span class="p">)))</span>
+                <span class="k">if</span> <span class="n">ftime</span> <span class="o">&gt;</span> <span class="n">fdtime</span><span class="p">:</span>
+                    <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;CATALOG FILE OLD: Generating...&quot;</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">catalog</span><span class="p">()</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;No DSS File found. Using catalog file as is&quot;</span><span class="p">)</span>
+        <span class="c1">#</span>
+        <span class="k">return</span> <span class="n">fdname</span>
+
+<div class="viewcode-block" id="DSSFile.read_catalog"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.read_catalog">[docs]</a>    <span class="k">def</span> <span class="nf">read_catalog</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Reads .dsd (condensed catalog) for the given dss file.</span>
+<span class="sd">        Will run catalog if it doesn&#39;t exist or is out of date</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">fdname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_check_condensed_catalog_file_and_recatalog</span><span class="p">(</span><span class="n">condensed</span><span class="o">=</span><span class="n">_USE_CONDENSED</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">_USE_CONDENSED</span><span class="p">:</span>
+            <span class="n">df</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_read_catalog_dsd</span><span class="p">(</span><span class="n">fdname</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">df</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_read_catalog_dsc</span><span class="p">(</span><span class="n">fdname</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">df</span></div>
 
 <div class="viewcode-block" id="DSSFile.get_pathnames"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.get_pathnames">[docs]</a>    <span class="k">def</span> <span class="nf">get_pathnames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catalog_dataframe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -346,7 +397,7 @@
         <span class="k">elif</span> <span class="n">interval</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;YEAR&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
             <span class="n">td</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="mi">365</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">td</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">EPART_FREQ_MAP</span><span class="p">[</span><span class="n">interval</span><span class="p">]</span><span class="o">.</span><span class="n">nanos</span><span class="o">/</span><span class="mf">1e9</span><span class="p">)</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">get_freq_from_epart</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span><span class="o">.</span><span class="n">nanos</span><span class="o">/</span><span class="mf">1e9</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">td</span>
 
     <span class="k">def</span> <span class="nf">_pad_to_end_of_block</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">,</span> <span class="n">interval</span><span class="p">):</span>
@@ -398,17 +449,15 @@
             <span class="c1"># everything is ok</span>
             <span class="k">pass</span>
         <span class="k">elif</span> <span class="n">istat</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">or</span> <span class="n">istat</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">istat</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="s2">&quot;Some data or data blocks are missing [istat=&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">istat</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;]&quot;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">istat</span> <span class="o">==</span> <span class="mi">4</span><span class="p">:</span>
-            <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span>
                 <span class="s2">&quot;Found file but failed to load any data&quot;</span><span class="p">,</span> <span class="ne">RuntimeWarning</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">istat</span> <span class="o">==</span> <span class="mi">5</span><span class="p">:</span>
-            <span class="c1"># should this be an exception?</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Path not found&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Path not found&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="n">istat</span> <span class="o">&gt;</span> <span class="mi">9</span><span class="p">:</span>
-            <span class="c1"># should this be an exception?</span>
-            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Illegal internal call&quot;</span><span class="p">)</span>
+            <span class="n">logging</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">&quot;Illegal internal call&quot;</span><span class="p">)</span>
     
     <span class="k">def</span> <span class="nf">_parse_times</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">startDateStr</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">endDateStr</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
@@ -461,7 +510,7 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_respond_to_istat_state</span><span class="p">(</span><span class="n">istat</span><span class="p">)</span>
 
             <span class="c1"># FIXME: deal with non-zero iofset for period data,i.e. else part of if stmt below</span>
-            <span class="n">freqoffset</span> <span class="o">=</span> <span class="n">DSSFile</span><span class="o">.</span><span class="n">EPART_FREQ_MAP</span><span class="p">[</span><span class="n">interval</span><span class="p">]</span>
+            <span class="n">freqoffset</span> <span class="o">=</span> <span class="n">DSSFile</span><span class="o">.</span><span class="n">get_freq_from_epart</span><span class="p">(</span><span class="n">interval</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">ctype</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;INST&#39;</span><span class="p">):</span>
                 <span class="n">startDateWithOffset</span><span class="o">=</span><span class="n">parse</span><span class="p">(</span><span class="n">startDateStr</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">iofset</span> <span class="o">!=</span><span class="mi">0</span><span class="p">:</span>
@@ -493,6 +542,27 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">opened_already</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
+<div class="viewcode-block" id="DSSFile.get_epart_from_freq"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.get_epart_from_freq">[docs]</a>    <span class="k">def</span> <span class="nf">get_epart_from_freq</span><span class="p">(</span><span class="n">freq</span><span class="p">):</span>
+        <span class="k">return</span> <span class="s2">&quot;</span><span class="si">%d%s</span><span class="s2">&quot;</span><span class="o">%</span><span class="p">(</span><span class="n">freq</span><span class="o">.</span><span class="n">n</span><span class="p">,</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">FREQ_NAME_MAP</span><span class="p">[</span><span class="n">freq</span><span class="o">.</span><span class="n">name</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="DSSFile.get_freq_from_epart"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.get_freq_from_epart">[docs]</a>    <span class="k">def</span> <span class="nf">get_freq_from_epart</span><span class="p">(</span><span class="n">epart</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">epart</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MON&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span> 
+            <span class="n">td</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">MonthEnd</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">epart</span><span class="p">,</span><span class="s1">&#39;MON&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="n">epart</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;DAY&#39;</span><span class="p">)</span> <span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Day</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">epart</span><span class="p">,</span><span class="s1">&#39;DAY&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="n">epart</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;HOUR&#39;</span><span class="p">)</span> <span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Hour</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">epart</span><span class="p">,</span><span class="s1">&#39;HOUR&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="n">epart</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;MIN&#39;</span><span class="p">)</span> <span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Minute</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">epart</span><span class="p">,</span><span class="s1">&#39;MIN&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="n">epart</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;YEAR&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">YearEnd</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">epart</span><span class="p">,</span><span class="s1">&#39;YEAR&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">elif</span> <span class="n">epart</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s1">&#39;WEEK&#39;</span><span class="p">)</span> <span class="o">&gt;=</span><span class="mi">0</span><span class="p">:</span>
+            <span class="n">td</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Minute</span><span class="p">(</span><span class="n">n</span><span class="o">=</span><span class="nb">int</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">epart</span><span class="p">,</span><span class="s1">&#39;MIN&#39;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">&#39;Could not understand interval: &#39;</span><span class="p">,</span><span class="n">epart</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">td</span></div>
+  
+
 <div class="viewcode-block" id="DSSFile.write_rts"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.write_rts">[docs]</a>    <span class="k">def</span> <span class="nf">write_rts</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">cunits</span><span class="p">,</span> <span class="n">ctype</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">        write time series to this DSS file with the given pathname.</span>
@@ -500,7 +570,7 @@
 <span class="sd">        and associated units and types of length no greater than 8.</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">parts</span> <span class="o">=</span> <span class="n">pathname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
-        <span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">DSSFile</span><span class="o">.</span><span class="n">FREQ_EPART_MAP</span><span class="p">[</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">freq</span><span class="p">]</span>
+        <span class="n">parts</span><span class="p">[</span><span class="mi">5</span><span class="p">]</span> <span class="o">=</span> <span class="n">DSSFile</span><span class="o">.</span><span class="n">get_epart_from_freq</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="o">.</span><span class="n">freq</span><span class="p">)</span>
         <span class="n">pathname</span> <span class="o">=</span> <span class="s2">&quot;/&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">pd</span><span class="o">.</span><span class="n">Period</span><span class="p">):</span>
             <span class="n">sp</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">index</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">to_timestamp</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;end&#39;</span><span class="p">)</span>

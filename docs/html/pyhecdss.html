@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pyhecdss package &#8212; pyhecdss 0.5.1 documentation</title>
+    <title>pyhecdss package &#8212; pyhecdss 0.6.0 documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -45,15 +45,10 @@
 <em class="property">class </em><code class="sig-prename descclassname">pyhecdss.pyhecdss.</code><code class="sig-name descname">DSSFile</code><span class="sig-paren">(</span><em class="sig-param">fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="attribute">
-<dt id="pyhecdss.pyhecdss.DSSFile.EPART_FREQ_MAP">
-<code class="sig-name descname">EPART_FREQ_MAP</code><em class="property"> = {'10MIN': &lt;10 * Minutes&gt;, '12HOUR': &lt;12 * Hours&gt;, '15MIN': &lt;15 * Minutes&gt;, '1DAY': &lt;Day&gt;, '1HOUR': &lt;Hour&gt;, '1MIN': &lt;Minute&gt;, '1MON': &lt;MonthEnd&gt;, '1WEEK': &lt;Week: weekday=None&gt;, '1YEAR': &lt;YearEnd: month=12&gt;, '20MIN': &lt;20 * Minutes&gt;, '2HOUR': &lt;2 * Hours&gt;, '2MIN': &lt;2 * Minutes&gt;, '30MIN': &lt;30 * Minutes&gt;, '3HOUR': &lt;3 * Hours&gt;, '3MIN': &lt;3 * Minutes&gt;, '4HOUR': &lt;4 * Hours&gt;, '4MIN': &lt;4 * Minutes&gt;, '5MIN': &lt;5 * Minutes&gt;, '6HOUR': &lt;6 * Hours&gt;, '8HOUR': &lt;8 * Hours&gt;}</em><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.EPART_FREQ_MAP" title="Permalink to this definition">¶</a></dt>
+<dt id="pyhecdss.pyhecdss.DSSFile.FREQ_NAME_MAP">
+<code class="sig-name descname">FREQ_NAME_MAP</code><em class="property"> = {'A-DEC': 'YEAR', 'D': 'DAY', 'H': 'HOUR', 'M': 'MON', 'T': 'MIN', 'W': 'WEEK'}</em><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.FREQ_NAME_MAP" title="Permalink to this definition">¶</a></dt>
 <dd><p>vectorized version of timedelta</p>
 </dd></dl>
-
-<dl class="attribute">
-<dt id="pyhecdss.pyhecdss.DSSFile.FREQ_EPART_MAP">
-<code class="sig-name descname">FREQ_EPART_MAP</code><em class="property"> = {&lt;Minute&gt;: '1MIN', &lt;2 * Minutes&gt;: '2MIN', &lt;3 * Minutes&gt;: '3MIN', &lt;4 * Minutes&gt;: '4MIN', &lt;5 * Minutes&gt;: '5MIN', &lt;10 * Minutes&gt;: '10MIN', &lt;15 * Minutes&gt;: '15MIN', &lt;20 * Minutes&gt;: '20MIN', &lt;30 * Minutes&gt;: '30MIN', &lt;Hour&gt;: '1HOUR', &lt;2 * Hours&gt;: '2HOUR', &lt;3 * Hours&gt;: '3HOUR', &lt;4 * Hours&gt;: '4HOUR', &lt;6 * Hours&gt;: '6HOUR', &lt;8 * Hours&gt;: '8HOUR', &lt;12 * Hours&gt;: '12HOUR', &lt;Day&gt;: '1DAY', &lt;Week: weekday=None&gt;: '1WEEK', &lt;MonthEnd&gt;: '1MON', &lt;YearEnd: month=12&gt;: '1YEAR'}</em><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.FREQ_EPART_MAP" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="attribute">
 <dt id="pyhecdss.pyhecdss.DSSFile.MISSING_RECORD">
@@ -76,6 +71,16 @@
 <code class="sig-name descname">close</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.close"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.close" title="Permalink to this definition">¶</a></dt>
 <dd><p>Close DSS File</p>
 </dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.get_epart_from_freq">
+<code class="sig-name descname">get_epart_from_freq</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.get_epart_from_freq"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.get_epart_from_freq" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="pyhecdss.pyhecdss.DSSFile.get_freq_from_epart">
+<code class="sig-name descname">get_freq_from_epart</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile.get_freq_from_epart"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.get_freq_from_epart" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="method">
 <dt id="pyhecdss.pyhecdss.DSSFile.get_pathnames">
@@ -171,6 +176,30 @@ The time series is passed in as a pandas DataFrame
 and associated units and types of length no greater than 8.</p>
 </dd></dl>
 
+</dd></dl>
+
+<dl class="function">
+<dt id="pyhecdss.pyhecdss.get_matching_rts">
+<code class="sig-prename descclassname">pyhecdss.pyhecdss.</code><code class="sig-name descname">get_matching_rts</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">pathname=None</em>, <em class="sig-param">path_parts=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#get_matching_rts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.get_matching_rts" title="Permalink to this definition">¶</a></dt>
+<dd><p>Opens the DSS file and reads matching pathname or path parts</p>
+<p>Args:</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>filename</strong> – DSS filename containing data</p></li>
+<li><p><strong>pathname</strong> – The DSS pathname A-F parts like string /A/B/C/D/E/F/
+where A-F is either blank implying match all or a regular expression to be matched</p></li>
+</ul>
+</dd>
+</dl>
+<p>or
+:param pathparts: if A-F regular expression contains the “/” character use the path_parts array instead</p>
+<p><em>One of pathname or pathparts must be specified</em></p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>an array of tuples of ( data as dataframe, units as string, type as string one of INST-VAL, PER-VAL)</p>
+</dd>
+</dl>
 </dd></dl>
 
 <dl class="function">
