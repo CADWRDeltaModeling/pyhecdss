@@ -18,20 +18,14 @@ def get_numpy_include():
     return numpy_include
 
 ##------------------ VERSIONING BEST PRACTICES --------------------------##
+import versioneer
+
 import os,codecs
 here = os.path.abspath(os.path.dirname(__file__))
 
 def read(*parts):
     with codecs.open(os.path.join(here, *parts), 'r') as fp:
         return fp.read()
-
-def find_version(*file_paths):
-    version_file = read(*file_paths)
-    version_match = re.search(r"^__version__ = ['\"]([^'\"]*)['\"]",
-                              version_file, re.M)
-    if version_match:
-        return version_match.group(1)
-    raise RuntimeError("Unable to find version string.")
 
 with open('README.rst') as readme_file:
     readme = readme_file.read()
@@ -81,6 +75,8 @@ pyheclib_module = Extension('pyhecdss._pyheclib',
 setup(name='pyhecdss',
     author="Nicky Sandhu",
     author_email='psandhu@water.ca.gov',
+    version=versioneer.get_version(),
+    cmdclass=versioneer.get_cmdclass(),
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',
@@ -104,7 +100,6 @@ setup(name='pyhecdss',
     test_suite='tests',
     tests_require=test_requirements,
     url='https://github.com/dwr-psandhu/pyhecdss',
-    version=find_version("pyhecdss","__init__.py"),
     zip_safe=False,
     ext_modules=[pyheclib_module],
 )
