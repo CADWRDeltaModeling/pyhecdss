@@ -268,9 +268,10 @@ class DSSFile:
         df=df.dropna()
         df[list('ABCDEF')]=df['Record Pathname'].str.split('/',expand=True).iloc[:,1:7]
         dfg=df.groupby(['A','B','C','F','E'])
+        df.D=pd.to_datetime(df.D)
         dfmin,dfmax=dfg.min(),dfg.max()
         tagmax='T'+str(dfmax.Tag.str[1:].astype('int').max())
-        dfc=dfmin['D']+'-'+dfmax['D']
+        dfc=dfmin['D'].dt.strftime('%d%b%Y').str.upper() +' - '+ dfmax['D'].dt.strftime('%d%b%Y').str.upper()
         dfc=dfc.reset_index()
         dfc.insert(0,'T',tagmax)
         return dfc

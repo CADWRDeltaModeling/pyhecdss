@@ -1,14 +1,18 @@
 =========
 CHANGELOG
 =========
+0.6.1
+-----
+ fixed bug when switching to non-condensed catalog that caused shortening of time windows
+ 
 0.6.0
 -----
-fix for breaking change by pandas >= 1.1
-switching to using non-condensed catalog, flag available to switch back
-changing exception on missing pathname to logging message
-changing message level to 0 as default
-adding get_rts_matching for pathname selection by regular expressions
-replaced warnings with debug logging
+ * fix for breaking change by pandas >= 1.1
+ * switching to using non-condensed catalog, flag available to switch back
+ * changing exception on missing pathname to logging message
+ * changing message level to 0 as default
+ * adding get_rts_matching for pathname selection by regular expressions
+ * replaced warnings with debug logging
 
 0.5.1
 -----
