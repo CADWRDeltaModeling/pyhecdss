@@ -1,3 +1,4 @@
+import collections
 from . import pyheclib
 import pandas as pd
 import numpy as np
@@ -11,7 +12,8 @@ from dateutil.parser import parse
 # some static functions
 
 DATE_FMT_STR = '%d%b%Y'
-_USE_CONDENSED=False
+_USE_CONDENSED = False
+
 
 def set_message_level(level):
     """
@@ -35,6 +37,7 @@ def get_version(fname):
     returns a tuple of string version of 4 characters and integer version
     """
     return pyheclib.hec_zfver(fname)
+
 
 def get_ts(filename, pathname):
     """
@@ -68,29 +71,31 @@ def get_ts(filename, pathname):
 
     """
     with DSSFile(filename) as dssh:
-        dfcat=dssh.read_catalog()
-        pp=pathname.split('/')
-        cond=True
-        for p,n in zip(pp[1:4]+pp[5:7],['A','B','C','E','F']):
-            if len(p)>0:
-                cond = cond & (dfcat[n]==p)
-        plist=dssh.get_pathnames(dfcat[cond])
+        dfcat = dssh.read_catalog()
+        pp = pathname.split('/')
+        cond = True
+        for p, n in zip(pp[1:4]+pp[5:7], ['A', 'B', 'C', 'E', 'F']):
+            if len(p) > 0:
+                cond = cond & (dfcat[n] == p)
+        plist = dssh.get_pathnames(dfcat[cond])
         twstr = str.strip(pp[4])
-        startDateStr=endDateStr=None
+        startDateStr = endDateStr = None
         if len(twstr) > 0:
-            if str.find(twstr,'-') >= 0:
-                startDateStr, endDateStr = list(map(lambda x: None if x == '' else x, map(str.strip,str.split(twstr,'-'))))
+            if str.find(twstr, '-') >= 0:
+                startDateStr, endDateStr = list(
+                    map(lambda x: None if x == '' else x, map(str.strip, str.split(twstr, '-'))))
             else:
                 startDateStr, endDateStr = None, None
         for p in plist:
             if p.split('/')[5].startswith('IR-'):
-                yield dssh.read_its(p,startDateStr, endDateStr)
+                yield dssh.read_its(p, startDateStr, endDateStr)
             else:
-                yield dssh.read_rts(p,startDateStr, endDateStr)
+                yield dssh.read_rts(p, startDateStr, endDateStr)
+
 
 def get_matching_ts(filename, pathname=None, path_parts=None):
     '''Opens the DSS file and reads matching pathname or path parts
-    
+
     Args:
 
     :param filename: DSS filename containing data
@@ -98,34 +103,37 @@ def get_matching_ts(filename, pathname=None, path_parts=None):
      where A-F is either blank implying match all or a regular expression to be matched
     or
     :param pathparts: if A-F regular expression contains the "/" character use the path_parts array instead
-    
+
     *One of pathname or pathparts must be specified*
 
     :returns: an generator of named tuples of DSSData ( data as dataframe, units as string, type as string one of INST-VAL, PER-VAL)
     '''
     with DSSFile(filename) as dssh:
-        dfcat=dssh.read_catalog()
-        pp=pathname.split('/')
-        cond=dfcat['A'].str.match('.*')
-        for p,n in zip(pp[1:4]+pp[5:7],['A','B','C','E','F']):
-            if len(p)>0:
+        dfcat = dssh.read_catalog()
+        pp = pathname.split('/')
+        cond = dfcat['A'].str.match('.*')
+        for p, n in zip(pp[1:4]+pp[5:7], ['A', 'B', 'C', 'E', 'F']):
+            if len(p) > 0:
                 cond = cond & (dfcat[n].str.match(p))
-        plist=dssh.get_pathnames(dfcat[cond])
+        plist = dssh.get_pathnames(dfcat[cond])
         twstr = str.strip(pp[4])
-        startDateStr=endDateStr=None
+        startDateStr = endDateStr = None
         if len(twstr) > 0:
-            if str.find(twstr,'-') >= 0:
-                startDateStr, endDateStr = list(map(lambda x: None if x == '' else x, map(str.strip,str.split(twstr,'-'))))
+            if str.find(twstr, '-') >= 0:
+                startDateStr, endDateStr = list(
+                    map(lambda x: None if x == '' else x, map(str.strip, str.split(twstr, '-'))))
             else:
                 startDateStr, endDateStr = None, None
         for p in plist:
             if p.split('/')[5].startswith('IR-'):
-                yield dssh.read_its(p,startDateStr, endDateStr)
+                yield dssh.read_its(p, startDateStr, endDateStr)
             else:
-                yield dssh.read_rts(p,startDateStr, endDateStr)
+                yield dssh.read_rts(p, startDateStr, endDateStr)
 
-import collections
-DSSData = collections.namedtuple('DSSDate', field_names=['data','units','period_type'])
+
+DSSData = collections.namedtuple('DSSDate', field_names=['data', 'units', 'period_type'])
+
+
 class DSSFile:
     """
     Opens a HEC-DSS file for operations of read and write. 
@@ -146,13 +154,12 @@ class DSSFile:
     MISSING_VALUE = -901.0
     MISSING_RECORD = -902.0
     #
-    FREQ_NAME_MAP={"T":"MIN","H":"HOUR","D":"DAY","W":"WEEK","M":"MON","A-DEC":"YEAR"}
+    FREQ_NAME_MAP = {"T": "MIN", "H": "HOUR", "D": "DAY", "W": "WEEK", "M": "MON", "A-DEC": "YEAR"}
     #
     """
     vectorized version of timedelta
     """
-    timedelta_minutes=np.vectorize(lambda x: timedelta(minutes=int(x)))
-
+    timedelta_minutes = np.vectorize(lambda x: timedelta(minutes=int(x)))
 
     def __init__(self, fname):
         self.isopen = False
@@ -166,7 +173,7 @@ class DSSFile:
     def __enter__(self):
         return self
 
-    def __exit__(self,exc_type, exc_value, traceback):
+    def __exit__(self, exc_type, exc_value, traceback):
         self.close()
 
     def __del__(self):
@@ -249,7 +256,7 @@ class DSSFile:
             pyheclib.fortranclose_(inunit)
             if not opened_already:
                 self.close()
-    
+
     @staticmethod
     def _read_catalog_dsd(fdname):
         '''
@@ -290,23 +297,24 @@ class DSSFile:
         read full catalog from fc name and create condensed catalog on the fly
         returns data frame 
         '''
-        df=pd.read_fwf(fcname,skiprows=8,colspecs=[(0,8),(8,15),(15,500)])
-        df=df.dropna(how='all',axis=0) # drop empty lines
-        df[list('ABCDEF')]=df['Record Pathname'].str.split('/',expand=True).iloc[:,1:7]
-        dfg=df.groupby(['A','B','C','F','E'])
-        df.D=pd.to_datetime(df.D)
-        dfmin,dfmax=dfg.min(),dfg.max()
-        tagmax='T'+ str(dfmax.Tag.astype('str').str[1:].astype('int',errors='ignore').max())
-        dfc=dfmin['D'].dt.strftime('%d%b%Y').str.upper() +' - '+ dfmax['D'].dt.strftime('%d%b%Y').str.upper()
-        dfc=dfc.reset_index()
-        dfc.insert(0,'T',tagmax)
+        df = pd.read_fwf(fcname, skiprows=8, colspecs=[(0, 8), (8, 15), (15, 500)])
+        df = df.dropna(how='all', axis=0)  # drop empty lines
+        df[list('ABCDEF')] = df['Record Pathname'].str.split('/', expand=True).iloc[:, 1:7]
+        dfg = df.groupby(['A', 'B', 'C', 'F', 'E'])
+        df.D = pd.to_datetime(df.D)
+        dfmin, dfmax = dfg.min(), dfg.max()
+        tagmax = 'T' + str(dfmax.Tag.astype('str').str[1:].astype('int', errors='ignore').max())
+        dfc = dfmin['D'].dt.strftime('%d%b%Y').str.upper() + ' - ' + \
+            dfmax['D'].dt.strftime('%d%b%Y').str.upper()
+        dfc = dfc.reset_index()
+        dfc.insert(0, 'T', tagmax)
         return dfc
-    
+
     def _check_condensed_catalog_file_and_recatalog(self, condensed=True):
         if condensed:
-            ext='.dsd'
+            ext = '.dsd'
         else:
-            ext='.dsc'
+            ext = '.dsc'
         fdname = self.fname[:self.fname.rfind(".")]+ext
         if not os.path.exists(fdname):
             logging.debug("NO CATALOG FOUND: Generating...")
@@ -329,11 +337,11 @@ class DSSFile:
         Reads .dsd (condensed catalog) for the given dss file.
         Will run catalog if it doesn't exist or is out of date
         """
-        fdname=self._check_condensed_catalog_file_and_recatalog(condensed=_USE_CONDENSED)
+        fdname = self._check_condensed_catalog_file_and_recatalog(condensed=_USE_CONDENSED)
         if _USE_CONDENSED:
-            df=DSSFile._read_catalog_dsd(fdname)
+            df = DSSFile._read_catalog_dsd(fdname)
         else:
-            df=DSSFile._read_catalog_dsc(fdname)
+            df = DSSFile._read_catalog_dsc(fdname)
         return df
 
     def get_pathnames(self, catalog_dataframe=None):
@@ -354,7 +362,7 @@ class DSSFile:
         Get number of values in interval istr, using the start date and end date
         string
         """
-        td=DSSFile._get_timedelta_for_interval(istr)
+        td = DSSFile._get_timedelta_for_interval(istr)
         return int((parse(edstr)-parse(sdstr))/td)+1
 
     def julian_day(self, date):
@@ -394,16 +402,16 @@ class DSSFile:
         return td
 
     def _pad_to_end_of_block(self, endDateStr, interval):
-        edate=parse(endDateStr)
+        edate = parse(endDateStr)
         if interval.find('MON') >= 0 or interval.find('YEAR') >= 0:
-            edate=datetime((edate.year//10+1)*10,1,1)
+            edate = datetime((edate.year//10+1)*10, 1, 1)
         elif interval.find('DAY') >= 0:
-            edate=datetime(edate.year+1,1,1)
+            edate = datetime(edate.year+1, 1, 1)
         elif interval.find('HOUR') >= 0 or interval.find('MIN') >= 0:
             if edate.month == 12:
-                edate=datetime(edate.year+1,1,1)
+                edate = datetime(edate.year+1, 1, 1)
             else:
-                edate=datetime(edate.year,edate.month+1,1)
+                edate = datetime(edate.year, edate.month+1, 1)
         else:
             edate = edate+timedelta(days=1)
         return edate.strftime(DATE_FMT_STR).upper()
@@ -451,7 +459,7 @@ class DSSFile:
             logging.debug("Path not found")
         elif istat > 9:
             logging.debug("Illegal internal call")
-    
+
     def _parse_times(self, pathname, startDateStr=None, endDateStr=None):
         '''
         parse times based on pathname or startDateStr and endDateStr
@@ -466,7 +474,7 @@ class DSSFile:
                         "No start date or end date and twstr is "+twstr)
                 sdate = edate = twstr
             else:
-                sdate, edate = twstr.replace("*","").split("-")
+                sdate, edate = twstr.replace("*", "").split("-")
             if startDateStr is None:
                 startDateStr = sdate.strip()
             if endDateStr is None:
@@ -505,9 +513,9 @@ class DSSFile:
             # FIXME: deal with non-zero iofset for period data,i.e. else part of if stmt below
             freqoffset = DSSFile.get_freq_from_epart(interval)
             if ctype.startswith('INST'):
-                startDateWithOffset=parse(startDateStr)
-                if iofset !=0:
-                    startDateWithOffset=parse(startDateStr)-freqoffset+timedelta(minutes=iofset)
+                startDateWithOffset = parse(startDateStr)
+                if iofset != 0:
+                    startDateWithOffset = parse(startDateStr)-freqoffset+timedelta(minutes=iofset)
                 dindex = pd.date_range(
                     startDateWithOffset, periods=nvals, freq=freqoffset)
             else:
@@ -536,25 +544,24 @@ class DSSFile:
                 self.close()
 
     def get_epart_from_freq(freq):
-        return "%d%s"%(freq.n,DSSFile.FREQ_NAME_MAP[freq.name])
+        return "%d%s" % (freq.n, DSSFile.FREQ_NAME_MAP[freq.name])
 
     def get_freq_from_epart(epart):
-        if epart.find('MON') >= 0: 
-            td = pd.offsets.MonthEnd(n=int(str.split(epart,'MON')[0]))
-        elif epart.find('DAY') >=0:
-            td = pd.offsets.Day(n=int(str.split(epart,'DAY')[0]))
-        elif epart.find('HOUR') >=0:
-            td = pd.offsets.Hour(n=int(str.split(epart,'HOUR')[0]))
-        elif epart.find('MIN') >=0:
-            td = pd.offsets.Minute(n=int(str.split(epart,'MIN')[0]))
+        if epart.find('MON') >= 0:
+            td = pd.offsets.MonthEnd(n=int(str.split(epart, 'MON')[0]))
+        elif epart.find('DAY') >= 0:
+            td = pd.offsets.Day(n=int(str.split(epart, 'DAY')[0]))
+        elif epart.find('HOUR') >= 0:
+            td = pd.offsets.Hour(n=int(str.split(epart, 'HOUR')[0]))
+        elif epart.find('MIN') >= 0:
+            td = pd.offsets.Minute(n=int(str.split(epart, 'MIN')[0]))
         elif epart.find('YEAR') >= 0:
-            td = pd.offsets.YearEnd(n=int(str.split(epart,'YEAR')[0]))
-        elif epart.find('WEEK') >=0:
-            td = pd.offsets.Minute(n=int(str.split(epart,'MIN')[0]))
+            td = pd.offsets.YearEnd(n=int(str.split(epart, 'YEAR')[0]))
+        elif epart.find('WEEK') >= 0:
+            td = pd.offsets.Minute(n=int(str.split(epart, 'MIN')[0]))
         else:
-            raise RuntimeError('Could not understand interval: ',epart)
+            raise RuntimeError('Could not understand interval: ', epart)
         return td
-  
 
     def write_rts(self, pathname, df, cunits, ctype):
         """
@@ -582,12 +589,13 @@ class DSSFile:
         before calling this function
         """
         epart = self.parse_pathname_epart(pathname)
-        startDateStr,endDateStr=self._parse_times(pathname, startDateStr, endDateStr)
+        startDateStr, endDateStr = self._parse_times(pathname, startDateStr, endDateStr)
         juls, istat = pyheclib.hec_datjul(startDateStr)
         jule, istat = pyheclib.hec_datjul(endDateStr)
         ietime = istime = 0
         # guess how many values to be read based on e part approximation
-        ktvals = DSSFile._number_between(startDateStr, endDateStr, DSSFile._get_timedelta_for_interval(epart))
+        ktvals = DSSFile._number_between(startDateStr, endDateStr,
+                                         DSSFile._get_timedelta_for_interval(epart))
         ktvals = guess_vals_per_block*int(ktvals)
         kdvals = ktvals
         itimes = np.zeros(ktvals, 'i')
@@ -600,7 +608,8 @@ class DSSFile:
             raise Exception(
                 "More values than guessed! %d. Call with guess_vals_per_block > 10000 " % ktvals)
         base_date = parse('31DEC1899')+timedelta(days=ibdate)
-        df = pd.DataFrame(dvalues[:nvals], index=base_date+DSSFile.timedelta_minutes(itimes[:nvals]), columns=[pathname])
+        df = pd.DataFrame(dvalues[:nvals], index=base_date +
+                          DSSFile.timedelta_minutes(itimes[:nvals]), columns=[pathname])
         return DSSData(data=df, units=cunits.strip(), period_type=ctype.strip())
         # return nvals, dvalues, itimes, base_date, cunits, ctype
 
