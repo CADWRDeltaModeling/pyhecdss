@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pyhecdss.pyhecdss &#8212; pyhecdss 0.6.0 documentation</title>
+    <title>pyhecdss.pyhecdss &#8212; pyhecdss &#39;1.0.0&#39;+0.g8e92055.dirty documentation</title>
     <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="../../" src="../../_static/documentation_options.js"></script>
@@ -70,7 +70,7 @@
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">pyheclib</span><span class="o">.</span><span class="n">hec_zfver</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_rts"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.get_rts">[docs]</a><span class="k">def</span> <span class="nf">get_rts</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">pathname</span><span class="p">):</span>
+<div class="viewcode-block" id="get_ts"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.get_ts">[docs]</a><span class="k">def</span> <span class="nf">get_ts</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">pathname</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    Gets regular time series matching the pathname from the filename.</span>
 <span class="sd">    Opens and reads pathname from filename and then closes it (slightly inefficient)</span>
@@ -86,7 +86,7 @@
 <span class="sd">    Returns</span>
 <span class="sd">    -------</span>
 
-<span class="sd">    a list of tuple (pandas DataFrame, units, period type) for timeseries found or an empty list</span>
+<span class="sd">    a generator of named tuples DSSData(data=pandas DataFrame, units=units, period_type=period type) for timeseries found or an empty list</span>
 
 <span class="sd">    Notes</span>
 <span class="sd">    -----</span>
@@ -101,9 +101,8 @@
 <span class="sd">    [(rts,units,type),...]</span>
 
 <span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">dssh</span><span class="o">=</span><span class="n">DSSFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-    <span class="n">dfcat</span><span class="o">=</span><span class="n">dssh</span><span class="o">.</span><span class="n">read_catalog</span><span class="p">()</span>
-    <span class="k">try</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">DSSFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">dssh</span><span class="p">:</span>
+        <span class="n">dfcat</span><span class="o">=</span><span class="n">dssh</span><span class="o">.</span><span class="n">read_catalog</span><span class="p">()</span>
         <span class="n">pp</span><span class="o">=</span><span class="n">pathname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
         <span class="n">cond</span><span class="o">=</span><span class="kc">True</span>
         <span class="k">for</span> <span class="n">p</span><span class="p">,</span><span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pp</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="n">pp</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">7</span><span class="p">],[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">]):</span>
@@ -116,13 +115,14 @@
             <span class="k">if</span> <span class="nb">str</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">twstr</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="n">x</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">twstr</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">))))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">startDateStr</span><span class="o">=</span><span class="n">twstr</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">dssh</span><span class="o">.</span><span class="n">read_rts</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">plist</span><span class="p">]</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">dssh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">return</span> <span class="p">[]</span></div>
+                <span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">plist</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;IR-&#39;</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">dssh</span><span class="o">.</span><span class="n">read_its</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">dssh</span><span class="o">.</span><span class="n">read_rts</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="get_matching_rts"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.get_matching_rts">[docs]</a><span class="k">def</span> <span class="nf">get_matching_rts</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">pathname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_parts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="get_matching_ts"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.get_matching_ts">[docs]</a><span class="k">def</span> <span class="nf">get_matching_ts</span><span class="p">(</span><span class="n">filename</span><span class="p">,</span> <span class="n">pathname</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">path_parts</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="sd">&#39;&#39;&#39;Opens the DSS file and reads matching pathname or path parts</span>
 <span class="sd">    </span>
 <span class="sd">    Args:</span>
@@ -135,13 +135,12 @@
 <span class="sd">    </span>
 <span class="sd">    *One of pathname or pathparts must be specified*</span>
 
-<span class="sd">    :returns: an array of tuples of ( data as dataframe, units as string, type as string one of INST-VAL, PER-VAL)</span>
+<span class="sd">    :returns: an generator of named tuples of DSSData ( data as dataframe, units as string, type as string one of INST-VAL, PER-VAL)</span>
 <span class="sd">    &#39;&#39;&#39;</span>
-    <span class="n">dssh</span><span class="o">=</span><span class="n">DSSFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
-    <span class="n">dfcat</span><span class="o">=</span><span class="n">dssh</span><span class="o">.</span><span class="n">read_catalog</span><span class="p">()</span>
-    <span class="k">try</span><span class="p">:</span>
+    <span class="k">with</span> <span class="n">DSSFile</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span> <span class="k">as</span> <span class="n">dssh</span><span class="p">:</span>
+        <span class="n">dfcat</span><span class="o">=</span><span class="n">dssh</span><span class="o">.</span><span class="n">read_catalog</span><span class="p">()</span>
         <span class="n">pp</span><span class="o">=</span><span class="n">pathname</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)</span>
-        <span class="n">cond</span><span class="o">=</span><span class="kc">True</span>
+        <span class="n">cond</span><span class="o">=</span><span class="n">dfcat</span><span class="p">[</span><span class="s1">&#39;A&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="s1">&#39;.*&#39;</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">p</span><span class="p">,</span><span class="n">n</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">pp</span><span class="p">[</span><span class="mi">1</span><span class="p">:</span><span class="mi">4</span><span class="p">]</span><span class="o">+</span><span class="n">pp</span><span class="p">[</span><span class="mi">5</span><span class="p">:</span><span class="mi">7</span><span class="p">],[</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">]):</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">p</span><span class="p">)</span><span class="o">&gt;</span><span class="mi">0</span><span class="p">:</span>
                 <span class="n">cond</span> <span class="o">=</span> <span class="n">cond</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">dfcat</span><span class="p">[</span><span class="n">n</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">match</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
@@ -152,13 +151,31 @@
             <span class="k">if</span> <span class="nb">str</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">twstr</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="nb">map</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="n">x</span> <span class="o">==</span> <span class="s1">&#39;&#39;</span> <span class="k">else</span> <span class="n">x</span><span class="p">,</span> <span class="nb">map</span><span class="p">(</span><span class="nb">str</span><span class="o">.</span><span class="n">strip</span><span class="p">,</span><span class="nb">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">twstr</span><span class="p">,</span><span class="s1">&#39;-&#39;</span><span class="p">))))</span>
             <span class="k">else</span><span class="p">:</span>
-                <span class="n">startDateStr</span><span class="o">=</span><span class="n">twstr</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">dssh</span><span class="o">.</span><span class="n">read_rts</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">plist</span><span class="p">]</span>
-    <span class="k">finally</span><span class="p">:</span>
-        <span class="n">dssh</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
-    <span class="k">return</span> <span class="p">[]</span></div>
+                <span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">plist</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">)[</span><span class="mi">5</span><span class="p">]</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s1">&#39;IR-&#39;</span><span class="p">):</span>
+                <span class="k">yield</span> <span class="n">dssh</span><span class="o">.</span><span class="n">read_its</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">yield</span> <span class="n">dssh</span><span class="o">.</span><span class="n">read_rts</span><span class="p">(</span><span class="n">p</span><span class="p">,</span><span class="n">startDateStr</span><span class="p">,</span> <span class="n">endDateStr</span><span class="p">)</span></div>
 
+<span class="kn">import</span> <span class="nn">collections</span>
+<span class="n">DSSData</span> <span class="o">=</span> <span class="n">collections</span><span class="o">.</span><span class="n">namedtuple</span><span class="p">(</span><span class="s1">&#39;DSSDate&#39;</span><span class="p">,</span> <span class="n">field_names</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;data&#39;</span><span class="p">,</span><span class="s1">&#39;units&#39;</span><span class="p">,</span><span class="s1">&#39;period_type&#39;</span><span class="p">])</span>
 <div class="viewcode-block" id="DSSFile"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile">[docs]</a><span class="k">class</span> <span class="nc">DSSFile</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Opens a HEC-DSS file for operations of read and write. </span>
+<span class="sd">    The correct way of using is &quot;with&quot; statement:</span>
+
+<span class="sd">    ```</span>
+<span class="sd">    with DSSFile(&#39;myfile.dss&#39;) as dh:</span>
+<span class="sd">        dfcat=dh.read_catalog()</span>
+<span class="sd">    ```    </span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        FileNotFoundError: If the path to the file is not found. Usually silently creats an empty file if missing</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        DSSFile: an open DSS file handle </span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># DSS missing conventions</span>
     <span class="n">MISSING_VALUE</span> <span class="o">=</span> <span class="o">-</span><span class="mf">901.0</span>
     <span class="n">MISSING_RECORD</span> <span class="o">=</span> <span class="o">-</span><span class="mf">902.0</span>
@@ -178,6 +195,13 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">istat</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">fname</span> <span class="o">=</span> <span class="n">fname</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">open</span><span class="p">()</span>
+
+    <span class="c1"># defining __enter__ and __exit__ for use with &quot;with&quot; statements</span>
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+    <span class="k">def</span> <span class="fm">__exit__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">exc_type</span><span class="p">,</span> <span class="n">exc_value</span><span class="p">,</span> <span class="n">traceback</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="fm">__del__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
@@ -260,7 +284,8 @@
             <span class="k">if</span> <span class="ow">not</span> <span class="n">opened_already</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
     
-    <span class="k">def</span> <span class="nf">_read_catalog_dsd</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fdname</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_read_catalog_dsd</span><span class="p">(</span><span class="n">fdname</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        read condensed catalog from fname into a data frame</span>
 <span class="sd">        &#39;&#39;&#39;</span>
@@ -293,18 +318,19 @@
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">a</span><span class="o">.</span><span class="n">transpose</span><span class="p">(),</span> <span class="n">columns</span><span class="o">=</span><span class="nb">list</span><span class="p">(</span><span class="s1">&#39;TABCFED&#39;</span><span class="p">))</span>
         <span class="k">return</span> <span class="n">df</span>
 
-    <span class="k">def</span> <span class="nf">_read_catalog_dsc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fcname</span><span class="p">):</span>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_read_catalog_dsc</span><span class="p">(</span><span class="n">fcname</span><span class="p">):</span>
         <span class="sd">&#39;&#39;&#39;</span>
 <span class="sd">        read full catalog from fc name and create condensed catalog on the fly</span>
 <span class="sd">        returns data frame </span>
 <span class="sd">        &#39;&#39;&#39;</span>
         <span class="n">df</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">read_fwf</span><span class="p">(</span><span class="n">fcname</span><span class="p">,</span><span class="n">skiprows</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span><span class="n">colspecs</span><span class="o">=</span><span class="p">[(</span><span class="mi">0</span><span class="p">,</span><span class="mi">8</span><span class="p">),(</span><span class="mi">8</span><span class="p">,</span><span class="mi">15</span><span class="p">),(</span><span class="mi">15</span><span class="p">,</span><span class="mi">500</span><span class="p">)])</span>
-        <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">()</span>
+        <span class="n">df</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">dropna</span><span class="p">(</span><span class="n">how</span><span class="o">=</span><span class="s1">&#39;all&#39;</span><span class="p">,</span><span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># drop empty lines</span>
         <span class="n">df</span><span class="p">[</span><span class="nb">list</span><span class="p">(</span><span class="s1">&#39;ABCDEF&#39;</span><span class="p">)]</span><span class="o">=</span><span class="n">df</span><span class="p">[</span><span class="s1">&#39;Record Pathname&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;/&#39;</span><span class="p">,</span><span class="n">expand</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">iloc</span><span class="p">[:,</span><span class="mi">1</span><span class="p">:</span><span class="mi">7</span><span class="p">]</span>
         <span class="n">dfg</span><span class="o">=</span><span class="n">df</span><span class="o">.</span><span class="n">groupby</span><span class="p">([</span><span class="s1">&#39;A&#39;</span><span class="p">,</span><span class="s1">&#39;B&#39;</span><span class="p">,</span><span class="s1">&#39;C&#39;</span><span class="p">,</span><span class="s1">&#39;F&#39;</span><span class="p">,</span><span class="s1">&#39;E&#39;</span><span class="p">])</span>
         <span class="n">df</span><span class="o">.</span><span class="n">D</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">D</span><span class="p">)</span>
         <span class="n">dfmin</span><span class="p">,</span><span class="n">dfmax</span><span class="o">=</span><span class="n">dfg</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span><span class="n">dfg</span><span class="o">.</span><span class="n">max</span><span class="p">()</span>
-        <span class="n">tagmax</span><span class="o">=</span><span class="s1">&#39;T&#39;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">dfmax</span><span class="o">.</span><span class="n">Tag</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+        <span class="n">tagmax</span><span class="o">=</span><span class="s1">&#39;T&#39;</span><span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">dfmax</span><span class="o">.</span><span class="n">Tag</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;str&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="s1">&#39;int&#39;</span><span class="p">,</span><span class="n">errors</span><span class="o">=</span><span class="s1">&#39;ignore&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
         <span class="n">dfc</span><span class="o">=</span><span class="n">dfmin</span><span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">%b%Y&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span> <span class="o">+</span><span class="s1">&#39; - &#39;</span><span class="o">+</span> <span class="n">dfmax</span><span class="p">[</span><span class="s1">&#39;D&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">dt</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="s1">&#39;</span><span class="si">%d</span><span class="s1">%b%Y&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">str</span><span class="o">.</span><span class="n">upper</span><span class="p">()</span>
         <span class="n">dfc</span><span class="o">=</span><span class="n">dfc</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
         <span class="n">dfc</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="s1">&#39;T&#39;</span><span class="p">,</span><span class="n">tagmax</span><span class="p">)</span>
@@ -339,9 +365,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">fdname</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_check_condensed_catalog_file_and_recatalog</span><span class="p">(</span><span class="n">condensed</span><span class="o">=</span><span class="n">_USE_CONDENSED</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">_USE_CONDENSED</span><span class="p">:</span>
-            <span class="n">df</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_read_catalog_dsd</span><span class="p">(</span><span class="n">fdname</span><span class="p">)</span>
+            <span class="n">df</span><span class="o">=</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">_read_catalog_dsd</span><span class="p">(</span><span class="n">fdname</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="n">df</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_read_catalog_dsc</span><span class="p">(</span><span class="n">fdname</span><span class="p">)</span>
+            <span class="n">df</span><span class="o">=</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">_read_catalog_dsc</span><span class="p">(</span><span class="n">fdname</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">df</span></div>
 
 <div class="viewcode-block" id="DSSFile.get_pathnames"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.get_pathnames">[docs]</a>    <span class="k">def</span> <span class="nf">get_pathnames</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">catalog_dataframe</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -538,7 +564,7 @@
                 <span class="n">df1</span> <span class="o">=</span> <span class="n">df1</span><span class="p">[</span><span class="n">first_index</span><span class="p">:</span><span class="n">last_index</span><span class="p">]</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">df1</span> <span class="o">=</span> <span class="n">df1</span>
-            <span class="k">return</span> <span class="n">df1</span><span class="p">,</span> <span class="n">cunits</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">ctype</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">DSSData</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df1</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">cunits</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">period_type</span><span class="o">=</span><span class="n">ctype</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span>
         <span class="k">finally</span><span class="p">:</span>
             <span class="k">if</span> <span class="ow">not</span> <span class="n">opened_already</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
@@ -609,7 +635,7 @@
                 <span class="s2">&quot;More values than guessed! </span><span class="si">%d</span><span class="s2">. Call with guess_vals_per_block &gt; 10000 &quot;</span> <span class="o">%</span> <span class="n">ktvals</span><span class="p">)</span>
         <span class="n">base_date</span> <span class="o">=</span> <span class="n">parse</span><span class="p">(</span><span class="s1">&#39;31DEC1899&#39;</span><span class="p">)</span><span class="o">+</span><span class="n">timedelta</span><span class="p">(</span><span class="n">days</span><span class="o">=</span><span class="n">ibdate</span><span class="p">)</span>
         <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">dvalues</span><span class="p">[:</span><span class="n">nvals</span><span class="p">],</span> <span class="n">index</span><span class="o">=</span><span class="n">base_date</span><span class="o">+</span><span class="n">DSSFile</span><span class="o">.</span><span class="n">timedelta_minutes</span><span class="p">(</span><span class="n">itimes</span><span class="p">[:</span><span class="n">nvals</span><span class="p">]),</span> <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">pathname</span><span class="p">])</span>
-        <span class="k">return</span> <span class="n">df</span><span class="p">,</span> <span class="n">cunits</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">ctype</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div>
+        <span class="k">return</span> <span class="n">DSSData</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="n">cunits</span><span class="o">.</span><span class="n">strip</span><span class="p">(),</span> <span class="n">period_type</span><span class="o">=</span><span class="n">ctype</span><span class="o">.</span><span class="n">strip</span><span class="p">())</span></div>
         <span class="c1"># return nvals, dvalues, itimes, base_date, cunits, ctype</span>
 
 <div class="viewcode-block" id="DSSFile.write_its"><a class="viewcode-back" href="../../pyhecdss.html#pyhecdss.pyhecdss.DSSFile.write_its">[docs]</a>    <span class="k">def</span> <span class="nf">write_its</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pathname</span><span class="p">,</span> <span class="n">df</span><span class="p">,</span> <span class="n">cunits</span><span class="p">,</span> <span class="n">ctype</span><span class="p">,</span> <span class="n">interval</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
@@ -680,6 +706,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../notebooks/sample_dss_files.html">Sample Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../notebooks/sample_dss_files.html#Best-way-to-work-with-DSS-Files">Best way to work with DSS Files</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../modules.html">pyhecdss</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../../authors.html">Credits</a></li>

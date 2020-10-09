@@ -4,7 +4,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <meta charset="utf-8" />
-    <title>pyhecdss package &#8212; pyhecdss 0.6.0 documentation</title>
+    <title>pyhecdss package &#8212; pyhecdss &#39;1.0.0&#39;+0.g8e92055.dirty documentation</title>
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
@@ -40,10 +40,30 @@
 </div>
 <div class="section" id="module-pyhecdss.pyhecdss">
 <span id="pyhecdss-pyhecdss-module"></span><h2>pyhecdss.pyhecdss module<a class="headerlink" href="#module-pyhecdss.pyhecdss" title="Permalink to this headline">¶</a></h2>
+<dl class="attribute">
+<dt id="pyhecdss.pyhecdss.DSSData">
+<code class="sig-prename descclassname">pyhecdss.pyhecdss.</code><code class="sig-name descname">DSSData</code><a class="headerlink" href="#pyhecdss.pyhecdss.DSSData" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">pyhecdss.pyhecdss.DSSDate</span></code></p>
+</dd></dl>
+
 <dl class="class">
 <dt id="pyhecdss.pyhecdss.DSSFile">
 <em class="property">class </em><code class="sig-prename descclassname">pyhecdss.pyhecdss.</code><code class="sig-name descname">DSSFile</code><span class="sig-paren">(</span><em class="sig-param">fname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#DSSFile"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>Opens a HEC-DSS file for operations of read and write. 
+The correct way of using is “with” statement:</p>
+<p><a href="#id1"><span class="problematic" id="id2">``</span></a>`
+with DSSFile(‘myfile.dss’) as dh:</p>
+<blockquote>
+<div><p>dfcat=dh.read_catalog()</p>
+</div></blockquote>
+<p><a href="#id3"><span class="problematic" id="id4">``</span></a><a href="#id5"><span class="problematic" id="id6">`</span></a></p>
+<dl class="simple">
+<dt>Raises:</dt><dd><p>FileNotFoundError: If the path to the file is not found. Usually silently creats an empty file if missing</p>
+</dd>
+<dt>Returns:</dt><dd><p>DSSFile: an open DSS file handle</p>
+</dd>
+</dl>
 <dl class="attribute">
 <dt id="pyhecdss.pyhecdss.DSSFile.FREQ_NAME_MAP">
 <code class="sig-name descname">FREQ_NAME_MAP</code><em class="property"> = {'A-DEC': 'YEAR', 'D': 'DAY', 'H': 'HOUR', 'M': 'MON', 'T': 'MIN', 'W': 'WEEK'}</em><a class="headerlink" href="#pyhecdss.pyhecdss.DSSFile.FREQ_NAME_MAP" title="Permalink to this definition">¶</a></dt>
@@ -179,8 +199,8 @@ and associated units and types of length no greater than 8.</p>
 </dd></dl>
 
 <dl class="function">
-<dt id="pyhecdss.pyhecdss.get_matching_rts">
-<code class="sig-prename descclassname">pyhecdss.pyhecdss.</code><code class="sig-name descname">get_matching_rts</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">pathname=None</em>, <em class="sig-param">path_parts=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#get_matching_rts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.get_matching_rts" title="Permalink to this definition">¶</a></dt>
+<dt id="pyhecdss.pyhecdss.get_matching_ts">
+<code class="sig-prename descclassname">pyhecdss.pyhecdss.</code><code class="sig-name descname">get_matching_ts</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">pathname=None</em>, <em class="sig-param">path_parts=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#get_matching_ts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.get_matching_ts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Opens the DSS file and reads matching pathname or path parts</p>
 <p>Args:</p>
 <dl class="field-list simple">
@@ -197,21 +217,21 @@ where A-F is either blank implying match all or a regular expression to be match
 <p><em>One of pathname or pathparts must be specified</em></p>
 <dl class="field-list simple">
 <dt class="field-odd">Returns</dt>
-<dd class="field-odd"><p>an array of tuples of ( data as dataframe, units as string, type as string one of INST-VAL, PER-VAL)</p>
+<dd class="field-odd"><p>an generator of named tuples of DSSData ( data as dataframe, units as string, type as string one of INST-VAL, PER-VAL)</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="function">
-<dt id="pyhecdss.pyhecdss.get_rts">
-<code class="sig-prename descclassname">pyhecdss.pyhecdss.</code><code class="sig-name descname">get_rts</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">pathname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#get_rts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.get_rts" title="Permalink to this definition">¶</a></dt>
+<dt id="pyhecdss.pyhecdss.get_ts">
+<code class="sig-prename descclassname">pyhecdss.pyhecdss.</code><code class="sig-name descname">get_ts</code><span class="sig-paren">(</span><em class="sig-param">filename</em>, <em class="sig-param">pathname</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/pyhecdss/pyhecdss.html#get_ts"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#pyhecdss.pyhecdss.get_ts" title="Permalink to this definition">¶</a></dt>
 <dd><p>Gets regular time series matching the pathname from the filename.
 Opens and reads pathname from filename and then closes it (slightly inefficient)</p>
 <p>filename: a path to DSS file
 pathname: a string of the form /A/B/C/D/E/F that is parsed to match all parts except D
 which if not blank is used to determine the time window to retrieve
 D should be specified in the format of ddMMMYYYY HHmm - ddMMMYYYY HHmm</p>
-<p>a list of tuple (pandas DataFrame, units, period type) for timeseries found or an empty list</p>
+<p>a generator of named tuples DSSData(data=pandas DataFrame, units=units, period_type=period type) for timeseries found or an empty list</p>
 <p>Assumes that all matching are Regular time series ( as opposed to Irregular, See DSS terminolog)</p>
 <p>Get time series based on a part of pathname, e.g.</p>
 <div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">pyhecdss</span><span class="o">.</span><span class="n">get_rts</span><span class="p">(</span><span class="s1">&#39;test1.dss&#39;</span><span class="p">,</span> <span class="s1">&#39;//SIN/////&#39;</span><span class="p">)</span>
@@ -269,6 +289,7 @@ level ranges from “bort” only (level 0) to “internal” (level &gt;10)</p>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/sample_dss_files.html">Sample Demo</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/sample_dss_files.html#Best-way-to-work-with-DSS-Files">Best way to work with DSS Files</a></li>
 <li class="toctree-l1 current"><a class="reference internal" href="modules.html">pyhecdss</a><ul class="current">
 <li class="toctree-l2 current"><a class="current reference internal" href="#">pyhecdss package</a></li>
 </ul>

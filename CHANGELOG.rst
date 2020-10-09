@@ -1,6 +1,13 @@
 =========
 CHANGELOG
 =========
+1.0.0
+------
+using generators for get_ts and get_matching_ts functions for efficiency
+context manager for use "with" statement 
+fixed for pandas >=1.1
+auto versioning turned on 
+
 0.6.1
 -----
  fixed bug when switching to non-condensed catalog that caused shortening of time windows
