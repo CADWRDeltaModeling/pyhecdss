@@ -36,7 +36,7 @@ def get_version(fname):
     """
     return pyheclib.hec_zfver(fname)
 
-def get_rts(filename, pathname):
+def get_ts(filename, pathname):
     """
     Gets regular time series matching the pathname from the filename.
     Opens and reads pathname from filename and then closes it (slightly inefficient)
@@ -52,7 +52,7 @@ def get_rts(filename, pathname):
     Returns
     -------
 
-    a list of tuple (pandas DataFrame, units, period type) for timeseries found or an empty list
+    a generator of named tuples DSSData(data=pandas DataFrame, units=units, period_type=period type) for timeseries found or an empty list
 
     Notes
     -----
@@ -67,9 +67,8 @@ def get_rts(filename, pathname):
     [(rts,units,type),...]
 
     """
-    dssh=DSSFile(filename)
-    dfcat=dssh.read_catalog()
-    try:
+    with DSSFile(filename) as dssh:
+        dfcat=dssh.read_catalog()
         pp=pathname.split('/')
         cond=True
         for p,n in zip(pp[1:4]+pp[5:7],['A','B','C','E','F']):
@@ -82,13 +81,14 @@ def get_rts(filename, pathname):
             if str.find(twstr,'-') >= 0:
                 startDateStr, endDateStr = list(map(lambda x: None if x == '' else x, map(str.strip,str.split(twstr,'-'))))
             else:
-                startDateStr=twstr
-        return [dssh.read_rts(p,startDateStr, endDateStr) for p in plist]
-    finally:
-        dssh.close()
-    return []
+                startDateStr, endDateStr = None, None
+        for p in plist:
+            if p.split('/')[5].startswith('IR-'):
+                yield dssh.read_its(p,startDateStr, endDateStr)
+            else:
+                yield dssh.read_rts(p,startDateStr, endDateStr)
 
-def get_matching_rts(filename, pathname=None, path_parts=None):
+def get_matching_ts(filename, pathname=None, path_parts=None):
     '''Opens the DSS file and reads matching pathname or path parts
     
     Args:
@@ -101,13 +101,12 @@ def get_matching_rts(filename, pathname=None, path_parts=None):
     
     *One of pathname or pathparts must be specified*
 
-    :returns: an array of tuples of ( data as dataframe, units as string, type as string one of INST-VAL, PER-VAL)
+    :returns: an generator of named tuples of DSSData ( data as dataframe, units as string, type as string one of INST-VAL, PER-VAL)
     '''
-    dssh=DSSFile(filename)
-    dfcat=dssh.read_catalog()
-    try:
+    with DSSFile(filename) as dssh:
+        dfcat=dssh.read_catalog()
         pp=pathname.split('/')
-        cond=True
+        cond=dfcat['A'].str.match('.*')
         for p,n in zip(pp[1:4]+pp[5:7],['A','B','C','E','F']):
             if len(p)>0:
                 cond = cond & (dfcat[n].str.match(p))
@@ -118,13 +117,31 @@ def get_matching_rts(filename, pathname=None, path_parts=None):
             if str.find(twstr,'-') >= 0:
                 startDateStr, endDateStr = list(map(lambda x: None if x == '' else x, map(str.strip,str.split(twstr,'-'))))
             else:
-                startDateStr=twstr
-        return [dssh.read_rts(p,startDateStr, endDateStr) for p in plist]
-    finally:
-        dssh.close()
-    return []
+                startDateStr, endDateStr = None, None
+        for p in plist:
+            if p.split('/')[5].startswith('IR-'):
+                yield dssh.read_its(p,startDateStr, endDateStr)
+            else:
+                yield dssh.read_rts(p,startDateStr, endDateStr)
 
+import collections
+DSSData = collections.namedtuple('DSSDate', field_names=['data','units','period_type'])
 class DSSFile:
+    """
+    Opens a HEC-DSS file for operations of read and write. 
+    The correct way of using is "with" statement:
+
+    ```
+    with DSSFile('myfile.dss') as dh:
+        dfcat=dh.read_catalog()
+    ```    
+
+    Raises:
+        FileNotFoundError: If the path to the file is not found. Usually silently creats an empty file if missing
+
+    Returns:
+        DSSFile: an open DSS file handle 
+    """
     # DSS missing conventions
     MISSING_VALUE = -901.0
     MISSING_RECORD = -902.0
@@ -144,6 +161,13 @@ class DSSFile:
         self.istat = 0
         self.fname = fname
         self.open()
+
+    # defining __enter__ and __exit__ for use with "with" statements
+    def __enter__(self):
+        return self
+
+    def __exit__(self,exc_type, exc_value, traceback):
+        self.close()
 
     def __del__(self):
         self.close()
@@ -226,7 +250,8 @@ class DSSFile:
             if not opened_already:
                 self.close()
     
-    def _read_catalog_dsd(self, fdname):
+    @staticmethod
+    def _read_catalog_dsd(fdname):
         '''
         read condensed catalog from fname into a data frame
         '''
@@ -259,18 +284,19 @@ class DSSFile:
         df = pd.DataFrame(a.transpose(), columns=list('TABCFED'))
         return df
 
-    def _read_catalog_dsc(self, fcname):
+    @staticmethod
+    def _read_catalog_dsc(fcname):
         '''
         read full catalog from fc name and create condensed catalog on the fly
         returns data frame 
         '''
         df=pd.read_fwf(fcname,skiprows=8,colspecs=[(0,8),(8,15),(15,500)])
-        df=df.dropna()
+        df=df.dropna(how='all',axis=0) # drop empty lines
         df[list('ABCDEF')]=df['Record Pathname'].str.split('/',expand=True).iloc[:,1:7]
         dfg=df.groupby(['A','B','C','F','E'])
         df.D=pd.to_datetime(df.D)
         dfmin,dfmax=dfg.min(),dfg.max()
-        tagmax='T'+str(dfmax.Tag.str[1:].astype('int').max())
+        tagmax='T'+ str(dfmax.Tag.astype('str').str[1:].astype('int',errors='ignore').max())
         dfc=dfmin['D'].dt.strftime('%d%b%Y').str.upper() +' - '+ dfmax['D'].dt.strftime('%d%b%Y').str.upper()
         dfc=dfc.reset_index()
         dfc.insert(0,'T',tagmax)
@@ -305,9 +331,9 @@ class DSSFile:
         """
         fdname=self._check_condensed_catalog_file_and_recatalog(condensed=_USE_CONDENSED)
         if _USE_CONDENSED:
-            df=self._read_catalog_dsd(fdname)
+            df=DSSFile._read_catalog_dsd(fdname)
         else:
-            df=self._read_catalog_dsc(fdname)
+            df=DSSFile._read_catalog_dsc(fdname)
         return df
 
     def get_pathnames(self, catalog_dataframe=None):
@@ -504,7 +530,7 @@ class DSSFile:
                 df1 = df1[first_index:last_index]
             else:
                 df1 = df1
-            return df1, cunits.strip(), ctype.strip()
+            return DSSData(data=df1, units=cunits.strip(), period_type=ctype.strip())
         finally:
             if not opened_already:
                 self.close()
@@ -575,7 +601,7 @@ class DSSFile:
                 "More values than guessed! %d. Call with guess_vals_per_block > 10000 " % ktvals)
         base_date = parse('31DEC1899')+timedelta(days=ibdate)
         df = pd.DataFrame(dvalues[:nvals], index=base_date+DSSFile.timedelta_minutes(itimes[:nvals]), columns=[pathname])
-        return df, cunits.strip(), ctype.strip()
+        return DSSData(data=df, units=cunits.strip(), period_type=ctype.strip())
         # return nvals, dvalues, itimes, base_date, cunits, ctype
 
     def write_its(self, pathname, df, cunits, ctype, interval=None):
