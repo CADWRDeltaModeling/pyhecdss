@@ -357,7 +357,7 @@ class DSSFile:
         pdf = catalog_dataframe.iloc[:, [1, 2, 3, 6, 5, 4]]
         return pdf.apply(func=lambda x: '/'+('/'.join(list(x.values)))+'/', axis=1).values.tolist()
 
-    def num_values_in_interval(self, sdstr, edstr, istr):
+    def num_values_in_interval(sdstr, edstr, istr):
         """
         Get number of values in interval istr, using the start date and end date
         string
@@ -497,7 +497,7 @@ class DSSFile:
             trim_first = startDateStr is None
             trim_last = endDateStr is None
             startDateStr, endDateStr = self._parse_times(pathname, startDateStr, endDateStr)
-            nvals = self.num_values_in_interval(startDateStr, endDateStr, interval)
+            nvals = DSSFile.num_values_in_interval(startDateStr, endDateStr, interval)
             sdate = parse(startDateStr)
             cdate = sdate.date().strftime('%d%b%Y').upper()
             ctime = ''.join(sdate.time().isoformat().split(':')[:2])
@@ -576,10 +576,12 @@ class DSSFile:
             sp = df.index[0].to_timestamp(how='end')
         else:
             sp = df.index[0]
+        # values are either the first column in the pandas DataFrame or should be a pandas Series
+        values = df.iloc[:,0].values if isinstance(df, pd.DataFrame) else df.iloc[:].values
         istat = pyheclib.hec_zsrtsxd(self.ifltab, pathname,
                                      sp.strftime("%d%b%Y").upper(
                                      ), sp.round(freq='T').strftime("%H%M"),
-                                     df.iloc[:, 0].values, cunits[:8], ctype[:8])
+                                     values, cunits[:8], ctype[:8])
         self._respond_to_istat_state(istat)
 
     def read_its(self, pathname, startDateStr=None, endDateStr=None, guess_vals_per_block=10000):
@@ -653,7 +655,9 @@ class DSSFile:
         itimes = itimes.total_seconds()/60  # time in minutes since base date juls
         itimes = itimes.values.astype('i')  # conver to integer numpy
         inflag = 1  # replace data (merging should be done in memory)
+        # values are either the first column in the pandas DataFrame or should be a pandas Series
+        values = df.iloc[:,0].values if isinstance(df, pd.DataFrame) else df.iloc[:].values
         istat = pyheclib.hec_zsitsxd(self.ifltab, pathname,
-                                     itimes, df.iloc[:, 0].values, juls, cunits, ctype, inflag)
+                                     itimes, values, juls, cunits, ctype, inflag)
         self._respond_to_istat_state(istat)
         # return istat
