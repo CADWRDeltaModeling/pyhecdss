@@ -1,6 +1,10 @@
 =========
 CHANGELOG
 =========
+1.0.1
+-----
+handle pandas Series on writes
+
 1.0.0
 ------
 using generators for get_ts and get_matching_ts functions for efficiency
