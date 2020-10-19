@@ -131,7 +131,7 @@ def get_matching_ts(filename, pathname=None, path_parts=None):
                 yield dssh.read_rts(p, startDateStr, endDateStr)
 
 
-DSSData = collections.namedtuple('DSSDate', field_names=['data', 'units', 'period_type'])
+DSSData = collections.namedtuple('DSSData', field_names=['data', 'units', 'period_type'])
 
 
 class DSSFile:
