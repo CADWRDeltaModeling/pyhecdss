@@ -159,7 +159,7 @@ class DSSFile:
     """
     vectorized version of timedelta
     """
-    timedelta_minutes = np.vectorize(lambda x: timedelta(minutes=int(x)))
+    timedelta_minutes = np.vectorize(lambda x: timedelta(minutes=int(x)), otypes=['O'])
 
     def __init__(self, fname):
         self.isopen = False
