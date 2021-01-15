@@ -8,23 +8,34 @@ import os
 
 
 class TestPyDsUtilsBasic(unittest.TestCase):
+
+    def cleanTempFiles():
+        try:
+            os.remove('./test_rts1.dss')
+            os.remove('./test_rts1.dsc')
+            os.remove('./test_rts1.dsd')
+            os.remove('./test_its1.dss')
+            os.remove('./test_its1.dsc')
+            os.remove('./test_its1.dsd')
+            os.remove('./test.dsc')
+            os.remove('./test.dsd')
+            os.remove('./test.dsc')
+            os.remove('./test.dsd')
+            os.remove('./test.dsk')
+            os.remove('./test_offset.dss')
+            os.remove('./test_rts1.dss')
+            os.remove('./test2.dss')
+            os.remove('./testnew.dss')
+        except OSError:
+            pass
+
     @classmethod
     def setupClass(cls):
-        os.remove('./test_rts1.dss')
-        os.remove('./test_rts1.dsc')
-        os.remove('./test_rts1.dsd')
-        os.remove('./test_its1.dss')
-        os.remove('./test_its1.dsc')
-        os.remove('./test_its1.dsd')
-        os.remove('./test.dsc')
-        os.remove('./test.dsd')
-        os.remove('./test.dsc')
-        os.remove('./test.dsd')
-        os.remove('./test.dsk')
+        cls.cleanTempFiles()
 
     @classmethod
     def tearDownClass(cls):
-        pass
+        cls.cleanTempFiles()
 
     def test_with(self):
         with pyhecdss.DSSFile('test1.dss') as d:
@@ -65,7 +76,7 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         dtr = pd.date_range(startDateStr, endDateStr, freq='1D')
         df = pd.DataFrame(np.ones(len(dtr), 'd'), index=dtr)
         cunits, ctype = 'CCC', 'INST-VAL'
-        with pyhecdss.DSSFile(fname) as dssfile2:
+        with pyhecdss.DSSFile(fname, create_new=True) as dssfile2:
             dssfile2.write_rts(pathname, df, cunits, ctype)
         startDateStr = "01JAN1990"
         endDateStr = "01JAN1991"
@@ -85,7 +96,7 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         dtr = pd.date_range(startDateStr, endDateStr, freq='1D')
         s = pd.Series(np.ones(len(dtr), 'd'), index=dtr)
         cunits, ctype = 'CCC', 'INST-VAL'
-        with pyhecdss.DSSFile(fname) as dssfile2:
+        with pyhecdss.DSSFile(fname, create_new=True) as dssfile2:
             dssfile2.write_rts(pathname, s, cunits, ctype)
         startDateStr = "01JAN1990"
         endDateStr = "01JAN1991"
@@ -136,9 +147,9 @@ class TestPyDsUtilsBasic(unittest.TestCase):
             df2, cunits2, ctype2 = dssfile1.read_its(pathname, "01JAN1990", "01JAN1998")
         self.assertEqual(ctype, ctype2)
         self.assertEqual(cunits, cunits2)
-        self.assertEqual(df2.iloc[0,0], df.iloc[0])
-        self.assertEqual(df2.iloc[1,0], df.iloc[1])
-        self.assertEqual(df2.iloc[2,0], df.iloc[2])
+        self.assertEqual(df2.iloc[0, 0], df.iloc[0])
+        self.assertEqual(df2.iloc[1, 0], df.iloc[1])
+        self.assertEqual(df2.iloc[2, 0], df.iloc[2])
 
     def test_read_catalog(self):
         fname = "test1.dss"
