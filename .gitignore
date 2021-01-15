@@ -9,6 +9,8 @@ pyhecdss/pyheclib.py
 #--ignore notebooks and perftest
 notebooks/
 perftest/
+#- VS Code 
+.vscode/
 #----- Generic Ignores imported from cookiecutter
 # Byte-compiled / optimized / DLL files
 __pycache__/
