@@ -185,7 +185,7 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         fname = 'testnew.dss'
         if os.path.exists(fname):
             os.remove(fname)
-        with pyhecdss.DSSFile(fname) as d:
+        with pyhecdss.DSSFile(fname, create_new=True) as d:
             d.close()
         assert os.path.exists(fname)
         with pytest.raises(FileNotFoundError):
@@ -197,7 +197,7 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         fname = 'testnew.dss'
         if os.path.exists(fname):
             os.remove(fname)
-        with pyhecdss.DSSFile(fname) as d:
+        with pyhecdss.DSSFile(fname, create_new=True) as d:
             d.close()
         # only checking if values are greater than expected, HECLIB will return the exact number of values found
         assert DSSFile.num_values_in_interval('01JAN2000', '01FEB2000', '1DAY') > 31

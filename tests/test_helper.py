@@ -39,3 +39,10 @@ def test_get_matching_ts(pathname):
     assert len(matching_list) == 3
     dfsin, units, ptype = matching_list[0]
     assert len(dfsin) > 1
+
+def test_non_existent_file():
+    filename='test_non_existent.dss'
+    with pytest.raises(Exception):
+        matching_list=list(pyhecdss.get_matching_ts(filename,'///////'))
+    import os
+    assert not os.path.exists(filename)

@@ -124,6 +124,8 @@ def get_matching_ts(filename, pathname=None, path_parts=None):
                     map(lambda x: None if x == '' else x, map(str.strip, str.split(twstr, '-'))))
             else:
                 startDateStr, endDateStr = None, None
+        if len(plist)==0:
+            raise Exception(f'No pathname found in {filename} for {pathname} or {path_parts}')
         for p in plist:
             if p.split('/')[5].startswith('IR-'):
                 yield dssh.read_its(p, startDateStr, endDateStr)
@@ -161,9 +163,19 @@ class DSSFile:
     """
     timedelta_minutes = np.vectorize(lambda x: timedelta(minutes=int(x)), otypes=['O'])
 
-    def __init__(self, fname):
+    def __init__(self, fname, create_new=False):
+        """Opens a dssfile
+
+        Args:
+            fname (str): path to filename
+            create_new (bool, optional): create_new if file doesn't exist. Defaults to False.
+        """
         self.isopen = False
         self._check_dir_exists(fname)
+        if not create_new:
+            if not os.path.exists(fname) and not os.path.isfile(fname):
+                raise Exception(
+                    f'File path: {fname} does not exist! '+'Use create_new=True if you want to create a new file')
         self.ifltab = pyheclib.intArray(600)
         self.istat = 0
         self.fname = fname
@@ -577,7 +589,7 @@ class DSSFile:
         else:
             sp = df.index[0]
         # values are either the first column in the pandas DataFrame or should be a pandas Series
-        values = df.iloc[:,0].values if isinstance(df, pd.DataFrame) else df.iloc[:].values
+        values = df.iloc[:, 0].values if isinstance(df, pd.DataFrame) else df.iloc[:].values
         istat = pyheclib.hec_zsrtsxd(self.ifltab, pathname,
                                      sp.strftime("%d%b%Y").upper(
                                      ), sp.round(freq='T').strftime("%H%M"),
@@ -605,6 +617,7 @@ class DSSFile:
         inflag = 0  # Retrieve both values preceding and following time window in addtion to time window
         nvals, ibdate, cunits, ctype, istat = pyheclib.hec_zritsxd(
             self.ifltab, pathname, juls, istime, jule, ietime, itimes, dvalues, inflag)
+
         self._respond_to_istat_state(istat)
         if nvals == ktvals:
             raise Exception(
@@ -656,7 +669,7 @@ class DSSFile:
         itimes = itimes.values.astype('i')  # conver to integer numpy
         inflag = 1  # replace data (merging should be done in memory)
         # values are either the first column in the pandas DataFrame or should be a pandas Series
-        values = df.iloc[:,0].values if isinstance(df, pd.DataFrame) else df.iloc[:].values
+        values = df.iloc[:, 0].values if isinstance(df, pd.DataFrame) else df.iloc[:].values
         istat = pyheclib.hec_zsitsxd(self.ifltab, pathname,
                                      itimes, values, juls, cunits, ctype, inflag)
         self._respond_to_istat_state(istat)

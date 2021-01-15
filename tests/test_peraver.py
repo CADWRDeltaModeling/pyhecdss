@@ -18,7 +18,7 @@ def test_read_write_cycle_rts():
                        index=pd.period_range('01jan1990 0100', periods=len(sina), freq='15T'),
                        columns=[path])
 
-    d = pyhecdss.DSSFile(fname)
+    d = pyhecdss.DSSFile(fname, create_new=True)
     unit2, ptype2 = 'UNIT-X', 'PER-VAL'
     d.write_rts(path, dfr, unit2, ptype2)
     d.close()
