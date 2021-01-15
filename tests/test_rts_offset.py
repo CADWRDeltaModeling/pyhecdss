@@ -20,7 +20,7 @@ def tsdaily():
 
 
 def test_store_as_instval(tsdaily):
-    dssfh = pyhecdss.DSSFile('test_offset.dss')
+    dssfh = pyhecdss.DSSFile('test_offset.dss', create_new=True)
     pathname = tsdaily.columns[0]
     dssfh.write_rts(pathname, tsdaily, 'XXX', 'INST-VAL')
     dssfh.close()
