@@ -34,7 +34,7 @@ def test_store_as_instval(tsdaily):
     pd.testing.assert_frame_equal(tsdaily, df, check_names=False, check_column_type=False)
 
 
-def test_store_as_instval(tsdaily):
+def test_store_as_perval(tsdaily):
     dssfh = pyhecdss.DSSFile('test_offset.dss', create_new=True)
     pathname = tsdaily.columns[0]
     dssfh.write_rts(pathname, tsdaily, 'XXX', 'PER-VAL')
