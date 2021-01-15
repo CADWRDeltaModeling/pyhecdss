@@ -10,30 +10,33 @@ import os
 class TestPyDsUtilsBasic(unittest.TestCase):
 
     def cleanTempFiles():
-        try:
-            os.remove('./test_rts1.dss')
-            os.remove('./test_rts1.dsc')
-            os.remove('./test_rts1.dsd')
-            os.remove('./test_its1.dss')
-            os.remove('./test_its1.dsc')
-            os.remove('./test_its1.dsd')
-            os.remove('./test.dsc')
-            os.remove('./test.dsd')
-            os.remove('./test.dsc')
-            os.remove('./test.dsd')
-            os.remove('./test.dsk')
-            os.remove('./test_offset.dss')
-            os.remove('./test_rts1.dss')
-            os.remove('./test2.dss')
-            os.remove('./testnew.dss')
-        except OSError:
-            pass
+        file_list = ['./test_rts1.dss',
+                     './test_rts1.dsc',
+                     './test_rts1.dsd',
+                     './test_its1.dss',
+                     './test_its1.dsc',
+                     './test_its1.dsd',
+                     './test.dsc',
+                     './test.dsd',
+                     './test.dsc',
+                     './test.dsd',
+                     './test.dsk',
+                     './test_offset.dss',
+                     './test_rts1.dss',
+                     './test2.dss',
+                     './testnew.dss']
 
-    @classmethod
+        for file in file_list:
+            try:
+                os.remove(file)
+            except OSError:
+                pass
+
+    @ classmethod
     def setupClass(cls):
         cls.cleanTempFiles()
 
-    @classmethod
+    @ classmethod
     def tearDownClass(cls):
         cls.cleanTempFiles()
 
@@ -63,7 +66,7 @@ class TestPyDsUtilsBasic(unittest.TestCase):
             values, units, periodtype = dssfile.read_rts(pathname, sdate, edate)
         self.assertEqual(units, 'UNIT-X')
         self.assertEqual(periodtype, 'INST-VAL')
-        self.assertEqual(len(values['10JAN1990':'11JAN1990'].values),
+        self.assertEqual(len(values['10JAN1990': '11JAN1990'].values),
                          96*2)  # 96 15 min values per day
         # get series
         vseries = values.iloc[:, 0]
