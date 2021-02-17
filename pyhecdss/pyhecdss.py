@@ -3,6 +3,7 @@ from . import pyheclib
 import pandas as pd
 import numpy as np
 import os
+import re
 import time
 import warnings
 import logging
@@ -124,7 +125,7 @@ def get_matching_ts(filename, pathname=None, path_parts=None):
                     map(lambda x: None if x == '' else x, map(str.strip, str.split(twstr, '-'))))
             else:
                 startDateStr, endDateStr = None, None
-        if len(plist)==0:
+        if len(plist) == 0:
             raise Exception(f'No pathname found in {filename} for {pathname} or {path_parts}')
         for p in plist:
             if p.split('/')[5].startswith('IR-'):
@@ -157,6 +158,10 @@ class DSSFile:
     MISSING_RECORD = -902.0
     #
     FREQ_NAME_MAP = {"T": "MIN", "H": "HOUR", "D": "DAY", "W": "WEEK", "M": "MON", "A-DEC": "YEAR"}
+    #
+    NAME_FREQ_MAP = {v: k for k, v in FREQ_NAME_MAP.items()}
+    #
+    EPART_PATTERN = re.compile('(?P<n>\d+)(?P<interval>M[O|I]N|YEAR|HOUR|DAY|WEEK)')
     #
     """
     vectorized version of timedelta
@@ -523,17 +528,19 @@ class DSSFile:
             self._respond_to_istat_state(istat)
 
             # FIXME: deal with non-zero iofset for period data,i.e. else part of if stmt below
+            nfreq, freqstr = DSSFile.get_number_and_frequency_from_epart(interval)
+            freqstr = '%d%s' % (nfreq, DSSFile.NAME_FREQ_MAP[freqstr])
             freqoffset = DSSFile.get_freq_from_epart(interval)
-            if ctype.startswith('INST'):
+            if ctype.startswith('PER'):  # for period values, shift back 1
+                # - pd.tseries.frequencies.to_offset(freqoffset)
+                sp = pd.Period(startDateStr, freq=freqstr)
+                dindex = pd.period_range(sp, periods=nvals, freq=freqstr).shift(-1)
+            else:
                 startDateWithOffset = parse(startDateStr)
-                if iofset != 0:
+                if iofset != 0:  # offsets are always from the end of the period, e.g. for day, rewind by a day and then add offset
                     startDateWithOffset = parse(startDateStr)-freqoffset+timedelta(minutes=iofset)
                 dindex = pd.date_range(
                     startDateWithOffset, periods=nvals, freq=freqoffset)
-            else:
-                sp = pd.Period(startDateStr, freq=freqoffset) - \
-                    pd.tseries.frequencies.to_offset(freqoffset)
-                dindex = pd.period_range(sp, periods=nvals, freq=freqoffset)
             df1 = pd.DataFrame(data=dvalues, index=dindex, columns=[pathname])
             # cleanup missing values --> NAN, trim dataset and units and period type strings
             df1.replace([DSSFile.MISSING_VALUE, DSSFile.MISSING_RECORD], [
@@ -558,9 +565,13 @@ class DSSFile:
     def get_epart_from_freq(freq):
         return "%d%s" % (freq.n, DSSFile.FREQ_NAME_MAP[freq.name])
 
+    def get_number_and_frequency_from_epart(epart):
+        match = DSSFile.EPART_PATTERN.match(epart)
+        return int(match['n']), match['interval']
+
     def get_freq_from_epart(epart):
         if epart.find('MON') >= 0:
-            td = pd.offsets.MonthEnd(n=int(str.split(epart, 'MON')[0]))
+            td = pd.offsets.MonthBegin(n=int(str.split(epart, 'MON')[0]))
         elif epart.find('DAY') >= 0:
             td = pd.offsets.Day(n=int(str.split(epart, 'DAY')[0]))
         elif epart.find('HOUR') >= 0:
@@ -568,7 +579,7 @@ class DSSFile:
         elif epart.find('MIN') >= 0:
             td = pd.offsets.Minute(n=int(str.split(epart, 'MIN')[0]))
         elif epart.find('YEAR') >= 0:
-            td = pd.offsets.YearEnd(n=int(str.split(epart, 'YEAR')[0]))
+            td = pd.offsets.YearBegin(n=int(str.split(epart, 'YEAR')[0]))
         elif epart.find('WEEK') >= 0:
             td = pd.offsets.Minute(n=int(str.split(epart, 'MIN')[0]))
         else:
@@ -584,8 +595,12 @@ class DSSFile:
         parts = pathname.split('/')
         parts[5] = DSSFile.get_epart_from_freq(df.index.freq)
         pathname = "/".join(parts)
-        if isinstance(df.index[0], pd.Period):
-            sp = df.index[0].to_timestamp(how='end')
+        if isinstance(df.index, pd.PeriodIndex):
+            if ctype.startswith('PER'):  # for period values...
+                sp = df.index.shift(1).to_timestamp()[0]  # shift by 1 as per HEC convention
+            else:
+                raise 'Either pass in ctype beginning with "PER" ' +\
+                    'for period indexed dataframe or change dataframe to timestamps'
         else:
             sp = df.index[0]
         # values are either the first column in the pandas DataFrame or should be a pandas Series
