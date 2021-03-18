@@ -40,6 +40,21 @@ def get_version(fname):
     return pyheclib.hec_zfver(fname)
 
 
+def get_start_end_dates(twstr, sep='-'):
+    """
+    Get the start and end date (as strings of format ddMMMyyyy,e.g. 01JAN1991) from timewindow string
+    The start and end times must be separated by sep (default = '-') and can be in any format that works with
+    pandas to_datetime (see link below)
+
+    The returned start and end date are rounded down and up (respectively) to the day
+
+    Args:
+        twstr (str): timewindow as string of the form that can be parsed by pd.to_datetime [https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.to_datetime.html]
+    """
+    s, e = [pd.to_datetime(str.strip(d)) for d in str.split(twstr, sep)]
+    return s.floor('D').strftime('%d%b%Y').upper(), e.ceil('D').strftime('%d%b%Y').upper()
+
+
 def get_ts(filename, pathname):
     """
     Gets regular time series matching the pathname from the filename.
@@ -82,10 +97,9 @@ def get_ts(filename, pathname):
         twstr = str.strip(pp[4])
         startDateStr = endDateStr = None
         if len(twstr) > 0:
-            if str.find(twstr, '-') >= 0:
-                startDateStr, endDateStr = list(
-                    map(lambda x: None if x == '' else x, map(str.strip, str.split(twstr, '-'))))
-            else:
+            try:
+                startDateStr, endDateStr = get_start_end_dates(twstr)
+            except:
                 startDateStr, endDateStr = None, None
         for p in plist:
             if p.split('/')[5].startswith('IR-'):
@@ -120,10 +134,9 @@ def get_matching_ts(filename, pathname=None, path_parts=None):
         twstr = str.strip(pp[4])
         startDateStr = endDateStr = None
         if len(twstr) > 0:
-            if str.find(twstr, '-') >= 0:
-                startDateStr, endDateStr = list(
-                    map(lambda x: None if x == '' else x, map(str.strip, str.split(twstr, '-'))))
-            else:
+            try:
+                startDateStr, endDateStr = get_start_end_dates(twstr)
+            except:
                 startDateStr, endDateStr = None, None
         if len(plist) == 0:
             raise Exception(f'No pathname found in {filename} for {pathname} or {path_parts}')
