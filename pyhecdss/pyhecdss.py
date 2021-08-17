@@ -594,7 +594,7 @@ class DSSFile:
         elif epart.find('YEAR') >= 0:
             td = pd.offsets.YearBegin(n=int(str.split(epart, 'YEAR')[0]))
         elif epart.find('WEEK') >= 0:
-            td = pd.offsets.Minute(n=int(str.split(epart, 'MIN')[0]))
+            td = pd.offsets.Week(n=int(str.split(epart, 'WEEK')[0]))
         else:
             raise RuntimeError('Could not understand interval: ', epart)
         return td
