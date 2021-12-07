@@ -8,6 +8,7 @@ Welcome to pyhecdss's documentation!
    installation
    usage
    notebooks/sample_dss_files.ipynb
+   notebooks/period_vs_instval.ipynb
    modules
    contributing
    authors

@@ -1,21 +1,24 @@
 
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
   <head>
     <meta charset="utf-8" />
-    <title>Sample Demo &#8212; pyhecdss 1.0.0+1.g2506320.dirty documentation</title>
-    <link rel="stylesheet" href="../_static/alabaster.css" type="text/css" />
-    <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
-    <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
-    <script type="text/javascript" src="../_static/jquery.js"></script>
-    <script type="text/javascript" src="../_static/underscore.js"></script>
-    <script type="text/javascript" src="../_static/doctools.js"></script>
-    <script type="text/javascript" src="../_static/language_data.js"></script>
-    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Usage with examples &#8212; pyhecdss 1.1.2+5.ga82763a.dirty documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="pyhecdss" href="../modules.html" />
+    <link rel="next" title="Discussion on PER-* and INST-* period types" href="period_vs_instval.html" />
     <link rel="prev" title="Usage" href="../usage.html" />
    
   <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
@@ -38,21 +41,35 @@
 /* CSS for nbsphinx extension */
 
 /* remove conflicting styling from Sphinx themes */
-div.nbinput.container,
-div.nbinput.container div.prompt,
-div.nbinput.container div.input_area,
-div.nbinput.container div[class*=highlight],
-div.nbinput.container div[class*=highlight] pre,
-div.nboutput.container,
-div.nboutput.container div.prompt,
-div.nboutput.container div.output_area,
-div.nboutput.container div[class*=highlight],
-div.nboutput.container div[class*=highlight] pre {
-    background: none;
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
     border: none;
-    padding: 0 0;
+    padding: 0;
     margin: 0;
     box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
 }
 
 /* avoid gaps between output lines */
@@ -99,20 +116,33 @@ div.nboutput.container div.prompt pre {
 /* all prompts */
 div.nbinput.container div.prompt,
 div.nboutput.container div.prompt {
-    min-width: 5.5ex;
-    padding-top: 0.3rem;
-    padding-right: 0.3rem;
-    text-align: right;
-    flex: 0;
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
 }
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
 @media (max-width: 540px) {
     div.nbinput.container div.prompt,
     div.nboutput.container div.prompt {
+        width: unset;
         text-align: left;
         padding: 0.4em;
     }
     div.nboutput.container div.prompt.empty {
         padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
     }
 }
 
@@ -140,7 +170,7 @@ div.nboutput.container div.output_area {
 div.nbinput.container div.input_area {
     border: 1px solid #e0e0e0;
     border-radius: 2px;
-    background: #f5f5f5;
+    /*background: #f5f5f5;*/
 }
 
 /* override MathJax center alignment in output cells */
@@ -205,7 +235,8 @@ div.nboutput.container div.output_area div[class*=highlight].math,
 div.nboutput.container div.output_area.rendered_html,
 div.nboutput.container div.output_area > div.output_javascript,
 div.nboutput.container div.output_area:not(.rendered_html) > img{
-    padding: 0.3rem;
+    padding: 5px;
+    margin: 0;
 }
 
 /* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
@@ -253,8 +284,8 @@ div.rendered_html tbody tr:hover {
   background: rgba(66, 165, 245, 0.2);
 }
 </style>
-<div class="section" id="Sample-Demo">
-<h1>Sample Demo<a class="headerlink" href="#Sample-Demo" title="Permalink to this headline">¶</a></h1>
+<section id="Usage-with-examples">
+<h1>Usage with examples<a class="headerlink" href="#Usage-with-examples" title="Permalink to this headline">¶</a></h1>
 <div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
 </pre></div>
@@ -267,17 +298,36 @@ div.rendered_html tbody tr:hover {
 </pre></div>
 </div>
 </div>
-<div class="section" id="Setting-message-level-and-program-name">
+<section id="Setting-message-level-and-program-name">
 <h2>Setting message level and program name<a class="headerlink" href="#Setting-message-level-and-program-name" title="Permalink to this headline">¶</a></h2>
-<div class="nbinput docutils container">
+<p>The HEC-DSS libraries output messaging to the console. To set the logging level of those libraries use the <code class="docutils literal notranslate"><span class="pre">set_message_level(int)</span></code> method</p>
+<div class="nbinput nblast docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">pyhecdss</span><span class="o">.</span><span class="n">set_message_level</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> <span class="c1"># highest level with debug level of output</span>
 <span class="n">pyhecdss</span><span class="o">.</span><span class="n">set_message_level</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span> <span class="c1"># quiets messages to only aborts</span>
-<span class="n">pyhecdss</span><span class="o">.</span><span class="n">set_program_name</span><span class="p">(</span><span class="s1">&#39;PYTHON&#39;</span><span class="p">)</span> <span class="c1"># name used when writing to DSS files</span>
-<span class="n">fname</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;sample.dss&#39;</span>
+</pre></div>
+</div>
+</div>
+<p>The program name can be set which inserts the name in the meta information for the file on writes only</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">pyhecdss</span><span class="o">.</span><span class="n">set_program_name</span><span class="p">(</span><span class="s1">&#39;PYTHON&#39;</span><span class="p">)</span> <span class="c1"># name used when writing to DSS files</span>
+</pre></div>
+</div>
+</div>
+<p>The version supported by the native heclib is printed out here. pyhecdss is linked with version 6</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">fname</span><span class="o">=</span><span class="sa">r</span><span class="s1">&#39;sample.dss&#39;</span>
 <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Version of DSS file &#39;</span><span class="p">,</span><span class="n">fname</span><span class="p">,</span><span class="s1">&#39;: &#39;</span><span class="p">,</span><span class="n">pyhecdss</span><span class="o">.</span><span class="n">get_version</span><span class="p">(</span><span class="n">fname</span><span class="p">))</span> <span class="c1"># version of DSS file format as a string and integer tuple</span>
 </pre></div>
 </div>
@@ -290,17 +340,16 @@ div.rendered_html tbody tr:hover {
 Version of DSS file  sample.dss :  [&#39;6-VE&#39;, 6]
 </pre></div></div>
 </div>
-</div>
-<div class="section" id="Example-of-writing-a-DSS-File">
+</section>
+<section id="Example-of-writing-a-DSS-File">
 <h2>Example of writing a DSS File<a class="headerlink" href="#Example-of-writing-a-DSS-File" title="Permalink to this headline">¶</a></h2>
 <p>This notebook is an example of how to interact with the features of pyhecdss pyhecdss is a C-Python interface to HECLIB and in particular HECDSS. The plan is to only support reading regular and irregular time series into pandas DataFrame structure.</p>
-</div>
-<div class="section" id="Opening-and-closing-a-DSS-File">
+</section>
+<section id="Opening-and-closing-a-DSS-File">
 <h2>Opening and closing a DSS File<a class="headerlink" href="#Opening-and-closing-a-DSS-File" title="Permalink to this headline">¶</a></h2>
-<p><strong>Warning</strong> This will create an empty DSS file if one does not exist!</p>
 <p>Use the with statement as it takes care of closing the file handle and other resources</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[3]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -310,24 +359,80 @@ Version of DSS file  sample.dss :  [&#39;6-VE&#39;, 6]
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="A-regular-time-series">
+</section>
+<section id="A-regular-time-series">
 <h2>A regular time series<a class="headerlink" href="#A-regular-time-series" title="Permalink to this headline">¶</a></h2>
 <p>Create a pandas DataFrame of a sin wave and then write it out a pathname.</p>
 <p>The concepts of regular time series is defined in HEC-DSS documentation. I would direct you there. There a limited number of period intervals supported by HEC-DSS formats.</p>
 <p>In addition to the pathname concept (pathnames consist of 6 parts A-F represented in a path like format /A/B/C/D/E/F/) the DSS format also stores units and the type of period (instantaneous or period and value or average as INST-VAL, PER-AVG, PER-VAL).</p>
-<div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[4]:
+<section id="Create-a-new-dataframe">
+<h3>Create a new dataframe<a class="headerlink" href="#Create-a-new-dataframe" title="Permalink to this headline">¶</a></h3>
+<p>A dataframe with single column of values in the first column and indexed by datetime is what is required for HEC-DSS libraries for storage. It is limited to 1-dimensional time series</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">sina</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span><span class="p">,</span> <span class="mi">201</span><span class="p">))</span>
 <span class="n">dfr</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">sina</span><span class="p">,</span><span class="n">index</span><span class="o">=</span><span class="n">pd</span><span class="o">.</span><span class="n">date_range</span><span class="p">(</span><span class="s1">&#39;01jan1990 0100&#39;</span><span class="p">,</span><span class="n">periods</span><span class="o">=</span><span class="nb">len</span><span class="p">(</span><span class="n">sina</span><span class="p">),</span><span class="n">freq</span><span class="o">=</span><span class="s1">&#39;15T&#39;</span><span class="p">))</span>
+<span class="n">dfr</span><span class="o">.</span><span class="n">head</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+</pre></div>
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>0</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1990-01-01 01:00:00</th>
+      <td>-1.224647e-16</td>
+    </tr>
+    <tr>
+      <th>1990-01-01 01:15:00</th>
+      <td>-3.141076e-02</td>
+    </tr>
+    <tr>
+      <th>1990-01-01 01:30:00</th>
+      <td>-6.279052e-02</td>
+    </tr>
+    <tr>
+      <th>1990-01-01 01:45:00</th>
+      <td>-9.410831e-02</td>
+    </tr>
+    <tr>
+      <th>1990-01-01 02:00:00</th>
+      <td>-1.253332e-01</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<p>Writing out this in-memory dataframe to a dss file requires defining the * pathname (str, format of /A/B/C/D/E/F) * where the D part is reserved for timewindow * E part matches the time interval for a regular timeseries * units (str, e.g. ‘CFS’) * period_type (str one of INST-VAL or PER-<a href="#id1"><span class="problematic" id="id2">*</span></a>)</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -336,13 +441,17 @@ Version of DSS file  sample.dss :  [&#39;6-VE&#39;, 6]
 </pre></div>
 </div>
 </div>
-</div>
-<div class="section" id="An-irregular-time-series">
+</section>
+</section>
+<section id="An-irregular-time-series">
 <h2>An irregular time series<a class="headerlink" href="#An-irregular-time-series" title="Permalink to this headline">¶</a></h2>
 <p>Create a pandas DataFrame and write it out as a pathname</p>
 <p>Again very similar to the regular time series. For details on the concepts please refer to documentation for HEC-DSS</p>
+<section id="Create-an-irregular-time-series">
+<h3>Create an irregular time series<a class="headerlink" href="#Create-an-irregular-time-series" title="Permalink to this headline">¶</a></h3>
+<p>This is similar to the regular time series with the difference that there is no periodic frequency and so both values and index is specified by arrays.</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[6]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -350,8 +459,9 @@ Version of DSS file  sample.dss :  [&#39;6-VE&#39;, 6]
 </pre></div>
 </div>
 </div>
+<p>The additional values needed to write are the pathname, units and period-type. See the section on regular time series above for details</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[7]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -360,8 +470,14 @@ Version of DSS file  sample.dss :  [&#39;6-VE&#39;, 6]
 </pre></div>
 </div>
 </div>
+</section>
+</section>
+<section id="Reading-DSS-Files">
+<h2>Reading DSS Files<a class="headerlink" href="#Reading-DSS-Files" title="Permalink to this headline">¶</a></h2>
+<p>After opening the dss file, the catalog is the first thing to read if you don’t know what to expect. The catalog is read in as a dataframe of A-F parts</p>
+<p>NOTE: This version of DSS is limited to a single catalog across all cataloging on this machine</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[8]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -428,22 +544,34 @@ Version of DSS file  sample.dss :  [&#39;6-VE&#39;, 6]
 </table>
 </div></div>
 </div>
-</div>
-<div class="section" id="Catalog-filtering">
+</section>
+<section id="Catalog-filtering">
 <h2>Catalog filtering<a class="headerlink" href="#Catalog-filtering" title="Permalink to this headline">¶</a></h2>
-<p>The catalog dataframe from the read_catalog method can use the pandas DataFrame filtering/indexing features to create a filtered data frame. That can be then used with get_pathnames to return the filtered list of pathnames</p>
+<p>The catalog dataframe from the read_catalog method can use the pandas DataFrame filtering/indexing features to create a filtered data frame.</p>
+<p>The filtered catalog can be then turned into a list of pathnames with <code class="docutils literal notranslate"><span class="pre">get_pathnames(dfcat)</span></code></p>
+<p>That list of pathnames can then be used to retrieve the data for each pathname</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[9]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="n">fdf1</span><span class="o">=</span><span class="n">catdf</span><span class="p">[(</span><span class="n">catdf</span><span class="o">.</span><span class="n">B</span><span class="o">==</span><span class="s1">&#39;ITS1&#39;</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">catdf</span><span class="o">.</span><span class="n">C</span><span class="o">==</span><span class="s1">&#39;RANDOM&#39;</span><span class="p">)]</span>
+<span class="n">display</span><span class="p">(</span><span class="s2">&quot;Catalog filtered for B == &#39;ITS1&#39; &amp; C==&#39;RANDOM&#39;&quot;</span><span class="p">)</span>
 <span class="n">display</span><span class="p">(</span><span class="n">fdf1</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="s2">&quot;Catalog filtered for B == &#39;SIN&#39;&quot;</span><span class="p">)</span>
 <span class="n">fdf2</span><span class="o">=</span><span class="n">catdf</span><span class="p">[</span><span class="n">catdf</span><span class="o">.</span><span class="n">B</span><span class="o">==</span><span class="s1">&#39;SIN&#39;</span><span class="p">]</span>
 <span class="n">display</span><span class="p">(</span><span class="n">fdf2</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 
 </pre></div>
 </div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#34;Catalog filtered for B == &#39;ITS1&#39; &amp; C==&#39;RANDOM&#39;&#34;
+</pre></div></div>
 </div>
 <div class="nboutput docutils container">
 <div class="prompt empty docutils container">
@@ -491,6 +619,14 @@ Version of DSS file  sample.dss :  [&#39;6-VE&#39;, 6]
 </table>
 </div></div>
 </div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+&#34;Catalog filtered for B == &#39;SIN&#39;&#34;
+</pre></div></div>
+</div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
@@ -537,21 +673,25 @@ Version of DSS file  sample.dss :  [&#39;6-VE&#39;, 6]
 </table>
 </div></div>
 </div>
-</div>
-<div class="section" id="Reading-Timeseries-Data">
+</section>
+<section id="Reading-Timeseries-Data">
 <h2>Reading Timeseries Data<a class="headerlink" href="#Reading-Timeseries-Data" title="Permalink to this headline">¶</a></h2>
+<p>The filtered catalog dataframe from the previous cell can be used with get_pathnames() to get a list of pathnames for that catalog dataframe.</p>
+<p>The read_its and read_ts function returns a DSSData tuple of (data, units, type) where the * data is the dataframe of the data indexed by time * units is a string value e.g. cfs for flow * type is a string value of either INST-VAL or PER-* representing period values</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[10]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
 <span></span><span class="k">with</span> <span class="n">pyhecdss</span><span class="o">.</span><span class="n">DSSFile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span> <span class="k">as</span> <span class="n">d</span><span class="p">:</span>
     <span class="n">plist1</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">get_pathnames</span><span class="p">(</span><span class="n">fdf1</span><span class="p">)</span>
     <span class="n">dfr1</span><span class="p">,</span><span class="n">units1</span><span class="p">,</span><span class="n">ptype1</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">read_its</span><span class="p">(</span><span class="n">plist1</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">display</span><span class="p">(</span><span class="n">units1</span><span class="p">,</span><span class="n">ptype1</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Units: </span><span class="si">%s</span><span class="s1">&#39;</span><span class="o">%</span><span class="k">units1</span>, &#39;Period Type: %s&#39;%ptype1)
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sample values: &#39;</span><span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">dfr1</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
     <span class="n">plist2</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">get_pathnames</span><span class="p">(</span><span class="n">fdf2</span><span class="p">)</span>
     <span class="n">dfi1</span><span class="p">,</span><span class="n">units2</span><span class="p">,</span><span class="n">ptype2</span><span class="o">=</span><span class="n">d</span><span class="o">.</span><span class="n">read_rts</span><span class="p">(</span><span class="n">plist2</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;Sample values: &#39;</span><span class="p">)</span>
     <span class="n">display</span><span class="p">(</span><span class="n">dfi1</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
 </pre></div>
 </div>
@@ -561,15 +701,8 @@ Version of DSS file  sample.dss :  [&#39;6-VE&#39;, 6]
 </div>
 <div class="output_area docutils container">
 <div class="highlight"><pre>
-&#39;YYY&#39;
-</pre></div></div>
-</div>
-<div class="nboutput docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-&#39;INST-VAL&#39;
+Units: YYY Period Type: INST-VAL
+Sample values:
 </pre></div></div>
 </div>
 <div class="nboutput docutils container">
@@ -613,6 +746,14 @@ Version of DSS file  sample.dss :  [&#39;6-VE&#39;, 6]
   </tbody>
 </table>
 </div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Sample values:
+</pre></div></div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
@@ -664,28 +805,29 @@ Version of DSS file  sample.dss :  [&#39;6-VE&#39;, 6]
 </table>
 </div></div>
 </div>
-</div>
-<div class="section" id="Closing-DSS-File">
+</section>
+<section id="Closing-DSS-File">
 <h2>Closing DSS File<a class="headerlink" href="#Closing-DSS-File" title="Permalink to this headline">¶</a></h2>
 <p>Closing the DSS File is important as multi user access is possible but might hang if the other thread is writing and holding on to an open handle</p>
-<p><strong>Warning</strong> Just use the “with” statement. Much better than opening and close like this!</p>
+<p><strong>Warning</strong> Just use the “with” statement. If you using open and close it is much better to use try: finally: close block</p>
 <div class="nbinput nblast docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[11]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="n">d</span><span class="o">=</span><span class="n">pyhecdss</span><span class="o">.</span><span class="n">DSSFile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
-<span class="n">d</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
+<span></span><span class="k">try</span><span class="p">:</span>
+    <span class="n">d</span><span class="o">=</span><span class="n">pyhecdss</span><span class="o">.</span><span class="n">DSSFile</span><span class="p">(</span><span class="n">fname</span><span class="p">)</span>
+<span class="k">finally</span><span class="p">:</span>
+    <span class="n">d</span><span class="o">.</span><span class="n">close</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-</div>
-</div>
-<div class="section" id="Best-way-to-work-with-DSS-Files">
-<h1>Best way to work with DSS Files<a class="headerlink" href="#Best-way-to-work-with-DSS-Files" title="Permalink to this headline">¶</a></h1>
-<p>Using context managers allows</p>
+</section>
+<section id="Best-way-to-work-with-DSS-Files">
+<h2>Best way to work with DSS Files<a class="headerlink" href="#Best-way-to-work-with-DSS-Files" title="Permalink to this headline">¶</a></h2>
+<p>Using context managers allows the cleanup of the open dss file handle without explicitly closing it.</p>
 <div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -751,77 +893,213 @@ Version of DSS file  sample.dss :  [&#39;6-VE&#39;, 6]
 </table>
 </div></div>
 </div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[13]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">pyhecdss</span><span class="o">.</span><span class="n">get_ts</span><span class="p">(</span><span class="s1">&#39;sample.dss&#39;</span><span class="p">,</span><span class="s1">&#39;/SAMPLE/SIN/////&#39;</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-DSSDate(data=                     /SAMPLE/SIN/WAVE/01JAN1990 - 01JAN1990/15MIN/SAMPLE1/
-1990-01-01 01:00:00                                      -1.224647e-16
-1990-01-01 01:15:00                                      -3.141076e-02
-1990-01-01 01:30:00                                      -6.279052e-02
-1990-01-01 01:45:00                                      -9.410831e-02
-1990-01-01 02:00:00                                      -1.253332e-01
-...                                                                ...
-1990-01-03 02:00:00                                       1.253332e-01
-1990-01-03 02:15:00                                       9.410831e-02
-1990-01-03 02:30:00                                       6.279052e-02
-1990-01-03 02:45:00                                       3.141076e-02
-1990-01-03 03:00:00                                       1.224647e-16
-
-[201 rows x 1 columns], units=&#39;UNIT-X&#39;, period_type=&#39;INST-VAL&#39;)
-</pre></div></div>
-</div>
-<div class="nbinput docutils container">
-<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[14]:
-</pre></div>
-</div>
-<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
-<span></span><span class="k">for</span> <span class="n">data</span> <span class="ow">in</span> <span class="n">pyhecdss</span><span class="o">.</span><span class="n">get_matching_ts</span><span class="p">(</span><span class="s1">&#39;sample.dss&#39;</span><span class="p">,</span><span class="s1">&#39;//.*/////&#39;</span><span class="p">):</span>
-    <span class="nb">print</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="nboutput nblast docutils container">
-<div class="prompt empty docutils container">
-</div>
-<div class="output_area docutils container">
-<div class="highlight"><pre>
-DSSDate(data=                     /SAMPLE/ITS1/RANDOM/01JAN1990 - 01JAN1992/IR-YEAR/SAMPLE2/
-1990-01-01 03:17:00                                                1.5
-1991-04-09 05:20:00                                                3.2
-1992-09-05 23:49:00                                                2.7         , units=&#39;YYY&#39;, period_type=&#39;INST-VAL&#39;)
-DSSDate(data=                     /SAMPLE/SIN/WAVE/01JAN1990 - 01JAN1990/15MIN/SAMPLE1/
-1990-01-01 01:00:00                                      -1.224647e-16
-1990-01-01 01:15:00                                      -3.141076e-02
-1990-01-01 01:30:00                                      -6.279052e-02
-1990-01-01 01:45:00                                      -9.410831e-02
-1990-01-01 02:00:00                                      -1.253332e-01
-...                                                                ...
-1990-01-03 02:00:00                                       1.253332e-01
-1990-01-03 02:15:00                                       9.410831e-02
-1990-01-03 02:30:00                                       6.279052e-02
-1990-01-03 02:45:00                                       3.141076e-02
-1990-01-03 03:00:00                                       1.224647e-16
-
-[201 rows x 1 columns], units=&#39;UNIT-X&#39;, period_type=&#39;INST-VAL&#39;)
-</pre></div></div>
-</div>
-<div class="section" id="Plotting-and-other-features">
-<h2>Plotting and other features<a class="headerlink" href="#Plotting-and-other-features" title="Permalink to this headline">¶</a></h2>
-<p>Once the data is available as a pandas DataFrame, all the features such as plotting and analysis is available through that library.</p>
+</section>
+<section id="Convenience-methods-for-matching-partnames">
+<h2>Convenience methods for matching partnames<a class="headerlink" href="#Convenience-methods-for-matching-partnames" title="Permalink to this headline">¶</a></h2>
+<p>If you know the patterns of pathnames expected in the dss file and don’t worry about the overhead of opening and closing dss files then the follow methods are quite convenient</p>
+<p>The get* methods are generators so if you don’t know or don’t have a large number of expected pathnames you can simply surround the method call with list()</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">`get_ts</span></code> &lt;../pyhecdss.html#pyhecdss.pyhecdss.get_ts&gt;`__ See the returned tuple by the <code class="docutils literal notranslate"><span class="pre">get_ts</span></code> method consisting of :- * the dataframe * the units * the period_type</p>
 <div class="nbinput docutils container">
 <div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">pyhecdss</span><span class="o">.</span><span class="n">get_ts</span><span class="p">(</span><span class="s1">&#39;sample.dss&#39;</span><span class="p">,</span><span class="s1">&#39;/SAMPLE/SIN/////&#39;</span><span class="p">):</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">units</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">period_type</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>/SAMPLE/SIN/WAVE/01JAN1990 - 01JAN1990/15MIN/SAMPLE1/</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1990-01-01 01:00:00</th>
+      <td>-1.224647e-16</td>
+    </tr>
+    <tr>
+      <th>1990-01-01 01:15:00</th>
+      <td>-3.141076e-02</td>
+    </tr>
+    <tr>
+      <th>1990-01-01 01:30:00</th>
+      <td>-6.279052e-02</td>
+    </tr>
+    <tr>
+      <th>1990-01-01 01:45:00</th>
+      <td>-9.410831e-02</td>
+    </tr>
+    <tr>
+      <th>1990-01-01 02:00:00</th>
+      <td>-1.253332e-01</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+UNIT-X
+INST-VAL
+</pre></div></div>
+</div>
+</section>
+<section id="Use-regular-expressions-for-more-powerful-filtering">
+<h2>Use regular expressions for more powerful filtering<a class="headerlink" href="#Use-regular-expressions-for-more-powerful-filtering" title="Permalink to this headline">¶</a></h2>
+<p>Use <code class="docutils literal notranslate"><span class="pre">get_matching_ts</span></code> to filter the path parts (between //) as regular expressions to filter pathnames to retrieve data from.</p>
+<p>This method also returns a generator of matching pathnames so surround with list() if you don’t expect a large number returned</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="k">for</span> <span class="n">t</span> <span class="ow">in</span> <span class="n">pyhecdss</span><span class="o">.</span><span class="n">get_matching_ts</span><span class="p">(</span><span class="s1">&#39;sample.dss&#39;</span><span class="p">,</span><span class="s1">&#39;//.*/////&#39;</span><span class="p">):</span>
+    <span class="n">display</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">head</span><span class="p">())</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">t</span><span class="o">.</span><span class="n">units</span><span class="p">,</span> <span class="n">t</span><span class="o">.</span><span class="n">period_type</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>/SAMPLE/ITS1/RANDOM/01JAN1990 - 01JAN1992/IR-YEAR/SAMPLE2/</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1990-01-01 03:17:00</th>
+      <td>1.5</td>
+    </tr>
+    <tr>
+      <th>1991-04-09 05:20:00</th>
+      <td>3.2</td>
+    </tr>
+    <tr>
+      <th>1992-09-05 23:49:00</th>
+      <td>2.7</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+YYY INST-VAL
+</pre></div></div>
+</div>
+<div class="nboutput docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area rendered_html docutils container">
+<div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>/SAMPLE/SIN/WAVE/01JAN1990 - 01JAN1990/15MIN/SAMPLE1/</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1990-01-01 01:00:00</th>
+      <td>-1.224647e-16</td>
+    </tr>
+    <tr>
+      <th>1990-01-01 01:15:00</th>
+      <td>-3.141076e-02</td>
+    </tr>
+    <tr>
+      <th>1990-01-01 01:30:00</th>
+      <td>-6.279052e-02</td>
+    </tr>
+    <tr>
+      <th>1990-01-01 01:45:00</th>
+      <td>-9.410831e-02</td>
+    </tr>
+    <tr>
+      <th>1990-01-01 02:00:00</th>
+      <td>-1.253332e-01</td>
+    </tr>
+  </tbody>
+</table>
+</div></div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+UNIT-X INST-VAL
+</pre></div></div>
+</div>
+</section>
+<section id="Plotting-and-other-features">
+<h2>Plotting and other features<a class="headerlink" href="#Plotting-and-other-features" title="Permalink to this headline">¶</a></h2>
+<p>Once the data is available as a pandas DataFrame, all the features such as plotting and analysis is available through other libraries such as matplotlib (see example below)</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[17]:
 </pre></div>
 </div>
 <div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
@@ -834,14 +1112,14 @@ DSSDate(data=                     /SAMPLE/SIN/WAVE/01JAN1990 - 01JAN1990/15MIN/S
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sample_dss_files_25_0.png" src="../_images/notebooks_sample_dss_files_25_0.png" />
+<img alt="../_images/notebooks_sample_dss_files_36_0.png" src="../_images/notebooks_sample_dss_files_36_0.png" />
 </div>
 </div>
 <div class="nboutput nblast docutils container">
 <div class="prompt empty docutils container">
 </div>
 <div class="output_area docutils container">
-<img alt="../_images/notebooks_sample_dss_files_25_1.png" src="../_images/notebooks_sample_dss_files_25_1.png" />
+<img alt="../_images/notebooks_sample_dss_files_36_1.png" src="../_images/notebooks_sample_dss_files_36_1.png" />
 </div>
 </div>
 <div class="nbinput nblast docutils container">
@@ -853,8 +1131,8 @@ DSSDate(data=                     /SAMPLE/SIN/WAVE/01JAN1990 - 01JAN1990/15MIN/S
 </pre></div>
 </div>
 </div>
-</div>
-</div>
+</section>
+</section>
 
 
           </div>
@@ -878,21 +1156,23 @@ DSSDate(data=                     /SAMPLE/SIN/WAVE/01JAN1990 - 01JAN1990/15MIN/S
 <li class="toctree-l1"><a class="reference internal" href="../readme.html">pyhecdss</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Sample Demo</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Usage with examples</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#Setting-message-level-and-program-name">Setting message level and program name</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Example-of-writing-a-DSS-File">Example of writing a DSS File</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Opening-and-closing-a-DSS-File">Opening and closing a DSS File</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#A-regular-time-series">A regular time series</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#An-irregular-time-series">An irregular time series</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Reading-DSS-Files">Reading DSS Files</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Catalog-filtering">Catalog filtering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Reading-Timeseries-Data">Reading Timeseries Data</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Closing-DSS-File">Closing DSS File</a></li>
-</ul>
-</li>
-<li class="toctree-l1"><a class="reference internal" href="#Best-way-to-work-with-DSS-Files">Best way to work with DSS Files</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#Best-way-to-work-with-DSS-Files">Best way to work with DSS Files</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Convenience-methods-for-matching-partnames">Convenience methods for matching partnames</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#Use-regular-expressions-for-more-powerful-filtering">Use regular expressions for more powerful filtering</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#Plotting-and-other-features">Plotting and other features</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="period_vs_instval.html">Discussion on PER-* and INST-* period types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../modules.html">pyhecdss</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
@@ -904,7 +1184,7 @@ DSSDate(data=                     /SAMPLE/SIN/WAVE/01JAN1990 - 01JAN1990/15MIN/S
 <ul>
   <li><a href="../index.html">Documentation overview</a><ul>
       <li>Previous: <a href="../usage.html" title="previous chapter">Usage</a></li>
-      <li>Next: <a href="../modules.html" title="next chapter">pyhecdss</a></li>
+      <li>Next: <a href="period_vs_instval.html" title="next chapter">Discussion on PER-* and INST-* period types</a></li>
   </ul></li>
 </ul>
 </div>
@@ -917,7 +1197,7 @@ DSSDate(data=                     /SAMPLE/SIN/WAVE/01JAN1990 - 01JAN1990/15MIN/S
     </form>
     </div>
 </div>
-<script type="text/javascript">$('#searchbox').show(0);</script>
+<script>$('#searchbox').show(0);</script>
 
 
 
@@ -934,7 +1214,7 @@ DSSDate(data=                     /SAMPLE/SIN/WAVE/01JAN1990 - 01JAN1990/15MIN/S
       &copy;2019, Nicky Sandhu.
       
       |
-      Powered by <a href="http://sphinx-doc.org/">Sphinx 2.3.1</a>
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
       &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
       
       |

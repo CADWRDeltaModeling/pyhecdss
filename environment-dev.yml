@@ -1,0 +1,17 @@
+name: dev_pyhecdss
+channels:
+  - cadwr-dms
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.7.*
+  - pip
+  - ipykernel # for jupyter notebook support
+  - autopep8 # for formatting esp. in jupyter notebook
+  - numpy
+  - pandas
+  - pytest  
+  - conda-build
+  - nbsphinx # docs stuff below
+  - sphinx
+  - pandoc

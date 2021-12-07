@@ -1,6 +1,23 @@
 =========
 CHANGELOG
 =========
+
+1.1.2
+-----
+more fixes for create_new flag tests
+
+1.1.1
+------
+fixing tests for create_new flag
+
+1.1.0
+-----
+DSS file only created when explicitly create_new=True(default: False)
+ 
+1.0.2
+-----
+bugfix for empty arrays
+
 1.0.1
 -----
 handle pandas Series on writes

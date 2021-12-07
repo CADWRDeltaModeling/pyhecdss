@@ -10,3 +10,4 @@ pandas=0.25.0=pypi_0
 pytest=5.0.1=py37_0
 python=3.7.3=h8c8aaf0_1
 sphinx=2.1.2=py_0
+pandoc
