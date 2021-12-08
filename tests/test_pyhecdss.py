@@ -122,6 +122,16 @@ class TestPyDsUtilsBasic(unittest.TestCase):
         self.assertTrue(abs(vseries.at['01JAN1990 0317']-1.5) < 1e-03)
         self.assertTrue(abs(vseries.at['05SEP1992 2349']-2.7) < 1e-03)
 
+    def test_read_its_tw(self):
+        # issue #26
+        fname = "test1.dss"
+        pathname = '/SAMPLE/ITS1/RANDOM/01JAN1990 0143 - 01JAN1992/IR-YEAR/SAMPLE2/'
+        with pyhecdss.DSSFile(fname) as dssfile:
+            values, units, periodtype = dssfile.read_its(pathname)
+        self.assertEqual(units, 'YYY')
+        self.assertEqual(periodtype, 'INST-VAL')
+        self.assertEqual(len(values), 3)
+
     def test_write_its(self):
         fname = "test1.dss"
         pathname = '/TEST/ITS1/VANILLA//IR-YEAR/RANDOM/'

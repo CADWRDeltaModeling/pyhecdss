@@ -639,6 +639,8 @@ class DSSFile:
         """
         epart = self.parse_pathname_epart(pathname)
         startDateStr, endDateStr = self._parse_times(pathname, startDateStr, endDateStr)
+        startDateStr = pd.to_datetime(startDateStr).floor('1D').strftime('%d%b%Y').upper() # round down
+        endDateStr = pd.to_datetime(endDateStr).ceil('1D').strftime('%d%b%Y').upper() # round up
         juls, istat = pyheclib.hec_datjul(startDateStr)
         jule, istat = pyheclib.hec_datjul(endDateStr)
         ietime = istime = 0
