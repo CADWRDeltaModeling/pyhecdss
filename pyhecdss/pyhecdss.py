@@ -174,7 +174,7 @@ class DSSFile:
     #
     NAME_FREQ_MAP = {v: k for k, v in FREQ_NAME_MAP.items()}
     #
-    EPART_PATTERN = re.compile('(?P<n>\d+)(?P<interval>M[O|I]N|YEAR|HOUR|DAY|WEEK)')
+    EPART_PATTERN = re.compile(r'(?P<n>\d+)(?P<interval>M[O|I]N|YEAR|HOUR|DAY|WEEK)', re.UNICODE)
     #
     """
     vectorized version of timedelta
