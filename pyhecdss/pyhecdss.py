@@ -88,6 +88,7 @@ def get_ts(filename, pathname):
     """
     with DSSFile(filename) as dssh:
         dfcat = dssh.read_catalog()
+        if pathname: pathname = pathname.upper()
         pp = pathname.split('/')
         cond = True
         for p, n in zip(pp[1:4]+pp[5:7], ['A', 'B', 'C', 'E', 'F']):
@@ -125,6 +126,7 @@ def get_matching_ts(filename, pathname=None, path_parts=None):
     '''
     with DSSFile(filename) as dssh:
         dfcat = dssh.read_catalog()
+        if pathname: pathname=pathname.upper()
         pp = pathname.split('/')
         cond = dfcat['A'].str.match('.*')
         for p, n in zip(pp[1:4]+pp[5:7], ['A', 'B', 'C', 'E', 'F']):
@@ -530,6 +532,7 @@ class DSSFile:
         try:
             if not opened_already:
                 self.open()
+            if pathname: pathname = pathname.upper()
             interval = self.parse_pathname_epart(pathname)
             trim_first = startDateStr is None
             trim_last = endDateStr is None
@@ -612,6 +615,7 @@ class DSSFile:
         The time series is passed in as a pandas DataFrame
         and associated units and types of length no greater than 8.
         """
+        if pathname: pathname = pathname.upper()
         parts = pathname.split('/')
         parts[5] = DSSFile.get_epart_from_freq(df.index.freq)
         pathname = "/".join(parts)
@@ -637,6 +641,7 @@ class DSSFile:
         from the D-PART of the pathname so make sure to read that from the catalog
         before calling this function
         """
+        if pathname: pathname = pathname.upper()
         epart = self.parse_pathname_epart(pathname)
         startDateStr, endDateStr = self._parse_times(pathname, startDateStr, endDateStr)
         startDateStr = pd.to_datetime(startDateStr).floor('1D').strftime('%d%b%Y').upper() # round down
@@ -678,6 +683,7 @@ class DSSFile:
         Uses the provided pandas.DataFrame df index (time) and values
         and also stores the units (cunits) and type (ctype)
         """
+        if pathname: pathname = pathname.upper()
         parts = pathname.split('/')
         # parts[5]=DSSFile.FREQ_EPART_MAP[df.index.freq]
         if interval:
