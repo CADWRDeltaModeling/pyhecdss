@@ -1,6 +1,13 @@
 =========
 CHANGELOG
 =========
+1.1.4
+-----
+fix for issue #25, #26, #27 and warning cleanup
+
+1.1.3
+-----
+Fixed imports to avoid circular import issue #27
 
 1.1.2
 -----
