@@ -115,55 +115,55 @@ auto versioning turned on</p>
 </section>
 <section id="id17">
 <h2>0.2.9<a class="headerlink" href="#id17" title="Permalink to this headline">¶</a></h2>
-<p>Fixed issue with end of timestamp writing to dss files for “PER-<a href="#id18"><span class="problematic" id="id19">*</span></a>” data type</p>
+<p>Fixed issue with end of timestamp writing to dss files for “PER-” data type</p>
 </section>
-<section id="id20">
-<h2>0.2.8<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
+<section id="id18">
+<h2>0.2.8<a class="headerlink" href="#id18" title="Permalink to this headline">¶</a></h2>
 <p>Recompiled heclib in linux with latest compilers to resolve issue 8</p>
 </section>
-<section id="id21">
-<h2>0.2.7<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h2>
+<section id="id19">
+<h2>0.2.7<a class="headerlink" href="#id19" title="Permalink to this headline">¶</a></h2>
 <p>Partial fixes for offset: Fixed for INST-* timeseries but not PER-* timeseries (issue #12)</p>
 </section>
-<section id="id22">
-<h2>0.2.6<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
+<section id="id20">
+<h2>0.2.6<a class="headerlink" href="#id20" title="Permalink to this headline">¶</a></h2>
 <p>Performance tests added to showcase pyhecdss is the fastest
 Fixed issue #10: Period data stored shifted to end of time stamp (HEC-DSS convention)
 Fixing libgfortran dependency on linux by statically linking the library</p>
 </section>
-<section id="id23">
-<h2>0.2.5<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h2>
+<section id="id21">
+<h2>0.2.5<a class="headerlink" href="#id21" title="Permalink to this headline">¶</a></h2>
 <p>Merged pull request from HenryDane:
 issues warnings or throws exception based on return value from functions
 fixed minor typo(s), added tests</p>
 </section>
-<section id="id24">
-<h2>0.2.4<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h2>
+<section id="id22">
+<h2>0.2.4<a class="headerlink" href="#id22" title="Permalink to this headline">¶</a></h2>
 <p>Fixes issues #2, #4: get_version(), set_message_level(), set_program_name() now supported at module level
 Fixes issues #1: HECDSS marks periods by end of time stamp bug</p>
 </section>
-<section id="id25">
-<h2>0.2.3<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h2>
+<section id="id23">
+<h2>0.2.3<a class="headerlink" href="#id23" title="Permalink to this headline">¶</a></h2>
 <p>Added linux 64bit support
 Corrected license to MIT for conda distribution</p>
 </section>
-<section id="id26">
-<h2>0.2.2<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
+<section id="id24">
+<h2>0.2.2<a class="headerlink" href="#id24" title="Permalink to this headline">¶</a></h2>
 <p>Update tests to use a smaller test.dss files
 Added sphinx documentation and demo notebook</p>
 </section>
-<section id="id27">
-<h2>0.2.1<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
+<section id="id25">
+<h2>0.2.1<a class="headerlink" href="#id25" title="Permalink to this headline">¶</a></h2>
 <p>Write irregular time series</p>
 </section>
-<section id="id28">
-<h2>0.2.0<a class="headerlink" href="#id28" title="Permalink to this headline">¶</a></h2>
+<section id="id26">
+<h2>0.2.0<a class="headerlink" href="#id26" title="Permalink to this headline">¶</a></h2>
 <p>Write regular time series
 Read irregular time series as data frame + units + type
 Performance improvement to using np.zeros instead of np.array(range…)</p>
 </section>
-<section id="id29">
-<h2>0.1.6<a class="headerlink" href="#id29" title="Permalink to this headline">¶</a></h2>
+<section id="id27">
+<h2>0.1.6<a class="headerlink" href="#id27" title="Permalink to this headline">¶</a></h2>
 </section>
 </section>
 
@@ -190,7 +190,7 @@ Performance improvement to using np.zeros instead of np.array(range…)</p>
 <li class="toctree-l1"><a class="reference internal" href="installation.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="usage.html">Usage</a></li>
 <li class="toctree-l1"><a class="reference internal" href="notebooks/sample_dss_files.html">Usage with examples</a></li>
-<li class="toctree-l1"><a class="reference internal" href="notebooks/period_vs_instval.html">Discussion on PER-* and INST-* period types</a></li>
+<li class="toctree-l1"><a class="reference internal" href="notebooks/period_vs_instval.html">PER-* and INST-* period types</a></li>
 <li class="toctree-l1"><a class="reference internal" href="modules.html">pyhecdss</a></li>
 <li class="toctree-l1"><a class="reference internal" href="contributing.html">Contributing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="authors.html">Credits</a></li>
@@ -212,16 +212,16 @@ Performance improvement to using np.zeros instead of np.array(range…)</p>
 <li class="toctree-l2"><a class="reference internal" href="#id15">0.3.1</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id16">0.3.0</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#id17">0.2.9</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id20">0.2.8</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id21">0.2.7</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id22">0.2.6</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id23">0.2.5</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id24">0.2.4</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id25">0.2.3</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id26">0.2.2</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id27">0.2.1</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id28">0.2.0</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#id29">0.1.6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id18">0.2.8</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id19">0.2.7</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id20">0.2.6</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id21">0.2.5</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id22">0.2.4</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id23">0.2.3</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id24">0.2.2</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id25">0.2.1</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id26">0.2.0</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#id27">0.1.6</a></li>
 </ul>
 </li>
 </ul>
