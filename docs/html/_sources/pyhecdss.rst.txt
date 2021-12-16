@@ -12,6 +12,14 @@ pyhecdss.pyhecdss module
    :undoc-members:
    :show-inheritance:
 
+pyhecdss.pyheclib module
+------------------------
+
+.. automodule:: pyhecdss.pyheclib
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 Module contents
 ---------------
 
