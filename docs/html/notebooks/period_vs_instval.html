@@ -1,0 +1,631 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Discussion on PER-* and INST-* period types &#8212; pyhecdss 1.1.4+1.g70de5b2.dirty documentation</title>
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/alabaster.css" />
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script async="async" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>window.MathJax = {"tex": {"inlineMath": [["$", "$"], ["\\(", "\\)"]], "processEscapes": true}, "options": {"ignoreHtmlClass": "tex2jax_ignore|mathjax_ignore|document", "processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyhecdss" href="../modules.html" />
+    <link rel="prev" title="Usage with examples" href="sample_dss_files.html" />
+   
+  <link rel="stylesheet" href="../_static/custom.css" type="text/css" />
+  
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head><body>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          
+
+          <div class="body" role="main">
+            
+  
+<style>
+/* CSS for nbsphinx extension */
+
+/* remove conflicting styling from Sphinx themes */
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt *,
+div.nbinput.container div.input_area pre,
+div.nboutput.container div.output_area pre,
+div.nbinput.container div.input_area .highlight,
+div.nboutput.container div.output_area .highlight {
+    border: none;
+    padding: 0;
+    margin: 0;
+    box-shadow: none;
+}
+
+div.nbinput.container > div[class*=highlight],
+div.nboutput.container > div[class*=highlight] {
+    margin: 0;
+}
+
+div.nbinput.container div.prompt *,
+div.nboutput.container div.prompt * {
+    background: none;
+}
+
+div.nboutput.container div.output_area .highlight,
+div.nboutput.container div.output_area pre {
+    background: unset;
+}
+
+div.nboutput.container div.output_area div.highlight {
+    color: unset;  /* override Pygments text color */
+}
+
+/* avoid gaps between output lines */
+div.nboutput.container div[class*=highlight] pre {
+    line-height: normal;
+}
+
+/* input/output containers */
+div.nbinput.container,
+div.nboutput.container {
+    display: -webkit-flex;
+    display: flex;
+    align-items: flex-start;
+    margin: 0;
+    width: 100%;
+}
+@media (max-width: 540px) {
+    div.nbinput.container,
+    div.nboutput.container {
+        flex-direction: column;
+    }
+}
+
+/* input container */
+div.nbinput.container {
+    padding-top: 5px;
+}
+
+/* last container */
+div.nblast.container {
+    padding-bottom: 5px;
+}
+
+/* input prompt */
+div.nbinput.container div.prompt pre {
+    color: #307FC1;
+}
+
+/* output prompt */
+div.nboutput.container div.prompt pre {
+    color: #BF5B3D;
+}
+
+/* all prompts */
+div.nbinput.container div.prompt,
+div.nboutput.container div.prompt {
+    width: 4.5ex;
+    padding-top: 5px;
+    position: relative;
+    user-select: none;
+}
+
+div.nbinput.container div.prompt > div,
+div.nboutput.container div.prompt > div {
+    position: absolute;
+    right: 0;
+    margin-right: 0.3ex;
+}
+
+@media (max-width: 540px) {
+    div.nbinput.container div.prompt,
+    div.nboutput.container div.prompt {
+        width: unset;
+        text-align: left;
+        padding: 0.4em;
+    }
+    div.nboutput.container div.prompt.empty {
+        padding: 0;
+    }
+
+    div.nbinput.container div.prompt > div,
+    div.nboutput.container div.prompt > div {
+        position: unset;
+    }
+}
+
+/* disable scrollbars on prompts */
+div.nbinput.container div.prompt pre,
+div.nboutput.container div.prompt pre {
+    overflow: hidden;
+}
+
+/* input/output area */
+div.nbinput.container div.input_area,
+div.nboutput.container div.output_area {
+    -webkit-flex: 1;
+    flex: 1;
+    overflow: auto;
+}
+@media (max-width: 540px) {
+    div.nbinput.container div.input_area,
+    div.nboutput.container div.output_area {
+        width: 100%;
+    }
+}
+
+/* input area */
+div.nbinput.container div.input_area {
+    border: 1px solid #e0e0e0;
+    border-radius: 2px;
+    /*background: #f5f5f5;*/
+}
+
+/* override MathJax center alignment in output cells */
+div.nboutput.container div[class*=MathJax] {
+    text-align: left !important;
+}
+
+/* override sphinx.ext.imgmath center alignment in output cells */
+div.nboutput.container div.math p {
+    text-align: left;
+}
+
+/* standard error */
+div.nboutput.container div.output_area.stderr {
+    background: #fdd;
+}
+
+/* ANSI colors */
+.ansi-black-fg { color: #3E424D; }
+.ansi-black-bg { background-color: #3E424D; }
+.ansi-black-intense-fg { color: #282C36; }
+.ansi-black-intense-bg { background-color: #282C36; }
+.ansi-red-fg { color: #E75C58; }
+.ansi-red-bg { background-color: #E75C58; }
+.ansi-red-intense-fg { color: #B22B31; }
+.ansi-red-intense-bg { background-color: #B22B31; }
+.ansi-green-fg { color: #00A250; }
+.ansi-green-bg { background-color: #00A250; }
+.ansi-green-intense-fg { color: #007427; }
+.ansi-green-intense-bg { background-color: #007427; }
+.ansi-yellow-fg { color: #DDB62B; }
+.ansi-yellow-bg { background-color: #DDB62B; }
+.ansi-yellow-intense-fg { color: #B27D12; }
+.ansi-yellow-intense-bg { background-color: #B27D12; }
+.ansi-blue-fg { color: #208FFB; }
+.ansi-blue-bg { background-color: #208FFB; }
+.ansi-blue-intense-fg { color: #0065CA; }
+.ansi-blue-intense-bg { background-color: #0065CA; }
+.ansi-magenta-fg { color: #D160C4; }
+.ansi-magenta-bg { background-color: #D160C4; }
+.ansi-magenta-intense-fg { color: #A03196; }
+.ansi-magenta-intense-bg { background-color: #A03196; }
+.ansi-cyan-fg { color: #60C6C8; }
+.ansi-cyan-bg { background-color: #60C6C8; }
+.ansi-cyan-intense-fg { color: #258F8F; }
+.ansi-cyan-intense-bg { background-color: #258F8F; }
+.ansi-white-fg { color: #C5C1B4; }
+.ansi-white-bg { background-color: #C5C1B4; }
+.ansi-white-intense-fg { color: #A1A6B2; }
+.ansi-white-intense-bg { background-color: #A1A6B2; }
+
+.ansi-default-inverse-fg { color: #FFFFFF; }
+.ansi-default-inverse-bg { background-color: #000000; }
+
+.ansi-bold { font-weight: bold; }
+.ansi-underline { text-decoration: underline; }
+
+
+div.nbinput.container div.input_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight] > pre,
+div.nboutput.container div.output_area div[class*=highlight].math,
+div.nboutput.container div.output_area.rendered_html,
+div.nboutput.container div.output_area > div.output_javascript,
+div.nboutput.container div.output_area:not(.rendered_html) > img{
+    padding: 5px;
+    margin: 0;
+}
+
+/* fix copybtn overflow problem in chromium (needed for 'sphinx_copybutton') */
+div.nbinput.container div.input_area > div[class^='highlight'],
+div.nboutput.container div.output_area > div[class^='highlight']{
+    overflow-y: hidden;
+}
+
+/* hide copybtn icon on prompts (needed for 'sphinx_copybutton') */
+.prompt a.copybtn {
+    display: none;
+}
+
+/* Some additional styling taken form the Jupyter notebook CSS */
+div.rendered_html table {
+  border: none;
+  border-collapse: collapse;
+  border-spacing: 0;
+  color: black;
+  font-size: 12px;
+  table-layout: fixed;
+}
+div.rendered_html thead {
+  border-bottom: 1px solid black;
+  vertical-align: bottom;
+}
+div.rendered_html tr,
+div.rendered_html th,
+div.rendered_html td {
+  text-align: right;
+  vertical-align: middle;
+  padding: 0.5em 0.5em;
+  line-height: normal;
+  white-space: normal;
+  max-width: none;
+  border: none;
+}
+div.rendered_html th {
+  font-weight: bold;
+}
+div.rendered_html tbody tr:nth-child(odd) {
+  background: #f5f5f5;
+}
+div.rendered_html tbody tr:hover {
+  background: rgba(66, 165, 245, 0.2);
+}
+</style>
+<section id="Discussion-on-PER-*-and-INST-*-period-types">
+<h1>Discussion on PER-* and INST-* period types<a class="headerlink" href="#Discussion-on-PER-*-and-INST-*-period-types" title="Permalink to this headline">¶</a></h1>
+<p>HEC DSS uses a different convention than most date time libraries in use. The one that is difficult to deal with is the the end of interval labeling</p>
+<p>For example, the monthly data in DSS is stored at the end of the month. Lets take a look</p>
+<p>The monthly value for January 1990 is stored as the datetime of 31JAN1990 2400 which first off all cannot be parsed as such by python libraries. If you take the time as stored (long) and convert it to datetime in python it will be displayed as 01FEB1990 0000.</p>
+<p>The last time stamp that is considered to belong to the month of January is 31JAN1990 2359.9999… to nano-second precision. However the timestamp stored in DSS files is actually the stroke of midnight of the end of January and python datetime libraries mark that as a February date.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[1]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+</pre></div>
+</div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[2]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;31JAN1990 2400&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt empty docutils container">
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+<span class="ansi-red-intense-fg ansi-bold">---------------------------------------------------------------------------</span>
+<span class="ansi-red-intense-fg ansi-bold">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\dateutil\parser\_parser.py</span> in <span class="ansi-cyan-fg">parse</span><span class="ansi-blue-intense-fg ansi-bold">(self, timestr, default, ignoretz, tzinfos, **kwargs)</span>
+<span class="ansi-green-fg">    648</span>         <span class="ansi-green-intense-fg ansi-bold">try</span><span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 649</span><span class="ansi-yellow-intense-fg ansi-bold">             </span>ret <span class="ansi-yellow-intense-fg ansi-bold">=</span> self<span class="ansi-yellow-intense-fg ansi-bold">.</span>_build_naive<span class="ansi-yellow-intense-fg ansi-bold">(</span>res<span class="ansi-yellow-intense-fg ansi-bold">,</span> default<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    650</span>         <span class="ansi-green-intense-fg ansi-bold">except</span> ValueError <span class="ansi-green-intense-fg ansi-bold">as</span> e<span class="ansi-yellow-intense-fg ansi-bold">:</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\dateutil\parser\_parser.py</span> in <span class="ansi-cyan-fg">_build_naive</span><span class="ansi-blue-intense-fg ansi-bold">(self, res, default)</span>
+<span class="ansi-green-fg">   1234</span>
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1235</span><span class="ansi-yellow-intense-fg ansi-bold">         </span>naive <span class="ansi-yellow-intense-fg ansi-bold">=</span> default<span class="ansi-yellow-intense-fg ansi-bold">.</span>replace<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">**</span>repl<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">   1236</span>
+
+<span class="ansi-red-intense-fg ansi-bold">ValueError</span>: hour must be in 0..23
+
+The above exception was the direct cause of the following exception:
+
+<span class="ansi-red-intense-fg ansi-bold">ParserError</span>                               Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\pandas\_libs\tslib.pyx</span> in <span class="ansi-cyan-fg">pandas._libs.tslib.array_to_datetime</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\pandas\_libs\tslibs\parsing.pyx</span> in <span class="ansi-cyan-fg">pandas._libs.tslibs.parsing.parse_datetime_string</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\dateutil\parser\_parser.py</span> in <span class="ansi-cyan-fg">parse</span><span class="ansi-blue-intense-fg ansi-bold">(timestr, parserinfo, **kwargs)</span>
+<span class="ansi-green-fg">   1367</span>     <span class="ansi-green-intense-fg ansi-bold">else</span><span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1368</span><span class="ansi-yellow-intense-fg ansi-bold">         </span><span class="ansi-green-intense-fg ansi-bold">return</span> DEFAULTPARSER<span class="ansi-yellow-intense-fg ansi-bold">.</span>parse<span class="ansi-yellow-intense-fg ansi-bold">(</span>timestr<span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-yellow-intense-fg ansi-bold">**</span>kwargs<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">   1369</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\dateutil\parser\_parser.py</span> in <span class="ansi-cyan-fg">parse</span><span class="ansi-blue-intense-fg ansi-bold">(self, timestr, default, ignoretz, tzinfos, **kwargs)</span>
+<span class="ansi-green-fg">    650</span>         <span class="ansi-green-intense-fg ansi-bold">except</span> ValueError <span class="ansi-green-intense-fg ansi-bold">as</span> e<span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 651</span><span class="ansi-yellow-intense-fg ansi-bold">             </span>six<span class="ansi-yellow-intense-fg ansi-bold">.</span>raise_from<span class="ansi-yellow-intense-fg ansi-bold">(</span>ParserError<span class="ansi-yellow-intense-fg ansi-bold">(</span>str<span class="ansi-yellow-intense-fg ansi-bold">(</span>e<span class="ansi-yellow-intense-fg ansi-bold">)</span> <span class="ansi-yellow-intense-fg ansi-bold">+</span> <span class="ansi-blue-intense-fg ansi-bold">&#34;: %s&#34;</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> timestr<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> e<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    652</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\six.py</span> in <span class="ansi-cyan-fg">raise_from</span><span class="ansi-blue-intense-fg ansi-bold">(value, from_value)</span>
+
+<span class="ansi-red-intense-fg ansi-bold">ParserError</span>: hour must be in 0..23: 31JAN1990 2400
+
+During handling of the above exception, another exception occurred:
+
+<span class="ansi-red-intense-fg ansi-bold">TypeError</span>                                 Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\pandas\_libs\tslib.pyx</span> in <span class="ansi-cyan-fg">pandas._libs.tslib.array_to_datetime</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+
+<span class="ansi-red-intense-fg ansi-bold">TypeError</span>: invalid string coercion to datetime
+
+During handling of the above exception, another exception occurred:
+
+<span class="ansi-red-intense-fg ansi-bold">ValueError</span>                                Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\dateutil\parser\_parser.py</span> in <span class="ansi-cyan-fg">parse</span><span class="ansi-blue-intense-fg ansi-bold">(self, timestr, default, ignoretz, tzinfos, **kwargs)</span>
+<span class="ansi-green-fg">    648</span>         <span class="ansi-green-intense-fg ansi-bold">try</span><span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 649</span><span class="ansi-yellow-intense-fg ansi-bold">             </span>ret <span class="ansi-yellow-intense-fg ansi-bold">=</span> self<span class="ansi-yellow-intense-fg ansi-bold">.</span>_build_naive<span class="ansi-yellow-intense-fg ansi-bold">(</span>res<span class="ansi-yellow-intense-fg ansi-bold">,</span> default<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    650</span>         <span class="ansi-green-intense-fg ansi-bold">except</span> ValueError <span class="ansi-green-intense-fg ansi-bold">as</span> e<span class="ansi-yellow-intense-fg ansi-bold">:</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\dateutil\parser\_parser.py</span> in <span class="ansi-cyan-fg">_build_naive</span><span class="ansi-blue-intense-fg ansi-bold">(self, res, default)</span>
+<span class="ansi-green-fg">   1234</span>
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1235</span><span class="ansi-yellow-intense-fg ansi-bold">         </span>naive <span class="ansi-yellow-intense-fg ansi-bold">=</span> default<span class="ansi-yellow-intense-fg ansi-bold">.</span>replace<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">**</span>repl<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">   1236</span>
+
+<span class="ansi-red-intense-fg ansi-bold">ValueError</span>: hour must be in 0..23
+
+The above exception was the direct cause of the following exception:
+
+<span class="ansi-red-intense-fg ansi-bold">ParserError</span>                               Traceback (most recent call last)
+<span class="ansi-green-intense-fg ansi-bold">~\AppData\Local\Temp/ipykernel_9596/3106564415.py</span> in <span class="ansi-cyan-fg">&lt;module&gt;</span>
+<span class="ansi-green-intense-fg ansi-bold">----&gt; 1</span><span class="ansi-yellow-intense-fg ansi-bold"> </span>pd<span class="ansi-yellow-intense-fg ansi-bold">.</span>to_datetime<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#39;31JAN1990 2400&#39;</span><span class="ansi-yellow-intense-fg ansi-bold">)</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\pandas\core\tools\datetimes.py</span> in <span class="ansi-cyan-fg">to_datetime</span><span class="ansi-blue-intense-fg ansi-bold">(arg, errors, dayfirst, yearfirst, utc, format, exact, unit, infer_datetime_format, origin, cache)</span>
+<span class="ansi-green-fg">    912</span>             result <span class="ansi-yellow-intense-fg ansi-bold">=</span> convert_listlike<span class="ansi-yellow-intense-fg ansi-bold">(</span>arg<span class="ansi-yellow-intense-fg ansi-bold">,</span> format<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    913</span>     <span class="ansi-green-intense-fg ansi-bold">else</span><span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 914</span><span class="ansi-yellow-intense-fg ansi-bold">         </span>result <span class="ansi-yellow-intense-fg ansi-bold">=</span> convert_listlike<span class="ansi-yellow-intense-fg ansi-bold">(</span>np<span class="ansi-yellow-intense-fg ansi-bold">.</span>array<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-yellow-intense-fg ansi-bold">[</span>arg<span class="ansi-yellow-intense-fg ansi-bold">]</span><span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> format<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">[</span><span class="ansi-cyan-intense-fg ansi-bold">0</span><span class="ansi-yellow-intense-fg ansi-bold">]</span>
+<span class="ansi-green-fg">    915</span>
+<span class="ansi-green-fg">    916</span>     <span class="ansi-red-intense-fg ansi-bold">#  error: Incompatible return value type (got &#34;Union[Timestamp, NaTType,</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\pandas\core\tools\datetimes.py</span> in <span class="ansi-cyan-fg">_convert_listlike_datetimes</span><span class="ansi-blue-intense-fg ansi-bold">(arg, format, name, tz, unit, errors, infer_datetime_format, dayfirst, yearfirst, exact)</span>
+<span class="ansi-green-fg">    406</span>         errors<span class="ansi-yellow-intense-fg ansi-bold">=</span>errors<span class="ansi-yellow-intense-fg ansi-bold">,</span>
+<span class="ansi-green-fg">    407</span>         require_iso8601<span class="ansi-yellow-intense-fg ansi-bold">=</span>require_iso8601<span class="ansi-yellow-intense-fg ansi-bold">,</span>
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 408</span><span class="ansi-yellow-intense-fg ansi-bold">         </span>allow_object<span class="ansi-yellow-intense-fg ansi-bold">=</span><span class="ansi-green-intense-fg ansi-bold">True</span><span class="ansi-yellow-intense-fg ansi-bold">,</span>
+<span class="ansi-green-fg">    409</span>     )
+<span class="ansi-green-fg">    410</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\pandas\core\arrays\datetimes.py</span> in <span class="ansi-cyan-fg">objects_to_datetime64ns</span><span class="ansi-blue-intense-fg ansi-bold">(data, dayfirst, yearfirst, utc, errors, require_iso8601, allow_object, allow_mixed)</span>
+<span class="ansi-green-fg">   2191</span>             <span class="ansi-green-intense-fg ansi-bold">return</span> values<span class="ansi-yellow-intense-fg ansi-bold">.</span>view<span class="ansi-yellow-intense-fg ansi-bold">(</span><span class="ansi-blue-intense-fg ansi-bold">&#34;i8&#34;</span><span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> tz_parsed
+<span class="ansi-green-fg">   2192</span>         <span class="ansi-green-intense-fg ansi-bold">except</span> <span class="ansi-yellow-intense-fg ansi-bold">(</span>ValueError<span class="ansi-yellow-intense-fg ansi-bold">,</span> TypeError<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 2193</span><span class="ansi-yellow-intense-fg ansi-bold">             </span><span class="ansi-green-intense-fg ansi-bold">raise</span> err
+<span class="ansi-green-fg">   2194</span>
+<span class="ansi-green-fg">   2195</span>     <span class="ansi-green-intense-fg ansi-bold">if</span> tz_parsed <span class="ansi-green-intense-fg ansi-bold">is</span> <span class="ansi-green-intense-fg ansi-bold">not</span> <span class="ansi-green-intense-fg ansi-bold">None</span><span class="ansi-yellow-intense-fg ansi-bold">:</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\pandas\core\arrays\datetimes.py</span> in <span class="ansi-cyan-fg">objects_to_datetime64ns</span><span class="ansi-blue-intense-fg ansi-bold">(data, dayfirst, yearfirst, utc, errors, require_iso8601, allow_object, allow_mixed)</span>
+<span class="ansi-green-fg">   2180</span>             yearfirst<span class="ansi-yellow-intense-fg ansi-bold">=</span>yearfirst<span class="ansi-yellow-intense-fg ansi-bold">,</span>
+<span class="ansi-green-fg">   2181</span>             require_iso8601<span class="ansi-yellow-intense-fg ansi-bold">=</span>require_iso8601<span class="ansi-yellow-intense-fg ansi-bold">,</span>
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 2182</span><span class="ansi-yellow-intense-fg ansi-bold">             </span>allow_mixed<span class="ansi-yellow-intense-fg ansi-bold">=</span>allow_mixed<span class="ansi-yellow-intense-fg ansi-bold">,</span>
+<span class="ansi-green-fg">   2183</span>         )
+<span class="ansi-green-fg">   2184</span>         result <span class="ansi-yellow-intense-fg ansi-bold">=</span> result<span class="ansi-yellow-intense-fg ansi-bold">.</span>reshape<span class="ansi-yellow-intense-fg ansi-bold">(</span>data<span class="ansi-yellow-intense-fg ansi-bold">.</span>shape<span class="ansi-yellow-intense-fg ansi-bold">,</span> order<span class="ansi-yellow-intense-fg ansi-bold">=</span>order<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\pandas\_libs\tslib.pyx</span> in <span class="ansi-cyan-fg">pandas._libs.tslib.array_to_datetime</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\pandas\_libs\tslib.pyx</span> in <span class="ansi-cyan-fg">pandas._libs.tslib.array_to_datetime</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\pandas\_libs\tslib.pyx</span> in <span class="ansi-cyan-fg">pandas._libs.tslib._array_to_datetime_object</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\pandas\_libs\tslib.pyx</span> in <span class="ansi-cyan-fg">pandas._libs.tslib._array_to_datetime_object</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\pandas\_libs\tslibs\parsing.pyx</span> in <span class="ansi-cyan-fg">pandas._libs.tslibs.parsing.parse_datetime_string</span><span class="ansi-blue-intense-fg ansi-bold">()</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\dateutil\parser\_parser.py</span> in <span class="ansi-cyan-fg">parse</span><span class="ansi-blue-intense-fg ansi-bold">(timestr, parserinfo, **kwargs)</span>
+<span class="ansi-green-fg">   1366</span>         <span class="ansi-green-intense-fg ansi-bold">return</span> parser<span class="ansi-yellow-intense-fg ansi-bold">(</span>parserinfo<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">.</span>parse<span class="ansi-yellow-intense-fg ansi-bold">(</span>timestr<span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-yellow-intense-fg ansi-bold">**</span>kwargs<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">   1367</span>     <span class="ansi-green-intense-fg ansi-bold">else</span><span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-intense-fg ansi-bold">-&gt; 1368</span><span class="ansi-yellow-intense-fg ansi-bold">         </span><span class="ansi-green-intense-fg ansi-bold">return</span> DEFAULTPARSER<span class="ansi-yellow-intense-fg ansi-bold">.</span>parse<span class="ansi-yellow-intense-fg ansi-bold">(</span>timestr<span class="ansi-yellow-intense-fg ansi-bold">,</span> <span class="ansi-yellow-intense-fg ansi-bold">**</span>kwargs<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">   1369</span>
+<span class="ansi-green-fg">   1370</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\dateutil\parser\_parser.py</span> in <span class="ansi-cyan-fg">parse</span><span class="ansi-blue-intense-fg ansi-bold">(self, timestr, default, ignoretz, tzinfos, **kwargs)</span>
+<span class="ansi-green-fg">    649</span>             ret <span class="ansi-yellow-intense-fg ansi-bold">=</span> self<span class="ansi-yellow-intense-fg ansi-bold">.</span>_build_naive<span class="ansi-yellow-intense-fg ansi-bold">(</span>res<span class="ansi-yellow-intense-fg ansi-bold">,</span> default<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    650</span>         <span class="ansi-green-intense-fg ansi-bold">except</span> ValueError <span class="ansi-green-intense-fg ansi-bold">as</span> e<span class="ansi-yellow-intense-fg ansi-bold">:</span>
+<span class="ansi-green-intense-fg ansi-bold">--&gt; 651</span><span class="ansi-yellow-intense-fg ansi-bold">             </span>six<span class="ansi-yellow-intense-fg ansi-bold">.</span>raise_from<span class="ansi-yellow-intense-fg ansi-bold">(</span>ParserError<span class="ansi-yellow-intense-fg ansi-bold">(</span>str<span class="ansi-yellow-intense-fg ansi-bold">(</span>e<span class="ansi-yellow-intense-fg ansi-bold">)</span> <span class="ansi-yellow-intense-fg ansi-bold">+</span> <span class="ansi-blue-intense-fg ansi-bold">&#34;: %s&#34;</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> timestr<span class="ansi-yellow-intense-fg ansi-bold">)</span><span class="ansi-yellow-intense-fg ansi-bold">,</span> e<span class="ansi-yellow-intense-fg ansi-bold">)</span>
+<span class="ansi-green-fg">    652</span>
+<span class="ansi-green-fg">    653</span>         <span class="ansi-green-intense-fg ansi-bold">if</span> <span class="ansi-green-intense-fg ansi-bold">not</span> ignoretz<span class="ansi-yellow-intense-fg ansi-bold">:</span>
+
+<span class="ansi-green-intense-fg ansi-bold">c:\Users\psandhu\Miniconda3\envs\dev_pyhecdss\lib\site-packages\six.py</span> in <span class="ansi-cyan-fg">raise_from</span><span class="ansi-blue-intense-fg ansi-bold">(value, from_value)</span>
+
+<span class="ansi-red-intense-fg ansi-bold">ParserError</span>: hour must be in 0..23: 31JAN1990 2400
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">last_day</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;31JAN1990&#39;</span><span class="p">)</span>
+<span class="n">last_day</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[5]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Timestamp(&#39;1990-01-31 00:00:00&#39;)
+</pre></div></div>
+</div>
+<p>See this discussion here <a class="reference external" href="https://stackoverflow.com/questions/37354105/find-the-end-of-the-month-of-a-pandas-dataframe-series">https://stackoverflow.com/questions/37354105/find-the-end-of-the-month-of-a-pandas-dataframe-series</a> on how to get end of month</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">pandas.tseries.offsets</span> <span class="kn">import</span> <span class="n">MonthEnd</span>
+<span class="n">last_day</span> <span class="o">+</span> <span class="n">MonthEnd</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[12]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Timestamp(&#39;1990-01-31 00:00:00&#39;)
+</pre></div></div>
+</div>
+<p>None of those will give 31JAN1990 2400 as the answer. If you force the issue, e.g. the last nano-second of the month you will get this</p>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">last_day</span> <span class="o">+</span> <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">MonthBegin</span><span class="p">()</span> <span class="o">-</span> <span class="n">pd</span><span class="o">.</span><span class="n">offsets</span><span class="o">.</span><span class="n">Nano</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[15]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Timestamp(&#39;1990-01-31 23:59:59.999999999&#39;)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">pd</span><span class="o">.</span><span class="n">to_datetime</span><span class="p">(</span><span class="s1">&#39;01FEB1990 0000&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[16]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+Timestamp(&#39;1990-02-01 00:00:00&#39;)
+</pre></div></div>
+</div>
+<div class="nbinput docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span><span class="n">pr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">period_range</span><span class="p">(</span><span class="n">start</span><span class="o">=</span><span class="s1">&#39;01JAN1990&#39;</span><span class="p">,</span><span class="n">periods</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span><span class="n">freq</span><span class="o">=</span><span class="s1">&#39;M&#39;</span><span class="p">)</span>
+<span class="n">pr</span>
+</pre></div>
+</div>
+</div>
+<div class="nboutput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[18]:
+</pre></div>
+</div>
+<div class="output_area docutils container">
+<div class="highlight"><pre>
+PeriodIndex([&#39;1990-01&#39;, &#39;1990-02&#39;], dtype=&#39;period[M]&#39;)
+</pre></div></div>
+</div>
+<section id="So-what-is-the-answer-to-this-dilemma?">
+<h2>So what is the answer to this dilemma?<a class="headerlink" href="#So-what-is-the-answer-to-this-dilemma?" title="Permalink to this headline">¶</a></h2>
+<p>The best that can be done IMHO is to use the pandas PeriodIndex which signifies a range of time. E.g. the monthly data is read in with a period of ‘M’ and shifted by 1’M’ interval to the left (-1) for data stored in DSS.</p>
+<p>This is not ideal because it uses the period_type ‘PER-AVG’ as the reason to shift the data and convert it to periods.</p>
+<p>Also math operations are not easily done with data indexed by PeriodIndex vs DatetimeIndex. These should be handled by users as it depends upon the usecase.</p>
+<p>One example would be to resample the datetimeindex’ed data to monthly and then add it to period indexed data.</p>
+<p>Another issue is that when resampling the user would want use different options so that the</p>
+<p>These issues are pandas issues and can be dealt with in the python or pandas space.</p>
+<div class="nbinput nblast docutils container">
+<div class="prompt highlight-none notranslate"><div class="highlight"><pre><span></span>[ ]:
+</pre></div>
+</div>
+<div class="input_area highlight-ipython3 notranslate"><div class="highlight"><pre>
+<span></span>
+</pre></div>
+</div>
+</div>
+</section>
+</section>
+
+
+          </div>
+          
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<h1 class="logo"><a href="../index.html">pyhecdss</a></h1>
+
+
+
+
+
+
+
+
+<h3>Navigation</h3>
+<p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../readme.html">pyhecdss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../installation.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../usage.html">Usage</a></li>
+<li class="toctree-l1"><a class="reference internal" href="sample_dss_files.html">Usage with examples</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Discussion on PER-* and INST-* period types</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#So-what-is-the-answer-to-this-dilemma?">So what is the answer to this dilemma?</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">pyhecdss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../contributing.html">Contributing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../authors.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../history.html">CHANGELOG</a></li>
+</ul>
+
+<div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../index.html">Documentation overview</a><ul>
+      <li>Previous: <a href="sample_dss_files.html" title="previous chapter">Usage with examples</a></li>
+      <li>Next: <a href="../modules.html" title="next chapter">pyhecdss</a></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+
+
+
+
+
+
+
+
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2019, Nicky Sandhu.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 4.0.2</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.12</a>
+      
+      |
+      <a href="../_sources/notebooks/period_vs_instval.ipynb.txt"
+          rel="nofollow">Page source</a>
+    </div>
+
+    
+
+    
+  </body>
+</html>
