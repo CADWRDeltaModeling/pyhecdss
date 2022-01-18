@@ -436,6 +436,8 @@ class DSSFile:
             td = timedelta(days=1)  # Assuming the maximum daily.
         elif interval.find('DECADE') >= 0:
             td = timedelta(days=365) # Assuming it is close to YEARLY
+        elif interval.find('DECADE') >=0:
+            td = timedelta(days=3650)
         else:
             td = timedelta(seconds=DSSFile.get_freq_from_epart(interval).nanos/1e9)
         return td
