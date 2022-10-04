@@ -14,7 +14,7 @@ build:
 
 requirements:
   build:
-    - python
+    - python {{ python }}
     - setuptools
     - numpy {{ numpy }}
     - pandas >=0.23
