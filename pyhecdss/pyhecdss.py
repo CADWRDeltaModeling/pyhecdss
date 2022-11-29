@@ -55,16 +55,16 @@ def get_start_end_dates(twstr, sep='-'):
     return s.floor('D').strftime('%d%b%Y').upper(), e.ceil('D').strftime('%d%b%Y').upper()
 
 
-def get_ts(filename, pathname):
+def get_ts(filename, *paths):
     """
-    Gets regular time series matching the pathname from the filename.
-    Opens and reads pathname from filename and then closes it (slightly inefficient)
+    Gets regular time series matching the pathname(s) from the filename.
+    Opens and reads pathname(s) from filename and then closes it (slightly inefficient)
 
     Parameters
     ----------
 
     filename: a path to DSS file
-    pathname: a string of the form /A/B/C/D/E/F that is parsed to match all parts except D
+    pathname(s): one or more strings of the form /A/B/C/D/E/F that is parsed to match all parts except D
     which if not blank is used to determine the time window to retrieve
     D should be specified in the format of ddMMMYYYY HHmm - ddMMMYYYY HHmm
 
@@ -82,31 +82,33 @@ def get_ts(filename, pathname):
 
     Get time series based on a part of pathname, e.g.
 
-    >>> pyhecdss.get_rts('test1.dss', '//SIN/////')
+    >>> pyhecdss.get_rts('test1.dss', '//SIN/////', '//COS/////')
     [(rts,units,type),...]
 
     """
     with DSSFile(filename) as dssh:
         dfcat = dssh.read_catalog()
-        if pathname: pathname = pathname.upper()
-        pp = pathname.split('/')
-        cond = True
-        for p, n in zip(pp[1:4]+pp[5:7], ['A', 'B', 'C', 'E', 'F']):
-            if len(p) > 0:
-                cond = cond & (dfcat[n] == p)
-        plist = dssh.get_pathnames(dfcat[cond])
-        twstr = str.strip(pp[4])
-        startDateStr = endDateStr = None
-        if len(twstr) > 0:
-            try:
-                startDateStr, endDateStr = get_start_end_dates(twstr)
-            except:
-                startDateStr, endDateStr = None, None
-        for p in plist:
-            if p.split('/')[5].startswith('IR-'):
-                yield dssh.read_its(p, startDateStr, endDateStr)
-            else:
-                yield dssh.read_rts(p, startDateStr, endDateStr)
+        for pathname in paths:
+            if pathname:
+                pathname = pathname.upper()
+            pp = pathname.split('/')
+            cond = True
+            for p, n in zip(pp[1:4]+pp[5:7], ['A', 'B', 'C', 'E', 'F']):
+                if len(p) > 0:
+                    cond = cond & (dfcat[n] == p)
+            plist = dssh.get_pathnames(dfcat[cond])
+            twstr = str.strip(pp[4])
+            startDateStr = endDateStr = None
+            if len(twstr) > 0:
+                try:
+                    startDateStr, endDateStr = get_start_end_dates(twstr)
+                except:
+                    startDateStr, endDateStr = None, None
+            for p in plist:
+                if p.split('/')[5].startswith('IR-'):
+                    yield dssh.read_its(p, startDateStr, endDateStr)
+                else:
+                    yield dssh.read_rts(p, startDateStr, endDateStr)
 
 
 def get_matching_ts(filename, pathname=None, path_parts=None):
@@ -126,7 +128,8 @@ def get_matching_ts(filename, pathname=None, path_parts=None):
     '''
     with DSSFile(filename) as dssh:
         dfcat = dssh.read_catalog()
-        if pathname: pathname=pathname.upper()
+        if pathname:
+            pathname = pathname.upper()
         pp = pathname.split('/')
         cond = dfcat['A'].str.match('.*')
         for p, n in zip(pp[1:4]+pp[5:7], ['A', 'B', 'C', 'E', 'F']):
@@ -343,6 +346,12 @@ class DSSFile:
         return dfc
 
     def _check_condensed_catalog_file_and_recatalog(self, condensed=True):
+        '''
+        check if cataloging is needed to generate the catalog files (condensed or otherwise)
+
+        returns name of catalog file and if it was regenerated (True) or not (False)
+        '''
+        generated = False
         if condensed:
             ext = '.dsd'
         else:
@@ -351,6 +360,7 @@ class DSSFile:
         if not os.path.exists(fdname):
             logging.debug("NO CATALOG FOUND: Generating...")
             self.catalog()
+            generated = True
         else:
             if os.path.exists(self.fname):
                 ftime = pd.to_datetime(time.ctime(
@@ -359,17 +369,19 @@ class DSSFile:
                 if ftime > fdtime:
                     logging.debug("CATALOG FILE OLD: Generating...")
                     self.catalog()
+                    generated = True
             else:
                 logging.debug("No DSS File found. Using catalog file as is")
         #
-        return fdname
+        return fdname, generated
 
     def read_catalog(self):
         """
         Reads .dsd (condensed catalog) for the given dss file.
         Will run catalog if it doesn't exist or is out of date
         """
-        fdname = self._check_condensed_catalog_file_and_recatalog(condensed=_USE_CONDENSED)
+        fdname, generated = self._check_condensed_catalog_file_and_recatalog(
+            condensed=_USE_CONDENSED)
         if _USE_CONDENSED:
             df = DSSFile._read_catalog_dsd(fdname)
         else:
@@ -435,8 +447,8 @@ class DSSFile:
         elif interval.find('DAY') >= 0:
             td = timedelta(days=1)  # Assuming the maximum daily.
         elif interval.find('DECADE') >= 0:
-            td = timedelta(days=365) # Assuming it is close to YEARLY
-        elif interval.find('DECADE') >=0:
+            td = timedelta(days=365)  # Assuming it is close to YEARLY
+        elif interval.find('DECADE') >= 0:
             td = timedelta(days=3650)
         else:
             td = timedelta(seconds=DSSFile.get_freq_from_epart(interval).nanos/1e9)
@@ -534,7 +546,8 @@ class DSSFile:
         try:
             if not opened_already:
                 self.open()
-            if pathname: pathname = pathname.upper()
+            if pathname:
+                pathname = pathname.upper()
             interval = self.parse_pathname_epart(pathname)
             trim_first = startDateStr is None
             trim_last = endDateStr is None
@@ -617,7 +630,8 @@ class DSSFile:
         The time series is passed in as a pandas DataFrame
         and associated units and types of length no greater than 8.
         """
-        if pathname: pathname = pathname.upper()
+        if pathname:
+            pathname = pathname.upper()
         parts = pathname.split('/')
         parts[5] = DSSFile.get_epart_from_freq(df.index.freq)
         pathname = "/".join(parts)
@@ -643,11 +657,13 @@ class DSSFile:
         from the D-PART of the pathname so make sure to read that from the catalog
         before calling this function
         """
-        if pathname: pathname = pathname.upper()
+        if pathname:
+            pathname = pathname.upper()
         epart = self.parse_pathname_epart(pathname)
         startDateStr, endDateStr = self._parse_times(pathname, startDateStr, endDateStr)
-        startDateStr = pd.to_datetime(startDateStr).floor('1D').strftime('%d%b%Y').upper() # round down
-        endDateStr = pd.to_datetime(endDateStr).ceil('1D').strftime('%d%b%Y').upper() # round up
+        startDateStr = pd.to_datetime(startDateStr).floor(
+            '1D').strftime('%d%b%Y').upper()  # round down
+        endDateStr = pd.to_datetime(endDateStr).ceil('1D').strftime('%d%b%Y').upper()  # round up
         juls, istat = pyheclib.hec_datjul(startDateStr)
         jule, istat = pyheclib.hec_datjul(endDateStr)
         ietime = istime = 0
@@ -685,7 +701,8 @@ class DSSFile:
         Uses the provided pandas.DataFrame df index (time) and values
         and also stores the units (cunits) and type (ctype)
         """
-        if pathname: pathname = pathname.upper()
+        if pathname:
+            pathname = pathname.upper()
         parts = pathname.split('/')
         # parts[5]=DSSFile.FREQ_EPART_MAP[df.index.freq]
         if interval:
