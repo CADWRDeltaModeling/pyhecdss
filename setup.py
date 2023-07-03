@@ -41,7 +41,7 @@ with open('CHANGELOG.rst') as history_file:
 
 requirements = ["numpy", "pandas"]
 
-setup_requirements = ['pytest-runner']
+setup_requirements = []
 
 test_requirements = ['pytest']
 
