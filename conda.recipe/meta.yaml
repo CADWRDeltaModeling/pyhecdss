@@ -16,19 +16,19 @@ requirements:
   build:
     - python {{ python }}
     - setuptools
-    - numpy {{ numpy }}
-    - pandas >=0.23
-    - pytest-runner >=5.0
+    - pytest
     - swig
-    - libgfortran5
-    - libstdcxx-ng
+    # dependencies are defined in setup.py
+    {% for dep in data['install_requires'] %}
+    - {{ dep.lower() }}
+    {% endfor %}
 
   run:
     - {{ pin_compatible('python', lower_bound='3.5', upper_bound='4.0') }}
-    - numpy  >=1.16
-    - pandas >=0.23
-#    - libgfortran5
-#    - libstdcxx-ng
+    # dependencies are defined in setup.py
+    {% for dep in data['install_requires'] %}
+    - {{ dep.lower() }}
+    {% endfor %}
 
 test:
   imports:
