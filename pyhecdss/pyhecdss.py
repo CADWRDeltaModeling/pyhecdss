@@ -336,7 +336,7 @@ class DSSFile:
         df = df.dropna(how='all', axis=0)  # drop empty lines
         df[list('ABCDEF')] = df['Record Pathname'].str.split('/', expand=True).iloc[:, 1:7]
         dfg = df.groupby(['A', 'B', 'C', 'F', 'E'])
-        df.D = pd.to_datetime(df.D)
+        df.D = pd.to_datetime(df.D, format='%d%b%Y')
         dfmin, dfmax = dfg.min(), dfg.max()
         tagmax = 'T' + str(dfmax.Tag.astype('str').str[1:].astype('int', errors='ignore').max())
         dfc = dfmin['D'].dt.strftime('%d%b%Y').str.upper() + ' - ' + \
