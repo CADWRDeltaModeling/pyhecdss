@@ -135,7 +135,7 @@ class TestPyDsUtilsBasic(unittest.TestCase):
     def test_write_its(self):
         fname = "test1.dss"
         pathname = '/TEST/ITS1/VANILLA//IR-YEAR/RANDOM/'
-        ta = pd.to_datetime(['01apr1990', '05nov1991', '07apr1997'])
+        ta = pd.to_datetime(['01apr1990', '05nov1991', '07apr1997'], format='%d%b%Y')
         df = pd.DataFrame([0.5, 0.6, 0.7], index=ta, columns=["random"])
         cunits, ctype = 'CCC', 'INST-VAL'
         with pyhecdss.DSSFile(fname) as dssfile2:
@@ -151,7 +151,7 @@ class TestPyDsUtilsBasic(unittest.TestCase):
     def test_write_its_series(self):
         fname = "test1.dss"
         pathname = '/TEST/ITS1/VANILLA//IR-YEAR/RANDOM/'
-        ta = pd.to_datetime(['01apr1990', '05nov1991', '07apr1997'])
+        ta = pd.to_datetime(['01apr1990', '05nov1991', '07apr1997'], format='%d%b%Y')
         df = pd.Series([0.5, 0.6, 0.7], index=ta)
         cunits, ctype = 'CCC', 'INST-VAL'
         with pyhecdss.DSSFile(fname) as dssfile2:
