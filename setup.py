@@ -56,12 +56,10 @@ if platform.system() == 'Linux':
     libdirs = ['./extensions']  # linux
     compile_args = ['-D_GNU_SOURCE', '-fno-exceptions']  # linux
 elif platform.system() == 'Windows':
-    extra_links = ['/FORCE:UNRESOLVED']  # windows
-    libs = ['extensions/heclib6-VE', 'extensions/ifconsol', 'extensions/libifcoremt', 'extensions/libifport', 'extensions/libmmt',
-            'extensions/libirc', 'extensions/svml_disp', 'extensions/IFWIN', 'legacy_stdio_definitions', 'User32', 'gdi32', ]  # windows
-    libdirs = [r'd:\dev\pydss\swig',
-               r'C:\Program Files (x86)\IntelSWTools\compilers_and_libraries\windows\compiler\lib\intel64']  # windows
-    compile_args = []  # windows
+    extra_links = ["/NODEFAULTLIB:LIBCMT"]
+    libs = ['extensions/heclib6-VE', ] 
+    libdirs = []
+    compile_args = []
 else:
     raise Exception("Unknown platform: "+platform.system()+"! You are on your own")
 
