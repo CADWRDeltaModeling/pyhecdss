@@ -15,7 +15,7 @@ def test_read_write_cycle_rts():
     path = '/SAMPLE/SIN/WAVE/01JAN1990 - 01JAN1990/15MIN/SAMPLE1/'
     sina = np.sin(np.linspace(-np.pi, np.pi, 201))
     dfr = pd.DataFrame(sina,
-                       index=pd.period_range('01jan1990 0100', periods=len(sina), freq='15T'),
+                       index=pd.period_range('01jan1990 0100', periods=len(sina), freq='15min'),
                        columns=[path])
 
     d = pyhecdss.DSSFile(fname, create_new=True)

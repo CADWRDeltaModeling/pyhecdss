@@ -2,14 +2,12 @@ name: dss
 channels:
   - cadwr-dms
   - conda-forge
-  - defaults
 dependencies:
   - conda
   - conda-build
   - nbsphinx
   - numpy
   - pandas
-  - python=3.7.*
+  - python=3.11
   - sphinx
   - pyhecdss
-prefix: /home/psandhu/.conda/envs/dss

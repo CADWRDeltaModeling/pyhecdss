@@ -175,7 +175,7 @@ class DSSFile:
     MISSING_VALUE = -901.0
     MISSING_RECORD = -902.0
     #
-    FREQ_NAME_MAP = {"T": "MIN", "H": "HOUR", "D": "DAY", "W": "WEEK", "M": "MON", "A-DEC": "YEAR"}
+    FREQ_NAME_MAP = {"min": "MIN", "H": "HOUR", "D": "DAY", "W": "WEEK", "M": "MON", "A-DEC": "YEAR"}
     #
     NAME_FREQ_MAP = {v: k for k, v in FREQ_NAME_MAP.items()}
     #
@@ -601,7 +601,11 @@ class DSSFile:
                 self.close()
 
     def get_epart_from_freq(freq):
-        return "%d%s" % (freq.n, DSSFile.FREQ_NAME_MAP[freq.name])
+        if freq.name == 'ME':
+            freq_name = 'M'
+        else:
+            freq_name = freq.name
+        return "%d%s" % (freq.n, DSSFile.FREQ_NAME_MAP[freq_name])
 
     def get_number_and_frequency_from_epart(epart):
         match = DSSFile.EPART_PATTERN.match(epart)
@@ -647,7 +651,7 @@ class DSSFile:
         values = df.iloc[:, 0].values if isinstance(df, pd.DataFrame) else df.iloc[:].values
         istat = pyheclib.hec_zsrtsxd(self.ifltab, pathname,
                                      sp.strftime("%d%b%Y").upper(
-                                     ), sp.round(freq='T').strftime("%H%M"),
+                                     ), sp.round(freq='min').strftime("%H%M"),
                                      values, cunits[:8], ctype[:8])
         self._respond_to_istat_state(istat)
 
