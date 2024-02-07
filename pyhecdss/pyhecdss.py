@@ -175,7 +175,7 @@ class DSSFile:
     MISSING_VALUE = -901.0
     MISSING_RECORD = -902.0
     #
-    FREQ_NAME_MAP = {"min": "MIN", "H": "HOUR", "D": "DAY", "W": "WEEK", "M": "MON", "A-DEC": "YEAR"}
+    FREQ_NAME_MAP = {"min": "MIN", "h": "HOUR", "D": "DAY", "W": "WEEK", "M": "MON", "A-DEC": "YEAR"}
     #
     NAME_FREQ_MAP = {v: k for k, v in FREQ_NAME_MAP.items()}
     #
