@@ -603,6 +603,8 @@ class DSSFile:
     def get_epart_from_freq(freq):
         if freq.name == 'ME':
             freq_name = 'M'
+        elif freq.name == 'T':
+            freq_name = 'min'
         else:
             freq_name = freq.name
         return "%d%s" % (freq.n, DSSFile.FREQ_NAME_MAP[freq_name])
