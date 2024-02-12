@@ -706,6 +706,7 @@ class DSSFile:
         values = (
             df.iloc[:, 0].values if isinstance(df, pd.DataFrame) else df.iloc[:].values
         )
+        values = np.ascontiguousarray(values, dtype="d")
         istat = pyheclib.hec_zsrtsxd(
             self.ifltab,
             pathname,
