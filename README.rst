@@ -2,7 +2,7 @@
 pyhecdss
 ========
 
-> ⚠️ **Note:** This project only supports **DSS version 6** and now recommends users to `HEC-DSS Python`_ version 7 and higher
+>  **Note:** This project only supports **DSS version 6** and now recommends users to `HEC-DSS Python`_ version 7 and higher
 
 For reading/writing HEC-DSS files [https://www.hec.usace.army.mil/software/hec-dss/]
 HEC-DSS is an ancient database used by the Army Corps of Engineers and prevalent
