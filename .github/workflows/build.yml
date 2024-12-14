@@ -1,0 +1,71 @@
+name: Build Conda packages
+
+on: [push, pull_request]
+
+jobs:
+  build-conda:
+    runs-on: ${{ matrix.os }}
+    
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        python-version: ["3.11"]
+        toolchain:
+          - {compiler: intel-classic, version: '2021.12'}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # Shallow clones should be disabled for versioneer
+          fetch-tags: true # Required for versioneer
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v4
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Set up Conda environment (Linux/Windows)
+        uses: conda-incubator/setup-miniconda@v3
+        with:
+          activate-environment: build-env
+          channels: conda-forge
+          python-version: ${{ matrix.python-version }}
+          auto-update-conda: true
+          mamba-version: "*"
+
+      - name: Install dependencies (Linux/Windows)
+        run: |
+          conda install -y conda-build numpy anaconda-client versioneer
+
+      - name: Install ifort dependencies (Windows)
+        if: matrix.os == 'windows-latest'
+        uses: fortran-lang/setup-fortran@v1
+        id: setup-fortran
+        with:
+          compiler: ${{ matrix.toolchain.compiler }}
+          version: ${{ matrix.toolchain.version }}
+
+      - name: Verify ifort environment (Windows)
+        if: matrix.os == 'windows-latest'
+        run: |
+          echo "Setting up Fortran environment"
+          ${{ steps.setup-fortran.outputs.fc }} /help
+
+      - name: Build Conda package on Ubuntu
+        if: matrix.os == 'ubuntu-latest'
+        env: 
+          ANACONDA_CHANNEL_UPLOAD_TOKEN: ${{ secrets.ANACONDA_CHANNEL_UPLOAD_TOKEN }}
+        run: |
+          echo "Building Conda package"
+          conda config --set anaconda_upload yes
+          conda build -c conda-forge -c cadwr-dms --user cadwr-dms --token "$ANACONDA_CHANNEL_UPLOAD_TOKEN" .
+
+      - name: Build Conda package on Windows
+        if: matrix.os == 'windows-latest'
+        env: 
+          ANACONDA_CHANNEL_UPLOAD_TOKEN: ${{ secrets.ANACONDA_CHANNEL_UPLOAD_TOKEN }}
+        run: |
+          echo "Building Conda package"
+          conda config --set anaconda_upload yes
+          conda build -c conda-forge -c cadwr-dms --user cadwr-dms --token "$env:ANACONDA_CHANNEL_UPLOAD_TOKEN" .
