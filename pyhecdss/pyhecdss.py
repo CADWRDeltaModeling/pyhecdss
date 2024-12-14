@@ -108,6 +108,13 @@ def get_ts(filename, *paths):
                     startDateStr, endDateStr = get_start_end_dates(twstr)
                 except:
                     startDateStr, endDateStr = None, None
+            if len(plist)==0:
+                # These messages are needed by the calibration post-processor in pydelmod, which uses
+                # a try/except block when creating plots/metrics layouts.  
+                print('-------------------------------------------------------------------------------------------------------')
+                print('ERROR in pyhecdss.get_ts: Data not found in file '+filename + 'for pathname '+pathname)
+                print('Check spelling of station name and verify that DSS file has been post-processed for this station name.')
+                print('-------------------------------------------------------------------------------------------------------')
             for p in plist:
                 if p.split("/")[5].startswith("IR-"):
                     yield dssh.read_its(p, startDateStr, endDateStr)
