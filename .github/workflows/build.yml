@@ -52,20 +52,11 @@ jobs:
           echo "Setting up Fortran environment"
           ${{ steps.setup-fortran.outputs.fc }} /help
 
-      - name: Build Conda package on Ubuntu
-        if: matrix.os == 'ubuntu-latest'
+      - name: Build Conda package
+        shell: bash
         env: 
           ANACONDA_CHANNEL_UPLOAD_TOKEN: ${{ secrets.ANACONDA_CHANNEL_UPLOAD_TOKEN }}
         run: |
           echo "Building Conda package"
           conda config --set anaconda_upload yes
           conda build -c conda-forge -c cadwr-dms --user cadwr-dms --token "$ANACONDA_CHANNEL_UPLOAD_TOKEN" .
-
-      - name: Build Conda package on Windows
-        if: matrix.os == 'windows-latest'
-        env: 
-          ANACONDA_CHANNEL_UPLOAD_TOKEN: ${{ secrets.ANACONDA_CHANNEL_UPLOAD_TOKEN }}
-        run: |
-          echo "Building Conda package"
-          conda config --set anaconda_upload yes
-          conda build -c conda-forge -c cadwr-dms --user cadwr-dms --token "$env:ANACONDA_CHANNEL_UPLOAD_TOKEN" .
