@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools", "wheel", "numpy", "versioneer"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pyhecdss"
+# version = "0.0.0"  # Version will be managed by versioneer
+description = "For reading/writing HEC-DSS files"
+readme = "README.rst"
+license = {text = "MIT"}
+requires-python = ">=3.11"
+keywords = ["pyhecdss", "hec-dss", "hydrology"]
+dynamic = ["version"]
+authors = [
+  { name = "Nicky Sandhu", email = "psandhu@water.ca.gov" }
+]
+
+classifiers = [
+  "Development Status :: 2 - Pre-Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: MIT License",
+  "Natural Language :: English",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12"
+]
+
+dependencies = [
+  "numpy",
+  "pandas"
+]
+
+[project.urls]
+homepage = "https://github.com/dwr-psandhu/pyhecdss"
+
+[tool.setuptools.packages.find]
+where = ["pyhecdss"]
+
+[tool.setuptools]
+include-package-data = true
+zip-safe = false
+
+[tool.versioneer]
+VCS = "git"
+style = "pep440"
+versionfile_source = "pyhecdss/_version.py"
+versionfile_build = "pyhecdss/_version.py"
+tag_prefix = ""
+parentdir_prefix = "pyhecdss-"
