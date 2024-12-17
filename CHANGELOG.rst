@@ -51,7 +51,7 @@ auto versioning turned on
 
 0.5.1
 -----
-Fixed for '*' in catalog file in case of missing periods
+Fixed for '\*' in catalog file in case of missing periods
 
 0.5.0
 -----
@@ -75,7 +75,7 @@ fix for issue 15: units 'M' and 'Y' no longer supported
 
 0.2.9
 -----
-Fixed issue with end of timestamp writing to dss files for "PER-*" data type
+Fixed issue with end of timestamp writing to dss files for "PER-\*" data type
 
 0.2.8
 -----
@@ -83,7 +83,7 @@ Recompiled heclib in linux with latest compilers to resolve issue 8
 
 0.2.7
 -----
-Partial fixes for offset: Fixed for INST-* timeseries but not PER-* timeseries (issue #12)
+Partial fixes for offset: Fixed for "INST-\*" timeseries but not "PER-\*" timeseries (issue #12)
 
 0.2.6
 -----
