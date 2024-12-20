@@ -77,6 +77,7 @@ pyheclib_module = Extension(
 )
 
 setup(
-    ext_modules=[pyheclib_module],
+    version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
+    ext_modules=[pyheclib_module],
 )
