@@ -1,5 +1,5 @@
 import collections
-from . import pyheclib
+from . import _pyheclib as pyheclib
 import pandas as pd
 import numpy as np
 import os
