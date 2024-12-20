@@ -9,8 +9,15 @@ jobs:
     
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest]
-        python-version: ["3.11"]
+        include:
+          # Linux build (single entry as cibuildwheel handles both Python versions)
+          - os: ubuntu-latest
+            python-version: "3.11"
+          # Windows builds (separate entries for each Python version)
+          - os: windows-latest
+            python-version: "3.11"
+          - os: windows-latest
+            python-version: "3.12"
     
     steps:
       - name: Checkout repository
