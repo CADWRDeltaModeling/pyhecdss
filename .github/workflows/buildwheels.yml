@@ -33,6 +33,11 @@ jobs:
           python -m pip install cibuildwheel
 
       - name: Build wheel with cibuildwheel
+        env:
+          CIBW_BUILD: cp311-manylinux_x86_64
+          CIBW_MANYLINUX_X86_64_IMAGE: manylinux_2_28
+          CIBW_BEFORE_BUILD: "pip install -r requirements-build.txt"  # if you have build dependencies
+          CIBW_SKIP: "*-win32 *-manylinux_i686 *-musllinux*"  # skip 32-bit and musl builds
         run: |
           cibuildwheel --output-dir dist
 
