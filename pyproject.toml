@@ -34,8 +34,7 @@ dependencies = [
 homepage = "https://github.com/dwr-psandhu/pyhecdss"
 
 [tool.setuptools.packages.find]
-where = ["pyhecdss"]
-include = ["pyhecdss*"]
+where = ["."]
 
 [tool.setuptools]
 include-package-data = true
