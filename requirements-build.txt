@@ -1,5 +1,7 @@
 pip
-numpy
+versioneer
 wheel
+numpy
+pandas
 pytest
 pytest-runner
