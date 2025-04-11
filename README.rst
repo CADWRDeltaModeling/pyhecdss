@@ -13,6 +13,12 @@ data from this data format and read it into pandas DataFrame
 * Documentation: https://cadwrdeltamodeling.github.io/pyhecdss/
 
 
+Installation
+------------
+> **Warning:** pip installs do not work. Please use conda installs from the cadwr-dms channel
+
+``conda create -c conda-forge -c cadwr-dms -n test_pyhecdss python=3.12 pyhecdss``
+
 Features
 --------
 
